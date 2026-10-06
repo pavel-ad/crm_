@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Skills Learner - Enterprise Operations, Billing & Call Center CRM Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root[data-theme="dark"] {
@@ -44,7 +44,10 @@
       --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
+    button, .btn, .btn-fast, .btn-xs, .chip, .kanban-card, a, .ctrl-btn, .page-btn, .cal-day { transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease, transform 0.12s ease; }
+    table { contain: content; }
+    .kanban-cards-container { contain: content; }
     body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
     /* Left Sidebar */
@@ -547,7 +550,7 @@
     <header>
       <div class="search-filter-group">
         <div class="search-box">
-          <input type="text" id="searchInput" placeholder="ফোন নম্বর (017...), নাম বা কোম্পানি..." onkeyup="filterData()">
+          <input type="text" id="searchInput" placeholder="ফোন নম্বর (017...), নাম বা কোম্পানি..." oninput="debouncedFilter()">
         </div>
         
         <select id="coursePersonFilter" class="filter-select" onchange="filterData()">
@@ -1210,10 +1213,12 @@
     }
 
     function persistRecords() {
-      localStorage.setItem(DB_STORAGE_KEY, JSON.stringify(masterRecords));
-      persistRecords();
-      localStorage.setItem('sl_crm_enterprise_full_v3', JSON.stringify(masterRecords));
+      const jsonStr = JSON.stringify(masterRecords);
+      localStorage.setItem(DB_STORAGE_KEY, jsonStr);
+      localStorage.setItem('sl_crm_enterprise_pro_v1', jsonStr);
+      localStorage.setItem('sl_crm_enterprise_full_v3', jsonStr);
       updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
+      renderMetrics();
     }
 
     function downloadDbJson() {
@@ -1320,16 +1325,66 @@
       }
     }
 
-    async function loadDatabase(forceNetwork = false) {
-      updateDBSyncStatusUI('loading', 'Loading DB...');
+        // Fast metrics calculation (only runs when records change)
+    function renderMetrics() {
+      let countYes = 0, countNo = 0, countDue = 0;
+      let totalSales = 0, totalCollected = 0, totalDue = 0;
 
-      // 1. Instant display from local storage cache
+      for (let i = 0; i < masterRecords.length; i++) {
+        const item = masterRecords[i];
+        if (item.isCoursePerson === 'YES') {
+          countYes++;
+          const fee = Number(item.totalFee || 0);
+          const adv = Number(item.advance || 0);
+          const reg = Number(item.regularPaid || 0);
+          const due = Number(item.due || 0);
+
+          totalSales += fee;
+          totalCollected += (adv + reg);
+          totalDue += due;
+          if (due > 0) countDue++;
+        } else {
+          countNo++;
+        }
+      }
+
+      document.getElementById('statTotalLeads').innerText = masterRecords.length;
+      document.getElementById('statLeadsBreakdown').innerText = `${countNo} Call Leads (NO)`;
+      document.getElementById('statEnrolledMembers').innerText = countYes;
+      document.getElementById('statCollectedRevenue').innerText = `৳${totalCollected.toLocaleString()}`;
+      document.getElementById('statSalesTotal').innerText = `Total Sales: ৳${totalSales.toLocaleString()}`;
+      document.getElementById('statTotalDueBalance').innerText = `৳${totalDue.toLocaleString()}`;
+      document.getElementById('statDueMembers').innerText = `${countDue} Members with Dues`;
+
+      document.getElementById('chipYesCount').innerText = countYes;
+      document.getElementById('chipNoCount').innerText = countNo;
+      document.getElementById('chipDueCount').innerText = countDue;
+      
+      updateCachedCalendarDates();
+    }
+
+    let cachedEventDates = new Set();
+    function updateCachedCalendarDates() {
+      cachedEventDates = new Set();
+      for (let i = 0; i < masterRecords.length; i++) {
+        const s = masterRecords[i];
+        if (s.nextCall) cachedEventDates.add(s.nextCall.slice(0, 10));
+        if (s.nextDueDate) cachedEventDates.add(s.nextDueDate);
+      }
+    }
+
+    async function loadDatabase(forceNetwork = false) {
+      // 1. Instant 0ms render from localStorage cache
       const localCache = localStorage.getItem(DB_STORAGE_KEY) || localStorage.getItem('sl_crm_enterprise_full_v3') || localStorage.getItem('sl_crm_enterprise_pro_v1');
+      let hasLocalData = false;
+
       if (localCache && !forceNetwork) {
         try {
           const cached = JSON.parse(localCache);
           if (Array.isArray(cached) && cached.length > 0) {
             masterRecords = cached;
+            hasLocalData = true;
+            renderMetrics();
             renderCalendar();
             renderTable();
             updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
@@ -1337,48 +1392,49 @@
         } catch(e) {}
       }
 
-      // 2. Fetch from GitHub Raw or Render / Local server
+      if (forceNetwork || !hasLocalData) {
+        updateDBSyncStatusUI('loading', 'Syncing DB...');
+      }
+
+      // 2. Fetch order: First try local ./db.json (Fast CDN on Render, ~20ms!)
       let fetchedData = null;
       let source = '';
 
-      // Priority 1: GitHub Raw URL
-      const ghRawUrl = `https://raw.githubusercontent.com/${dbConfig.repo}/${dbConfig.branch}/${dbConfig.path}?_t=${Date.now()}`;
       try {
-        const res = await fetch(ghRawUrl);
+        const res = await fetch(`./db.json?_t=${Date.now()}`);
         if (res.ok) {
           fetchedData = await res.json();
-          source = 'GitHub';
+          source = 'Render/Local';
         }
-      } catch(e) {
-        console.warn("GitHub Raw fetch:", e);
-      }
+      } catch(e) {}
 
-      // Priority 2: Local relative ./db.json
-      if (!fetchedData) {
+      // Fallback to GitHub Raw if local relative path not available
+      if (!fetchedData && dbConfig.repo) {
         try {
-          const res = await fetch(`./db.json?_t=${Date.now()}`);
+          const ghRawUrl = `https://raw.githubusercontent.com/${dbConfig.repo}/${dbConfig.branch}/${dbConfig.path}?_t=${Date.now()}`;
+          const res = await fetch(ghRawUrl);
           if (res.ok) {
             fetchedData = await res.json();
-            source = 'Render/Local';
+            source = 'GitHub';
           }
-        } catch(e) {
-          console.warn("Local ./db.json fetch:", e);
-        }
+        } catch(e) {}
       }
 
       if (fetchedData && Array.isArray(fetchedData)) {
-        if (forceNetwork || masterRecords.length === 0) {
+        const isDifferent = !hasLocalData || masterRecords.length !== fetchedData.length;
+        if (forceNetwork || isDifferent) {
           masterRecords = fetchedData;
           persistRecords();
+          renderMetrics();
           renderCalendar();
           renderTable();
+          if (forceNetwork) showToast(`☁️ ${source} থেকে ডাটাবেস সিঙ্ক হয়েছে (${masterRecords.length} টি রেকর্ড)`);
         }
         dbConfig.lastSyncTime = new Date().toLocaleTimeString();
         localStorage.setItem(DB_CONFIG_KEY, JSON.stringify(dbConfig));
         updateDBSyncStatusUI('synced', `${source} (${masterRecords.length})`);
-        showToast(`☁️ ${source} থেকে ডাটাবেস সিঙ্ক হয়েছে (${masterRecords.length} টি রেকর্ড)`);
-      } else if (masterRecords.length > 0) {
-        updateDBSyncStatusUI('local', `Offline DB (${masterRecords.length})`);
+      } else if (hasLocalData) {
+        updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
       } else {
         updateDBSyncStatusUI('error', 'DB Offline');
       }
@@ -1568,182 +1624,117 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       if (currentPage > totalPages) currentPage = totalPages;
       if (currentPage < 1) currentPage = 1;
 
-      const infoEl = document.getElementById('paginationInfo');
       const startItem = totalItems === 0 ? 0 : (currentPage - 1) * pageSize + 1;
       const endItem = Math.min(currentPage * pageSize, totalItems);
-      infoEl.innerText = `Showing ${startItem}-${endItem} of ${totalItems} leads (Page ${currentPage} of ${totalPages})`;
+      document.getElementById('paginationInfo').innerText = `Showing ${startItem}-${endItem} of ${totalItems} leads (Page ${currentPage} of ${totalPages})`;
 
-      const ctrlEl = document.getElementById('paginationControls');
-      ctrlEl.innerHTML = '';
+      let html = '';
+      html += `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">◀ Prev</button>`;
 
-      // Prev Button
-      const prevBtn = document.createElement('button');
-      prevBtn.className = 'page-btn';
-      prevBtn.innerText = '◀ Prev';
-      prevBtn.disabled = currentPage === 1;
-      prevBtn.onclick = () => { currentPage--; renderTable(); };
-      ctrlEl.appendChild(prevBtn);
-
-      // Page Number Buttons (e.g. 1 2 3 ... totalPages)
       let startPage = Math.max(1, currentPage - 2);
       let endPage = Math.min(totalPages, currentPage + 2);
 
       if (startPage > 1) {
-        const btn1 = document.createElement('button');
-        btn1.className = 'page-btn';
-        btn1.innerText = '1';
-        btn1.onclick = () => { currentPage = 1; renderTable(); };
-        ctrlEl.appendChild(btn1);
-
-        if (startPage > 2) {
-          const dots = document.createElement('span');
-          dots.innerText = '...';
-          dots.style.padding = '0 4px';
-          dots.style.color = 'var(--text-muted)';
-          ctrlEl.appendChild(dots);
-        }
+        html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+        if (startPage > 2) html += `<span style="padding:0 4px; color:var(--text-muted);">...</span>`;
       }
 
       for (let p = startPage; p <= endPage; p++) {
-        const pBtn = document.createElement('button');
-        pBtn.className = 'page-btn' + (p === currentPage ? ' active' : '');
-        pBtn.innerText = p;
-        pBtn.onclick = () => { currentPage = p; renderTable(); };
-        ctrlEl.appendChild(pBtn);
+        html += `<button class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
       }
 
       if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-          const dots = document.createElement('span');
-          dots.innerText = '...';
-          dots.style.padding = '0 4px';
-          dots.style.color = 'var(--text-muted)';
-          ctrlEl.appendChild(dots);
-        }
-        const lastBtn = document.createElement('button');
-        lastBtn.className = 'page-btn';
-        lastBtn.innerText = totalPages;
-        lastBtn.onclick = () => { currentPage = totalPages; renderTable(); };
-        ctrlEl.appendChild(lastBtn);
+        if (endPage < totalPages - 1) html += `<span style="padding:0 4px; color:var(--text-muted);">...</span>`;
+        html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
       }
 
-      // Next Button
-      const nextBtn = document.createElement('button');
-      nextBtn.className = 'page-btn';
-      nextBtn.innerText = 'Next ▶';
-      nextBtn.disabled = currentPage === totalPages;
-      nextBtn.onclick = () => { currentPage++; renderTable(); };
-      ctrlEl.appendChild(nextBtn);
+      html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">Next ▶</button>`;
+      document.getElementById('paginationControls').innerHTML = html;
+    }
+
+    function goToPage(p) {
+      currentPage = p;
+      renderTable();
     }
 
     function renderTable() {
       const tbody = document.getElementById('crmTableBody');
-      tbody.innerHTML = '';
-
-      let countYes = 0;
-      let countNo = 0;
-      let countDue = 0;
-      let totalSales = 0;
-      let totalCollected = 0;
-      let totalDue = 0;
-
-      masterRecords.forEach(item => {
-        if (item.isCoursePerson === 'YES') {
-          countYes++;
-          const fee = Number(item.totalFee || 0);
-          const adv = Number(item.advance || 0);
-          const reg = Number(item.regularPaid || 0);
-          const due = Number(item.due || 0);
-
-          totalSales += fee;
-          totalCollected += (adv + reg);
-          totalDue += due;
-          if (due > 0) countDue++;
-        } else {
-          countNo++;
-        }
-      });
-
-      document.getElementById('statTotalLeads').innerText = masterRecords.length;
-      document.getElementById('statLeadsBreakdown').innerText = `${countNo} Call Leads (NO)`;
-      document.getElementById('statEnrolledMembers').innerText = countYes;
-      document.getElementById('statCollectedRevenue').innerText = `৳${totalCollected.toLocaleString()}`;
-      document.getElementById('statSalesTotal').innerText = `Total Sales: ৳${totalSales.toLocaleString()}`;
-      document.getElementById('statTotalDueBalance').innerText = `৳${totalDue.toLocaleString()}`;
-      document.getElementById('statDueMembers').innerText = `${countDue} Members with Dues`;
-
-      document.getElementById('chipYesCount').innerText = countYes;
-      document.getElementById('chipNoCount').innerText = countNo;
-      document.getElementById('chipDueCount').innerText = countDue;
-
-      const searchQ = document.getElementById('searchInput').value.toLowerCase();
+      const searchQ = document.getElementById('searchInput').value.toLowerCase().trim();
       const personQ = document.getElementById('coursePersonFilter').value;
       const courseQ = document.getElementById('courseFilter').value;
 
-      const filtered = masterRecords.filter(item => {
-        const matchesQ = item.name.toLowerCase().includes(searchQ) || 
-                         item.phone.includes(searchQ) || 
-                         (item.company && item.company.toLowerCase().includes(searchQ)) ||
-                         (item.id && item.id.toLowerCase().includes(searchQ));
-        
-        const matchesCourse = courseQ === 'ALL' || item.course === courseQ;
-        const matchesPerson = personQ === 'ALL' || item.isCoursePerson === personQ;
+      const hasSearch = searchQ.length > 0;
+      const hasPerson = personQ !== 'ALL';
+      const hasCourse = courseQ !== 'ALL';
+      const hasChip = currentFilter !== 'ALL';
+      const hasCal = !!selectedCalDate;
 
-        let matchesChip = true;
-        if (currentFilter === 'YES') matchesChip = item.isCoursePerson === 'YES';
-        else if (currentFilter === 'NO') matchesChip = item.isCoursePerson === 'NO';
-        else if (currentFilter === 'DUE') matchesChip = (item.isCoursePerson === 'YES' && item.due > 0);
+      let filtered = masterRecords;
+      if (hasSearch || hasPerson || hasCourse || hasChip || hasCal) {
+        filtered = masterRecords.filter(item => {
+          if (hasPerson && item.isCoursePerson !== personQ) return false;
+          if (hasCourse && item.course !== courseQ) return false;
+          if (hasChip) {
+            if (currentFilter === 'YES' && item.isCoursePerson !== 'YES') return false;
+            if (currentFilter === 'NO' && item.isCoursePerson !== 'NO') return false;
+            if (currentFilter === 'DUE' && (item.isCoursePerson !== 'YES' || item.due <= 0)) return false;
+          }
+          if (hasCal) {
+            const matchesCal = (item.nextCall && item.nextCall.startsWith(selectedCalDate)) || (item.nextDueDate === selectedCalDate);
+            if (!matchesCal) return false;
+          }
+          if (hasSearch) {
+            const nameMatch = item.name && item.name.toLowerCase().indexOf(searchQ) !== -1;
+            const phoneMatch = item.phone && item.phone.indexOf(searchQ) !== -1;
+            const compMatch = item.company && item.company.toLowerCase().indexOf(searchQ) !== -1;
+            const idMatch = item.id && item.id.toLowerCase().indexOf(searchQ) !== -1;
+            if (!nameMatch && !phoneMatch && !compMatch && !idMatch) return false;
+          }
+          return true;
+        });
+      }
 
-        let matchesCal = true;
-        if (selectedCalDate) {
-          matchesCal = (item.nextCall && item.nextCall.startsWith(selectedCalDate)) || (item.nextDueDate === selectedCalDate);
-        }
-
-        return matchesQ && matchesCourse && matchesPerson && matchesChip && matchesCal;
-      });
-
-      // Render Pagination Controls
       renderPagination(filtered.length);
 
-      // Slice exact 20 leads for current page
       const startIndex = (currentPage - 1) * pageSize;
       const paginatedItems = filtered.slice(startIndex, startIndex + pageSize);
 
-      paginatedItems.forEach(item => {
-        const tr = document.createElement('tr');
-        const isYes = item.isCoursePerson === 'YES';
+      if (paginatedItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:2.5rem; color:var(--text-muted); font-size:0.9rem;">কোনো রেকর্ড পাওয়া যায়নি</td></tr>`;
+        return;
+      }
 
-        tr.innerHTML = `
-          <td><strong>${item.id}</strong></td>
+      const rows = new Array(paginatedItems.length);
+      for (let i = 0; i < paginatedItems.length; i++) {
+        const item = paginatedItems[i];
+        const isYes = item.isCoursePerson === 'YES';
+        const totalFeeStr = isYes ? `<strong>৳${Number(item.totalFee || 0).toLocaleString()}</strong>` : '<span style="color:var(--text-muted);">-</span>';
+        const advStr = isYes ? `<span style="color:var(--accent-green);">৳${Number(item.advance || 0).toLocaleString()}</span>` : '<span style="color:var(--text-muted);">-</span>';
+        const regPaidStr = isYes ? `<span style="color:var(--primary);">৳${Number(item.regularPaid || 0).toLocaleString()}</span>` : '<span style="color:var(--text-muted);">-</span>';
+        const dueStr = isYes ? `<strong style="color:var(--accent-red);">৳${Number(item.due || 0).toLocaleString()}</strong>` : '<span style="color:var(--text-muted);">-</span>';
+        const nextCallFormatted = item.nextCall ? item.nextCall.replace('T', ' ') : '';
+
+        rows[i] = `<tr>
+          <td><strong>${item.id || ''}</strong></td>
           <td>
-            <strong>${item.name}</strong>
+            <strong>${item.name || ''}</strong>
             <div style="font-size:0.7rem; color:var(--text-muted);">${item.designation || 'N/A'}</div>
           </td>
           <td>${item.company || 'Individual'}</td>
-          <td><strong>${item.phone}</strong></td>
+          <td><strong>${item.phone || ''}</strong></td>
           <td>
             <span class="badge ${isYes ? 'badge-yes' : 'badge-no'}" onclick="toggleCoursePersonStatus('${item.id}')" title="Click to Switch YES/NO">
               ${isYes ? '✅ YES' : '❌ NO'}
             </span>
           </td>
+          <td><div>${item.course || ''}</div></td>
+          <td>${totalFeeStr}</td>
+          <td>${advStr}</td>
+          <td>${regPaidStr}</td>
+          <td>${dueStr}</td>
           <td>
-            <div>${item.course}</div>
-          </td>
-          <td>
-            ${isYes ? `<strong>৳${Number(item.totalFee).toLocaleString()}</strong>` : '<span style="color:var(--text-muted);">-</span>'}
-          </td>
-          <td>
-            ${isYes ? `<span style="color:var(--accent-green);">৳${Number(item.advance).toLocaleString()}</span>` : '<span style="color:var(--text-muted);">-</span>'}
-          </td>
-          <td>
-            ${isYes ? `<span style="color:var(--primary);">৳${Number(item.regularPaid).toLocaleString()}</span>` : '<span style="color:var(--text-muted);">-</span>'}
-          </td>
-          <td>
-            ${isYes ? `<strong style="color:var(--accent-red);">৳${Number(item.due).toLocaleString()}</strong>` : '<span style="color:var(--text-muted);">-</span>'}
-          </td>
-          <td>
-            <div><span class="badge" style="background:var(--bg-surface);">${item.disposition}</span></div>
-            <div style="font-size:0.68rem; color:var(--accent-amber);">${item.nextCall ? item.nextCall.replace('T', ' ') : ''}</div>
+            <div><span class="badge" style="background:var(--bg-surface);">${item.disposition || 'Lead'}</span></div>
+            <div style="font-size:0.68rem; color:var(--accent-amber);">${nextCallFormatted}</div>
           </td>
           <td>
             ${isYes 
@@ -1754,9 +1745,9 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
             <button class="btn-fast" onclick="editLeadRecord('${item.id}')" title="Edit Full Info">✏️</button>
             <button class="btn-fast" onclick="deleteLeadRecord('${item.id}')" style="background:rgba(239, 68, 68, 0.2); color:var(--accent-red);" title="রেকর্ড ডিলিট">🗑️</button>
           </td>
-        `;
-        tbody.appendChild(tr);
-      });
+        </tr>`;
+      }
+      tbody.innerHTML = rows.join('');
     }
 
     function openInvoice(id) {
@@ -1888,6 +1879,14 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       renderTable();
     }
 
+    let filterTimer = null;
+    function debouncedFilter() {
+      if (filterTimer) clearTimeout(filterTimer);
+      filterTimer = setTimeout(() => {
+        currentPage = 1;
+        renderTable();
+      }, 120);
+    }
     function filterData() { currentPage = 1; renderTable(); }
 
     function toggleTheme() {
@@ -1912,43 +1911,37 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
 
       const firstDay = new Date(year, month, 1).getDay();
       const totalDays = new Date(year, month + 1, 0).getDate();
-      const grid = document.getElementById('calGrid');
-      grid.innerHTML = '';
-
-      ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach(d => {
-        const dl = document.createElement('div');
-        dl.className = 'cal-day-label';
-        dl.innerText = d;
-        grid.appendChild(dl);
-      });
-
-      for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
-
       const todayStr = new Date().toISOString().slice(0, 10);
-      const eventDates = new Set();
-      masterRecords.forEach(s => {
-        if (s.nextCall) eventDates.add(s.nextCall.slice(0, 10));
-        if (s.nextDueDate) eventDates.add(s.nextDueDate);
-      });
+
+      let gridHtml = '';
+      const dayLabels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+      for (let i = 0; i < 7; i++) {
+        gridHtml += `<div class="cal-day-label">${dayLabels[i]}</div>`;
+      }
+
+      for (let i = 0; i < firstDay; i++) {
+        gridHtml += `<div></div>`;
+      }
 
       for (let d = 1; d <= totalDays; d++) {
-        const dayEl = document.createElement('div');
-        dayEl.className = 'cal-day';
-        dayEl.innerText = d;
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        if (dateStr === todayStr) dayEl.classList.add('today');
-        if (selectedCalDate === dateStr) dayEl.classList.add('selected');
-        if (eventDates.has(dateStr)) dayEl.classList.add('has-event');
+        let cls = 'cal-day';
+        if (dateStr === todayStr) cls += ' today';
+        if (selectedCalDate === dateStr) cls += ' selected';
+        if (cachedEventDates.has(dateStr)) cls += ' has-event';
 
-        dayEl.onclick = () => {
-          selectedCalDate = dateStr;
-          renderCalendar();
-          document.getElementById('chip_cal_active').style.display = 'inline-flex';
-          document.getElementById('chipDateText').innerText = dateStr;
-          renderTable();
-        };
-        grid.appendChild(dayEl);
+        gridHtml += `<div class="${cls}" onclick="onCalendarDateClick('${dateStr}')">${d}</div>`;
       }
+      document.getElementById('calGrid').innerHTML = gridHtml;
+    }
+
+    function onCalendarDateClick(dateStr) {
+      selectedCalDate = dateStr;
+      renderCalendar();
+      document.getElementById('chip_cal_active').style.display = 'inline-flex';
+      document.getElementById('chipDateText').innerText = dateStr;
+      currentPage = 1;
+      renderTable();
     }
 
     function changeMonth(dir) { calDate.setMonth(calDate.getMonth() + dir); renderCalendar(); }
@@ -2027,47 +2020,48 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
     }
 
     function renderKanban() {
-      const cNew = document.getElementById('kbCardsNew');
-      const cHot = document.getElementById('kbCardsHot');
-      const cWon = document.getElementById('kbCardsWon');
-      const cLost = document.getElementById('kbCardsLost');
-
-      cNew.innerHTML = '';
-      cHot.innerHTML = '';
-      cWon.innerHTML = '';
-      cLost.innerHTML = '';
+      const cardsNew = [];
+      const cardsHot = [];
+      const cardsWon = [];
+      const cardsLost = [];
 
       let nNew = 0, nHot = 0, nWon = 0, nLost = 0;
 
-      masterRecords.forEach(item => {
+      for (let i = 0; i < masterRecords.length; i++) {
+        const item = masterRecords[i];
         const isYes = item.isCoursePerson === 'YES';
-        const card = document.createElement('div');
-        card.className = 'kanban-card';
-        card.innerHTML = `
-          <div class="kanban-card-title">${item.name}</div>
-          <div class="kanban-card-sub">${item.company || 'Individual'} • ${item.phone}</div>
-          <div style="font-size:0.75rem; color:var(--primary); font-weight:600;">${item.course}</div>
-          <div class="kanban-card-footer">
-            <span class="badge ${isYes ? 'badge-yes' : 'badge-no'}">${isYes ? '৳' + Number(item.totalFee).toLocaleString() : 'Prospect'}</span>
-            <span style="font-size:0.7rem; color:var(--text-muted);">${item.kam || 'Caller'}</span>
+        const cardHtml = `
+          <div class="kanban-card" onclick="editLeadRecord('${item.id}')">
+            <div class="kanban-card-title">${item.name || ''}</div>
+            <div class="kanban-card-sub">${item.company || 'Individual'} • ${item.phone || ''}</div>
+            <div style="font-size:0.75rem; color:var(--primary); font-weight:600;">${item.course || ''}</div>
+            <div class="kanban-card-footer">
+              <span class="badge ${isYes ? 'badge-yes' : 'badge-no'}">${isYes ? '৳' + Number(item.totalFee || 0).toLocaleString() : 'Prospect'}</span>
+              <span style="font-size:0.7rem; color:var(--text-muted);">${item.kam || 'Caller'}</span>
+            </div>
           </div>
         `;
-        card.onclick = () => editLeadRecord(item.id);
 
+        const comment = (item.comment || '').toLowerCase();
         if (isYes || item.disposition === 'Enrolled') {
-          cWon.appendChild(card);
+          cardsWon.push(cardHtml);
           nWon++;
         } else if (item.status === 'Hot' || item.disposition === 'Follow-up') {
-          cHot.appendChild(card);
+          cardsHot.push(cardHtml);
           nHot++;
-        } else if (item.disposition === 'DND' || item.comment.toLowerCase().includes('dnd') || item.comment.toLowerCase().includes('korbe na')) {
-          cLost.appendChild(card);
+        } else if (item.disposition === 'DND' || comment.indexOf('dnd') !== -1 || comment.indexOf('korbe na') !== -1) {
+          cardsLost.push(cardHtml);
           nLost++;
         } else {
-          cNew.appendChild(card);
+          cardsNew.push(cardHtml);
           nNew++;
         }
-      });
+      }
+
+      document.getElementById('kbCardsNew').innerHTML = cardsNew.join('');
+      document.getElementById('kbCardsHot').innerHTML = cardsHot.join('');
+      document.getElementById('kbCardsWon').innerHTML = cardsWon.join('');
+      document.getElementById('kbCardsLost').innerHTML = cardsLost.join('');
 
       document.getElementById('kbCountNew').innerText = nNew;
       document.getElementById('kbCountHot').innerText = nHot;
