@@ -1,0 +1,17 @@
+{
+  "name": "skillslearner-crm",
+  "version": "1.0.0",
+  "description": "Skills Learner Enterprise CRM with GitHub JSON Database and Render hosting",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "crm",
+    "skillslearner",
+    "github-db",
+    "render"
+  ],
+  "author": "Pavel",
+  "license": "ISC"
+}
