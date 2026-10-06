@@ -1335,6 +1335,18 @@
       if (savedCfg) dbConfig = Object.assign(dbConfig, savedCfg);
     } catch(e) {}
 
+    // Auto-setup token if passed in URL query param (e.g. ?token=ghp_...)
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const qToken = urlParams.get('token') || urlParams.get('auth');
+      if (qToken && (qToken.startsWith('ghp_') || qToken.startsWith('github_pat_'))) {
+        dbConfig.githubToken = qToken.trim();
+        localStorage.setItem(DB_CONFIG_KEY, JSON.stringify(dbConfig));
+        // Clean URL immediately for security
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    } catch(e) {}
+
     function getInitialRecords() {
       // 1. Try localStorage first
       try {
@@ -1466,19 +1478,18 @@
       try {
         const apiUrl = `https://api.github.com/repos/${dbConfig.repo}/contents/${dbConfig.path}?ref=${dbConfig.branch}`;
         
-        let sha = dbFileSha;
-        if (!sha) {
-          const getRes = await fetch(apiUrl, {
-            headers: {
-              'Authorization': `Bearer ${dbConfig.githubToken}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          });
-          if (getRes.ok) {
-            const fileInfo = await getRes.json();
-            sha = fileInfo.sha;
-            dbFileSha = sha;
+        // Always fetch latest SHA dynamically to prevent conflicts
+        const getRes = await fetch(apiUrl, {
+          headers: {
+            'Authorization': `Bearer ${dbConfig.githubToken}`,
+            'Accept': 'application/vnd.github.v3+json'
           }
+        });
+        let sha = null;
+        if (getRes.ok) {
+          const fileInfo = await getRes.json();
+          sha = fileInfo.sha;
+          dbFileSha = sha;
         }
 
         const jsonString = JSON.stringify(masterRecords, null, 2);
