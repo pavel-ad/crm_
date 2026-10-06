@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skills Learner - Enterprise Operations, Billing & Call Center CRM Pro</title>
+  <title>Skills Learner - Enterprise Smart CRM & Operations Pro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,6 +23,7 @@
       --accent-amber: #f59e0b;
       --accent-red: #ef4444;
       --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
       --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
 
@@ -41,18 +42,19 @@
       --accent-amber: #d97706;
       --accent-red: #dc2626;
       --accent-purple: #7c3aed;
+      --accent-cyan: #0891b2;
       --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
-    button, .btn, .btn-fast, .btn-xs, .chip, .kanban-card, a, .ctrl-btn, .page-btn, .cal-day { transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease, transform 0.12s ease; }
+    button, .btn, .btn-fast, .btn-xs, .chip, .sheet-tab, .kanban-card, a, .ctrl-btn, .page-btn, .cal-day { transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease, transform 0.12s ease; }
     table { contain: content; }
     .kanban-cards-container { contain: content; }
     body { background-color: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
 
     /* Left Sidebar */
     aside {
-      width: 270px;
+      width: 280px;
       background: var(--bg-sidebar);
       border-right: 1px solid var(--border-color);
       display: flex;
@@ -61,11 +63,11 @@
     }
     .brand-section { padding: 1.25rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; }
     .brand-title-wrap { display: flex; align-items: center; gap: 0.75rem; }
-    .brand-logo { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--accent-purple)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 0.95rem; }
+    .brand-logo { width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), var(--accent-purple)); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #fff; font-size: 1rem; }
     .brand-title { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.3px; }
 
     .theme-lang-bar {
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 1rem;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
@@ -87,10 +89,32 @@
     }
     .ctrl-btn:hover { background: var(--bg-surface-hover); }
 
+    /* User / Caller Profile Switcher */
+    .profile-switch-box {
+      margin: 0.75rem 1rem 0.25rem 1rem;
+      padding: 0.75rem;
+      background: var(--bg-surface);
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+    }
+    .profile-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
+    .profile-select {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.4rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      outline: none;
+      cursor: pointer;
+    }
+
     /* Daily Calling & Target Box */
     .target-box {
-      margin: 0.85rem 1rem 0.4rem 1rem;
-      padding: 0.85rem;
+      margin: 0.65rem 1rem 0.35rem 1rem;
+      padding: 0.75rem;
       background: rgba(59, 130, 246, 0.08);
       border: 1px solid rgba(59, 130, 246, 0.25);
       border-radius: 8px;
@@ -101,40 +125,40 @@
 
     /* Live Talk Timer */
     .call-timer-box {
-      margin: 0.6rem 1rem;
-      padding: 0.85rem;
+      margin: 0.5rem 1rem;
+      padding: 0.75rem;
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       text-align: center;
     }
-    .timer-display { font-size: 1.45rem; font-weight: 800; font-family: monospace; color: var(--accent-amber); margin: 0.2rem 0; }
+    .timer-display { font-size: 1.45rem; font-weight: 800; font-family: monospace; color: var(--accent-amber); margin: 0.15rem 0; }
     .timer-btns { display: flex; gap: 0.3rem; justify-content: center; }
     .btn-xs { padding: 0.25rem 0.55rem; font-size: 0.7rem; border-radius: 4px; border: none; cursor: pointer; font-weight: 600; }
 
-    .nav-links { padding: 0.5rem 0.75rem; list-style: none; display: flex; flex-direction: column; gap: 0.3rem; flex: 1; }
-    .nav-item a { display: flex; align-items: center; gap: 0.7rem; padding: 0.65rem 0.85rem; color: var(--text-muted); text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 0.84rem; cursor: pointer; }
+    .nav-links { padding: 0.5rem 0.75rem; list-style: none; display: flex; flex-direction: column; gap: 0.25rem; flex: 1; overflow-y: auto; }
+    .nav-item a { display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.85rem; color: var(--text-muted); text-decoration: none; border-radius: 6px; font-weight: 500; font-size: 0.82rem; cursor: pointer; }
     .nav-item.active a, .nav-item a:hover { background: rgba(59, 130, 246, 0.12); color: var(--primary); font-weight: 700; }
 
-    /* Calendar in sidebar */
+    /* Interactive Calendar */
     .calendar-widget {
-      margin: 0.5rem 1rem 1rem 1rem;
-      padding: 0.85rem;
+      margin: 0.4rem 1rem 0.75rem 1rem;
+      padding: 0.75rem;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       box-shadow: var(--card-shadow);
     }
-    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    .cal-title { font-size: 0.8rem; font-weight: 700; }
-    .cal-nav-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; padding: 0.1rem 0.35rem; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; font-size: 0.68rem; }
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+    .cal-title { font-size: 0.78rem; font-weight: 700; }
+    .cal-nav-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.75rem; padding: 0.1rem 0.35rem; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; font-size: 0.66rem; }
     .cal-day-label { font-weight: 700; color: var(--text-muted); padding: 0.15rem 0; }
-    .cal-day { padding: 0.3rem 0; border-radius: 4px; cursor: pointer; color: var(--text-main); position: relative; }
+    .cal-day { padding: 0.25rem 0; border-radius: 4px; cursor: pointer; color: var(--text-main); position: relative; }
     .cal-day:hover { background: var(--bg-surface-hover); }
     .cal-day.today { border: 1px solid var(--primary); font-weight: 800; color: var(--primary); }
     .cal-day.selected { background: var(--primary) !important; color: #fff !important; font-weight: 800; }
-    .cal-day.has-event::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--accent-red); border-radius: 50%; }
+    .cal-day.has-event::after { content: ''; position: absolute; bottom: 1px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--accent-red); border-radius: 50%; }
 
     /* Workspace */
     .workspace { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
@@ -160,33 +184,113 @@
       outline: none;
       font-size: 0.82rem;
     }
-    .search-box input { width: 220px; }
+    .search-box input { width: 230px; }
 
-    .btn { padding: 0.55rem 1rem; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; border: none; font-size: 0.82rem; }
+    .btn { padding: 0.55rem 0.95rem; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; border: none; font-size: 0.82rem; }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-hover); }
     .btn-success { background: var(--accent-green); color: #fff; }
+    .btn-success:hover { background: #059669; }
     .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); }
     .btn-outline:hover { background: var(--bg-surface); color: var(--text-main); }
 
-    .content-area { padding: 1.5rem 1.75rem; display: flex; flex-direction: column; gap: 1.25rem; }
+    .content-area { padding: 1.25rem 1.75rem; display: flex; flex-direction: column; gap: 1.15rem; }
 
-    /* 4 Financial & Conversion Metric Cards */
-    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-    .metric-card { background: var(--bg-card); border: 1px solid var(--border-color); padding: 1rem 1.2rem; border-radius: 8px; box-shadow: var(--card-shadow); }
-    .metric-label { font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; }
-    .metric-num { font-size: 1.5rem; font-weight: 800; margin: 0.25rem 0; color: var(--text-main); }
-    .metric-sub { font-size: 0.75rem; }
+    /* Top Connected Sheet Tabs (Req 1: Physical vs Online vs Admitted) */
+    .sheet-tabs-nav {
+      display: flex;
+      gap: 0.4rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .sheet-tab {
+      padding: 0.45rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+    .sheet-tab:hover, .sheet-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .sheet-pill {
+      background: rgba(255,255,255,0.18);
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+    }
+
+    /* KPI Percentage Status Cards (Req 6 & Req 7) */
+    .status-kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.85rem;
+    }
+    .status-kpi-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .status-kpi-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+    .status-kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 4px;
+    }
+    .kpi-hot::before { background: var(--accent-red); }
+    .kpi-semi::before { background: var(--accent-amber); }
+    .kpi-cold::before { background: var(--primary); }
+    .kpi-enrolled::before { background: var(--accent-green); }
+    .kpi-today::before { background: var(--accent-purple); }
+
+    .kpi-title { font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700; display:flex; justify-content:space-between; }
+    .kpi-count { font-size: 1.45rem; font-weight: 800; margin: 0.2rem 0; color: var(--text-main); }
+    .kpi-pct { font-size: 0.75rem; font-weight: 700; }
+
+    /* Today's Call Priority Banner (Req 2) */
+    .today-priority-banner {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15));
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      border-radius: 8px;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .priority-text h4 { font-size: 0.95rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.4rem; }
+    .priority-text p { font-size: 0.78rem; color: var(--text-muted); margin-top: 0.2rem; }
 
     /* Quick Action Chips */
-    .quick-chips-row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .quick-chips-row { display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center; }
     .chip {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
       color: var(--text-muted);
-      padding: 0.35rem 0.8rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 9999px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -195,86 +299,12 @@
     }
     .chip:hover, .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-    /* Table Container */
-    .table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: var(--card-shadow); }
-    .table-topbar { padding: 0.85rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
-    .table-wrapper { width: 100%; overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.82rem; }
-    th { background: var(--bg-surface); padding: 0.75rem 1rem; color: var(--text-muted); text-transform: uppercase; font-size: 0.7rem; font-weight: 600; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
-    td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; white-space: nowrap; color: var(--text-main); }
-    tr:hover td { background: var(--bg-surface-hover); }
-
-    .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.68rem; font-weight: 700; cursor: pointer; }
-    .badge-yes { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .badge-no { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid var(--border-color); }
-
-    .btn-fast {
-      padding: 0.25rem 0.45rem;
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-surface);
-      color: var(--text-main);
-      font-size: 0.68rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-fast:hover { background: var(--bg-surface-hover); }
-
-    
-    /* Pagination Styles */
-    .pagination-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.85rem 1.25rem;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border-color);
-      flex-wrap: wrap;
-      gap: 0.75rem;
-    }
-    .pagination-info {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-    .pagination-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-wrap: wrap;
-    }
-    .page-btn {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 0.35rem 0.7rem;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .page-btn:hover:not(:disabled) {
-      background: var(--primary);
-      color: #fff;
-      border-color: var(--primary);
-    }
-    .page-btn.active {
-      background: var(--primary) !important;
-      color: #fff !important;
-      border-color: var(--primary) !important;
-    }
-    .page-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-
-    
     /* View Switcher Bar */
     .view-switcher-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      margin-top: 0.2rem;
       flex-wrap: wrap;
       gap: 0.5rem;
     }
@@ -292,7 +322,7 @@
       border: none;
       background: transparent;
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -305,7 +335,73 @@
       color: #fff;
     }
 
-    /* Kanban Board Styles */
+    /* Table Container */
+    .table-container { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: var(--card-shadow); }
+    .table-topbar { padding: 0.85rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+    .table-wrapper { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.81rem; }
+    th { background: var(--bg-surface); padding: 0.75rem 0.85rem; color: var(--text-muted); text-transform: uppercase; font-size: 0.68rem; font-weight: 600; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+    td { padding: 0.75rem 0.85rem; border-bottom: 1px solid var(--border-color); vertical-align: middle; white-space: nowrap; color: var(--text-main); }
+    tr:hover td { background: var(--bg-surface-hover); }
+    tr.call-today-highlight td { background: rgba(139, 92, 246, 0.08); font-weight: 600; }
+
+    .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; border-radius: 9999px; font-size: 0.68rem; font-weight: 700; cursor: pointer; }
+    .badge-yes { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .badge-no { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid var(--border-color); }
+
+    .mode-badge {
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .mode-physical { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .mode-online { background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.3); }
+
+    .btn-fast {
+      padding: 0.25rem 0.45rem;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-fast:hover { background: var(--bg-surface-hover); }
+
+    /* Pagination Styles */
+    .pagination-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.25rem;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .pagination-info { font-size: 0.78rem; color: var(--text-muted); }
+    .pagination-controls { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+    .page-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .page-btn:hover:not(:disabled) { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .page-btn.active { background: var(--primary) !important; color: #fff !important; border-color: var(--primary) !important; }
+    .page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* Kanban Board */
     .kanban-board {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -324,89 +420,12 @@
       min-height: 480px;
       box-shadow: var(--card-shadow);
     }
-    .kanban-col-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 0.6rem;
-      border-bottom: 2px solid var(--border-color);
-    }
-    .kanban-col-title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .kanban-count-pill {
-      background: var(--bg-surface);
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-color);
-    }
-    .kanban-cards-container {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      max-height: 70vh;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    .kanban-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-    .kanban-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .kanban-card-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-    .kanban-card-sub {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-    }
-    .kanban-card-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.3rem;
-      padding-top: 0.4rem;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-
-    /* Executive Leaderboard Widget */
-    .leaderboard-modal-card {
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 1.5rem;
-      max-width: 650px;
-      width: 100%;
-    }
-    .leader-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.85rem 1rem;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      margin-bottom: 0.6rem;
-    }
+    .kanban-col-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.6rem; border-bottom: 2px solid var(--border-color); }
+    .kanban-col-title { font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 0.4rem; }
+    .kanban-count-pill { background: var(--bg-surface); font-size: 0.72rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 999px; border: 1px solid var(--border-color); }
+    .kanban-cards-container { display: flex; flex-direction: column; gap: 0.75rem; max-height: 70vh; overflow-y: auto; padding-right: 4px; }
+    .kanban-card { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; padding: 0.85rem; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; gap: 0.4rem; }
+    .kanban-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 
     /* Modals */
     .modal-overlay {
@@ -496,7 +515,17 @@
       </button>
     </div>
 
-    <!-- Executive Daily Calling Target -->
+    <!-- Profile & Executive Filter (Req 2 & Req 11) -->
+    <div class="profile-switch-box">
+      <div class="profile-label">👤 Caller Profile / Executive</div>
+      <select id="userProfileSelector" class="profile-select" onchange="switchUserProfile()">
+        <option value="ALL">🏢 All Team Members (Admin View)</option>
+        <option value="পাবেল" selected>🎯 পাবেল (Account Manager / Sales)</option>
+        <option value="ইমরান">⚡ ইমরান (Telesales & Operation)</option>
+      </select>
+    </div>
+
+    <!-- Daily Calling & Target Box -->
     <div class="target-box">
       <div class="target-title">
         <span>Daily Call Target</span>
@@ -507,7 +536,7 @@
       </div>
       <div style="font-size:0.68rem; color:var(--text-muted); display:flex; justify-content:space-between;">
         <span>Progress: 68%</span>
-        <span style="color:var(--accent-green); font-weight:700;">4 Enrolled</span>
+        <span style="color:var(--accent-green); font-weight:700;" id="sideEnrolledCount">4 Enrolled</span>
       </div>
     </div>
     
@@ -530,18 +559,20 @@
         <button class="cal-nav-btn" onclick="changeMonth(1)">▶</button>
       </div>
       <div class="cal-grid" id="calGrid"></div>
-      <div style="margin-top:0.5rem; text-align:center;">
+      <div style="margin-top:0.4rem; text-align:center;">
         <button class="btn-xs" style="background:var(--bg-surface); color:var(--text-muted); cursor:pointer;" onclick="clearDateFilter()">Clear Date Filter</button>
       </div>
     </div>
 
-    <ul class="nav-links">
-      <li class="nav-item active"><a href="#"><span>📞 Master Pipeline & Accounts</span></a></li>
+        <ul class="nav-links">
+      <li class="nav-item active"><a href="#" onclick="switchMainDisplay('TABLE')"><span>📞 Master Pipeline & Accounts</span></a></li>
       <li class="nav-item"><a href="#" onclick="openDbModal()"><span>🗄️ GitHub JSON Database</span></a></li>
+      <li class="nav-item"><a href="#" onclick="openReportModal()"><span>📊 Day & Weekly Report (Req 4)</span></a></li>
+      <li class="nav-item"><a href="#" onclick="openLeaderboardModal()"><span>🏆 Employee KPI Leaderboard</span></a></li>
+      <li class="nav-item"><a href="#" onclick="syncAllTodayToCalendar()"><span>📅 Google Calendar Sync (Req 5 & 10)</span></a></li>
+            <li class="nav-item"><a href="#" onclick="openAnalyticsModal()"><span>📈 Visual Performance Analytics</span></a></li>
+      <li class="nav-item"><a href="#" onclick="openObjectionModal()"><span>🎯 Objection Handling & Replies</span></a></li>
       <li class="nav-item"><a href="#" onclick="openScriptModal()"><span>📜 Call Scripts & FAQs</span></a></li>
-      <li class="nav-item"><a href="#" onclick="openLeaderboardModal()"><span>🏆 Team Leaderboard & KPI</span></a></li>
-      <li class="nav-item"><a href="#" onclick="openWhatsAppModal()"><span>💬 WhatsApp Templates</span></a></li>
-      <li class="nav-item"><a href="#" onclick="requestNotificationPermission()"><span>🔔 Desktop Notifications</span></a></li>
     </ul>
   </aside>
 
@@ -552,7 +583,11 @@
         <div class="search-box">
           <input type="text" id="searchInput" placeholder="ফোন নম্বর (017...), নাম বা কোম্পানি..." oninput="debouncedFilter()">
         </div>
-        
+
+        <!-- Date Specific Filter (Req 3) -->
+        <input type="date" id="dateWorkFilter" class="filter-select" onchange="filterData()" title="Filter by Next Call / Work Date">
+
+        <!-- Course Person Conditional Filter -->
         <select id="coursePersonFilter" class="filter-select" onchange="filterData()">
           <option value="ALL">Course Person: All (Yes & No)</option>
           <option value="YES">✅ Course Person: YES (Paid / Due)</option>
@@ -580,52 +615,108 @@
     </header>
 
     <div class="content-area">
-      <!-- 4 Core Metric Cards -->
-      <div class="metrics-row">
-        <div class="metric-card">
-          <div class="metric-label">Total Leads Tracked</div>
-          <div class="metric-num" id="statTotalLeads" style="color:var(--text-main);">0</div>
-          <div class="metric-sub" style="color:var(--text-muted);" id="statLeadsBreakdown">0 Calling Leads (NO)</div>
+      <!-- Req 1 & Req 8: Connected Sheet Navigation Tabs (Physical vs Online vs Admitted) -->
+      <div class="sheet-tabs-nav">
+        <button class="sheet-tab active" id="tab_all" onclick="switchConnectedSheet('ALL')">
+          <span>📁 All Mother Data</span>
+          <span class="sheet-pill" id="pill_all_count">500+</span>
+        </button>
+        <button class="sheet-tab" id="tab_offline" onclick="switchConnectedSheet('OFFLINE')">
+          <span>🏢 Physical (Offline) Sheet</span>
+          <span class="sheet-pill" id="pill_offline_count">0</span>
+        </button>
+        <button class="sheet-tab" id="tab_online" onclick="switchConnectedSheet('ONLINE')">
+          <span>🌐 Online Batch Sheet</span>
+          <span class="sheet-pill" id="pill_online_count">0</span>
+        </button>
+        <button class="sheet-tab" id="tab_admitted" onclick="switchConnectedSheet('ADMITTED')" style="border-color:var(--accent-green); color:var(--accent-green);">
+          <span>🎓 Admitted Students Sheet (Req 8)</span>
+          <span class="sheet-pill" id="pill_admitted_count" style="background:var(--accent-green); color:#fff;">0</span>
+        </button>
+      </div>
+
+      <!-- Req 2: Today's High Priority Call Queue Banner -->
+      <div class="today-priority-banner" id="todayCallBanner">
+        <div class="priority-text">
+          <h4>🚨 আজকের অগ্রাধিকার কল শিডিউল (Today's Call Priority Queue)</h4>
+          <p id="todayCallBannerSub">আজকে মোট ০ জন ক্লায়েন্টকে কল দিতে হবে। এগুলো তালিকার সবার উপরে পিন করা আছে।</p>
         </div>
-        <div class="metric-card">
-          <div class="metric-label">Enrolled Members (YES)</div>
-          <div class="metric-num" id="statEnrolledMembers" style="color:var(--primary);">0</div>
-          <div class="metric-sub" style="color:var(--primary);">Active Students</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Total Collected Revenue</div>
-          <div class="metric-num" id="statCollectedRevenue" style="color:var(--accent-green);">৳০</div>
-          <div class="metric-sub" style="color:var(--accent-green);" id="statSalesTotal">Total Sales: ৳০</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Total Due Balance</div>
-          <div class="metric-num" id="statTotalDueBalance" style="color:var(--accent-red);">৳০</div>
-          <div class="metric-sub" style="color:var(--accent-red);" id="statDueMembers">0 Members with Dues</div>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-xs" style="background:var(--accent-purple); color:#fff;" onclick="filterTodayOnly()">🎯 Show Today's Priority Only</button>
+          <button class="btn btn-xs" style="background:var(--bg-surface); color:var(--text-main);" onclick="syncAllTodayToCalendar()">📅 Sync to Phone Google Calendar</button>
         </div>
       </div>
 
-      <!-- Quick Filter Chips -->
+      <!-- Req 6 & Req 7: Hot, Semi-Hot, Cold Percentage KPI Metrics (Clickable Badges) -->
+      <div class="status-kpi-row">
+        <div class="status-kpi-card kpi-today" onclick="filterTodayOnly()">
+          <div class="kpi-title"><span>Today's Calls</span> <span>📅 Priority</span></div>
+          <div class="kpi-count" id="statTodayCount">0</div>
+          <div class="kpi-pct" style="color:var(--accent-purple);" id="statTodayPct">Priority Calls</div>
+        </div>
+        <div class="status-kpi-card kpi-hot" onclick="filterByStatusQuick('Hot')">
+          <div class="kpi-title"><span>Hot Leads</span> <span>🔥</span></div>
+          <div class="kpi-count" id="statHotCount">0</div>
+          <div class="kpi-pct" style="color:var(--accent-red);" id="statHotPct">0% of total</div>
+        </div>
+        <div class="status-kpi-card kpi-semi" onclick="filterByStatusQuick('Semi-Hot')">
+          <div class="kpi-title"><span>Semi-Hot Leads</span> <span>⚡</span></div>
+          <div class="kpi-count" id="statSemiCount">0</div>
+          <div class="kpi-pct" style="color:var(--accent-amber);" id="statSemiPct">0% of total</div>
+        </div>
+        <div class="status-kpi-card kpi-cold" onclick="filterByStatusQuick('Cold')">
+          <div class="kpi-title"><span>Cold Leads</span> <span>❄️</span></div>
+          <div class="kpi-count" id="statColdCount">0</div>
+          <div class="kpi-pct" style="color:var(--primary);" id="statColdPct">0% of total</div>
+        </div>
+        <div class="status-kpi-card kpi-enrolled" onclick="filterByCoursePersonOnly()">
+          <div class="kpi-title"><span>Enrolled (Course Person)</span> <span>🎓</span></div>
+          <div class="kpi-count" id="statEnrolledCount">0</div>
+          <div class="kpi-pct" style="color:var(--accent-green);" id="statEnrolledPct">0% Converted</div>
+        </div>
+      </div>
+
+      <!-- Financial Metrics Summary (Req 9) -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:0.85rem;">
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); padding:0.85rem 1.1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Total Revenue Collected</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--accent-green); margin-top:0.2rem;" id="statCollectedRevenue">৳০</div>
+          </div>
+          <span style="font-size:1.5rem;">💵</span>
+        </div>
+        <div style="background:var(--bg-card); border:1px solid var(--border-color); padding:0.85rem 1.1rem; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-size:0.72rem; text-transform:uppercase; color:var(--text-muted); font-weight:700;">Total Pending Due Balance</div>
+            <div style="font-size:1.4rem; font-weight:800; color:var(--accent-red); margin-top:0.2rem;" id="statTotalDueBalance">৳০</div>
+          </div>
+          <span style="font-size:1.5rem;">🔴</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Filter Chips -->
       <div class="quick-chips-row">
-        <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-right: 0.3rem;">Views:</span>
-        <div class="chip active" id="chip_all" onclick="setQuickFilter('ALL')">All Records</div>
+        <span style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted);">Quick Filter:</span>
+        <div class="chip active" id="chip_all" onclick="setQuickFilter('ALL')">All Leads</div>
+        <div class="chip" id="chip_today" onclick="filterTodayOnly()">🚨 Today's Calls (<span id="chipTodayCount">0</span>)</div>
         <div class="chip" id="chip_yes" onclick="setQuickFilter('YES')">✅ Course Person: YES (<span id="chipYesCount">0</span>)</div>
         <div class="chip" id="chip_no" onclick="setQuickFilter('NO')">❌ Course Person: NO (<span id="chipNoCount">0</span>)</div>
         <div class="chip" id="chip_due" onclick="setQuickFilter('DUE')">🔴 Due Payments (<span id="chipDueCount">0</span>)</div>
         <div class="chip" id="chip_cal_active" style="display:none; background:var(--accent-purple); color:#fff;" onclick="clearDateFilter()">📅 <span id="chipDateText"></span> ✕</div>
       </div>
 
-      <!-- View Switcher (Table vs Kanban vs Leaderboard) -->
+      <!-- View Switcher (Table vs Kanban) -->
       <div class="view-switcher-bar">
         <div class="view-toggle-btns">
           <button class="view-tab-btn active" id="btnViewTable" onclick="switchMainDisplay('TABLE')">
-            📋 Table View (মাস্টার লিস্ট)
+            📋 Table View (Master List)
           </button>
           <button class="view-tab-btn" id="btnViewKanban" onclick="switchMainDisplay('KANBAN')">
-            📊 Sales Pipeline Kanban (স্টেজ ভিউ)
+            📊 Sales Pipeline Kanban (Stage View)
           </button>
         </div>
         <div style="font-size:0.75rem; color:var(--text-muted);">
-          ⚡ Drag/Change stage anytime • Real-time stats sync
+          Showing exact 20 records per page • Smart auto-sorts today's calls to TOP
         </div>
       </div>
 
@@ -633,8 +724,8 @@
       <div class="table-container" id="mainTableContainer">
         <div class="table-topbar">
           <div>
-            <h3 style="font-size: 0.95rem; font-weight: 700;">Google Sheet Integrated Operations & Accounts Masterlist</h3>
-            <span style="font-size: 0.75rem; color: var(--text-muted);">Click on "✅ YES / ❌ NO" badge to toggle payment status. Click "💬 WA Bill" to send receipt directly to WhatsApp.</span>
+            <h3 style="font-size: 0.95rem; font-weight: 700;">Connected Sheets Pipeline & Accounts Ledger</h3>
+            <span style="font-size: 0.74rem; color: var(--text-muted);">Click "Physical / Online" badge to transfer between sheets instantly (Req 1).</span>
           </div>
         </div>
         <div class="table-wrapper">
@@ -645,14 +736,15 @@
                 <th>Name & Designation</th>
                 <th>Company</th>
                 <th>Phone</th>
-                <th>Course Person (Yes/No)</th>
-                <th>Course Selected</th>
+                <th>Sheet Mode</th>
+                <th>Course Person</th>
+                <th>Course</th>
                 <th>Total Fee</th>
-                <th>Advance Paid</th>
-                <th>Monthly Paid</th>
-                <th>Due Balance</th>
-                <th>Call Disposition</th>
-                <th>Action & WhatsApp</th>
+                <th>Paid</th>
+                <th>Due</th>
+                <th>Next Call / Due</th>
+                <th>Status</th>
+                <th>Action & Google Sync</th>
               </tr>
             </thead>
             <tbody id="crmTableBody"></tbody>
@@ -661,15 +753,12 @@
         <!-- 20 Per Page Pagination Bar -->
         <div class="pagination-bar" id="paginationBar">
           <div class="pagination-info" id="paginationInfo">Showing 1-20 of 0 leads</div>
-          <div class="pagination-controls" id="paginationControls">
-            <!-- Dynamic page buttons: Prev, 1, 2, 3... Next -->
-          </div>
+          <div class="pagination-controls" id="paginationControls"></div>
         </div>
       </div>
 
       <!-- Visual Sales Pipeline Kanban Board -->
       <div class="kanban-board" id="mainKanbanContainer" style="display: none;">
-        <!-- Col 1: Discovery & New Leads -->
         <div class="kanban-col">
           <div class="kanban-col-header">
             <div class="kanban-col-title">🔵 New & Follow-up</div>
@@ -678,25 +767,22 @@
           <div class="kanban-cards-container" id="kbCardsNew"></div>
         </div>
 
-        <!-- Col 2: Mid Discussion / Negotiation -->
         <div class="kanban-col">
           <div class="kanban-col-header">
-            <div class="kanban-col-title">🟡 In Negotiation / Hot</div>
+            <div class="kanban-col-title">🟡 Hot & Negotiation</div>
             <span class="kanban-count-pill" id="kbCountHot">0</span>
           </div>
           <div class="kanban-cards-container" id="kbCardsHot"></div>
         </div>
 
-        <!-- Col 3: Enrolled & Paid (Course Person: YES) -->
         <div class="kanban-col">
           <div class="kanban-col-header">
-            <div class="kanban-col-title" style="color:var(--accent-green);">🟢 Enrolled & Won (YES)</div>
+            <div class="kanban-col-title" style="color:var(--accent-green);">🟢 Admitted & Won</div>
             <span class="kanban-count-pill" id="kbCountWon">0</span>
           </div>
           <div class="kanban-cards-container" id="kbCardsWon"></div>
         </div>
 
-        <!-- Col 4: DND / Uninterested -->
         <div class="kanban-col">
           <div class="kanban-col-header">
             <div class="kanban-col-title" style="color:var(--accent-red);">🔴 DND / Dropped</div>
@@ -733,6 +819,23 @@
           <div class="form-group">
             <label>Designation</label>
             <input type="text" id="m_designation" placeholder="Manager, SCM / QA Engineer">
+          </div>
+
+          <!-- Req 1: Online / Physical Sheet Switcher -->
+          <div class="form-group">
+            <label>Sheet Allocation (Physical vs Online)</label>
+            <select id="m_sheetMode" style="font-weight:700;">
+              <option value="Physical">🏢 Physical (Offline) Sheet</option>
+              <option value="Online">🌐 Online Batch Sheet</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Assigned Executive (Caller)</label>
+            <select id="m_kam" style="font-weight:700;">
+              <option value="পাবেল">পাবেল</option>
+              <option value="ইমরান">ইমরান</option>
+            </select>
           </div>
 
           <!-- THE CRITICAL SWITCH: Course Person (YES / NO) -->
@@ -792,10 +895,6 @@
           </div>
 
           <div class="form-group">
-            <label>Assigned Caller (KAM)</label>
-            <input type="text" id="m_kam" value="পাবেল">
-          </div>
-          <div class="form-group">
             <label>Call Disposition</label>
             <select id="m_disposition">
               <option value="Follow-up">Interested (Follow-up)</option>
@@ -807,16 +906,16 @@
             </select>
           </div>
           <div class="form-group">
-            <label>Next Call Date & Time</label>
-            <input type="datetime-local" id="m_nextCall">
-          </div>
-          <div class="form-group">
-            <label>Lead Priority</label>
+            <label>Lead Status / Priority</label>
             <select id="m_priority">
               <option value="Hot">🔥 Hot</option>
               <option value="Semi-Hot">⚡ Semi-Hot</option>
               <option value="Cold">❄️ Cold</option>
             </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Next Call Date & Time *</label>
+            <input type="datetime-local" id="m_nextCall">
           </div>
           <div class="form-group full-width">
             <label>Discussion History & Caller Notes</label>
@@ -832,7 +931,142 @@
     </div>
   </div>
 
-  <!-- Quick Collect Installment Modal (1-Click Installment Entry) -->
+
+  <!-- Objection Handling & Quick WhatsApp Reply Modal -->
+  <div class="modal-overlay" id="objectionModal">
+    <div class="modal-card" style="max-width:680px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+        <h3 style="color:var(--accent-amber);">🎯 Objection Handling & 1-Click WhatsApp Replies</h3>
+        <button class="btn btn-outline" onclick="closeModal('objectionModal')">✕</button>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.85rem; font-size:0.83rem;">
+        <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; padding:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+            <strong style="color:var(--accent-red);">1. Objection: "কোর্স ফি একটু বেশি / বাজেট কম"</strong>
+            <button class="btn-xs btn-primary" onclick="copyObjection(1)">📋 Copy WA Text</button>
+          </div>
+          <p style="color:var(--text-muted); line-height:1.5;">"স্যার, আমাদের এই আন্তর্জাতিক ট্রেনিংটিতে পাচ্ছেন ৪০ ঘণ্টার প্র্যাকটিক্যাল হ্যান্ডস-অন প্রজেক্ট, গ্লোবাল এক্সাম ভাউচার গাইডলাইন এবং আজীবন মেম্বারশিপ সাপোর্ট। এছাড়া আপনার সুবিধার্থে আমরা ২ থেকে ৩টি সহজ মাসিক কিস্তিতে পেমেন্টের সুবিধা দিচ্ছি। আপনি কি সহজ কিস্তিতে সিট বুকিং করতে আগ্রহী?"</p>
+        </div>
+
+        <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; padding:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+            <strong style="color:var(--accent-amber);">2. Objection: "অফিসের কাজের চাপ / সময় ম্যানেজ করতে পারছি না"</strong>
+            <button class="btn-xs btn-primary" onclick="copyObjection(2)">📋 Copy WA Text</button>
+          </div>
+          <p style="color:var(--text-muted); line-height:1.5;">"স্যার, আমাদের ক্লাসগুলো কর্মজীবী প্রফেশনালদের সুবিধার্থে রাত ৮:৩০ থেকে ১০:৩০ টা পর্যন্ত অনলাইনে এবং ছুটির দিনে ফিজিক্যাল ব্যাচে পরিচালিত হয়। এছাড়া প্রতিটি ক্লাসের হাই-ডেফিনিশন রেকর্ডিং ও লাইভ সাপোর্ট থাকবে, ফলে কোনো ক্লাস মিস হলেও কোনো ক্ষতি হবে না।"</p>
+        </div>
+
+        <div style="background:var(--bg-surface); border:1px solid var(--border-color); border-radius:6px; padding:0.85rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+            <strong style="color:var(--accent-green);">3. Objection: "পরের ব্যাচে করবো / এখন ভাবছি"</strong>
+            <button class="btn-xs btn-primary" onclick="copyObjection(3)">📋 Copy WA Text</button>
+          </div>
+          <p style="color:var(--text-muted); line-height:1.5;">"স্যার, বর্তমান ব্যাচে সীমিত আসনে আর্লি-বার্ড স্পেশাল ছাড় কার্যকর রয়েছে। পরের ব্যাচে ফি বৃদ্ধি পাওয়ার সম্ভাবনা রয়েছে। মাত্র ৩,০০০ থেকে ৫,০০০ টাকা অ্যাডভান্স করে সিটটি লক করে রাখতে পারেন এবং ক্লাস শুরুর পর বাকি পেমেন্ট সম্পন্ন করতে পারবেন।"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual Analytics & Charts Modal -->
+  <div class="modal-overlay" id="analyticsModal">
+    <div class="modal-card" style="max-width:760px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h3>📈 Executive Visual Analytics & Performance Charts</h3>
+        <button class="btn btn-outline" onclick="closeModal('analyticsModal')">✕</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1rem;">
+        <div style="background:var(--bg-surface); border:1px solid var(--border-color); padding:1rem; border-radius:8px;">
+          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:0.75rem; color:var(--primary);">🎯 Lead Pipeline Funnel</h4>
+          <div id="chartPipelineFunnel" style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.75rem;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <div style="background:var(--bg-surface); border:1px solid var(--border-color); padding:1rem; border-radius:8px;">
+          <h4 style="font-size:0.85rem; font-weight:700; margin-bottom:0.75rem; color:var(--accent-green);">💰 Course Revenue Share</h4>
+          <div id="chartCourseRevenue" style="display:flex; flex-direction:column; gap:0.5rem; font-size:0.75rem;">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-surface); border:1px solid var(--border-color); padding:1rem; border-radius:8px; font-size:0.8rem;">
+        <strong style="color:var(--accent-purple);">🏢 Operational Takeaway:</strong>
+        <p style="color:var(--text-muted); margin-top:0.3rem;">আমাদের সর্বোচ্চ রেভিনিউ আসছে <strong>Lean Six Sigma Black Belt</strong> এবং <strong>PMP Exam Prep</strong> কোর্স দুটি থেকে। নিয়মিত ফলো-আপ করালে কনভার্সন রেট ১৮% পর্যন্ত বাড়ানো সম্ভব।</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Req 4: Day & Weekly Employee Performance Summary Modal -->
+  <div class="modal-overlay" id="reportModal">
+    <div class="modal-card" style="max-width:720px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h3>📊 Employee Day & Weekly Performance Report</h3>
+        <button class="btn btn-outline" onclick="closeModal('reportModal')">✕</button>
+      </div>
+
+      <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+        <button class="btn btn-xs btn-primary" onclick="generateReport('DAY')">📅 Daily Report (Today)</button>
+        <button class="btn btn-xs btn-outline" onclick="generateReport('WEEK')">📈 Weekly Summary (Last 7 Days)</button>
+      </div>
+
+      <div id="reportContentArea">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Leaderboard & Executive KPI Modal -->
+  <div class="modal-overlay" id="leaderboardModal">
+    <div class="modal-card" style="max-width:620px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+        <h3>🏆 Executive Sales Leaderboard & Performance</h3>
+        <button class="btn btn-outline" onclick="closeModal('leaderboardModal')">✕</button>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div class="leader-row" style="border-left:4px solid var(--primary); padding:1rem; background:var(--bg-surface); border-radius:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h4 style="font-size:0.95rem; font-weight:700;">পাবেল (Account Manager / Lead Sales)</h4>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
+                Enrolled: <strong id="pavelEnrolled" style="color:var(--accent-green);">0</strong> | Total Call Leads: <span id="pavelLeads">0</span> | Conversion: <strong id="pavelConv" style="color:var(--primary);">0%</strong>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:1.15rem; font-weight:800; color:var(--accent-green);" id="pavelRevenue">৳০</div>
+              <div style="font-size:0.72rem; color:var(--primary); font-weight:700;">Revenue Collected</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leader-row" style="border-left:4px solid var(--accent-purple); padding:1rem; background:var(--bg-surface); border-radius:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <h4 style="font-size:0.95rem; font-weight:700;">ইমরান (Telesales & Operation Specialist)</h4>
+              <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
+                Enrolled: <strong id="imranEnrolled" style="color:var(--accent-green);">0</strong> | Total Call Leads: <span id="imranLeads">0</span> | Conversion: <strong id="imranConv" style="color:var(--accent-purple);">0%</strong>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:1.15rem; font-weight:800; color:var(--accent-green);" id="imranRevenue">৳০</div>
+              <div style="font-size:0.72rem; color:var(--accent-purple); font-weight:700;">Revenue Collected</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--bg-surface); border-radius:6px; padding:1rem; margin-top:0.5rem; font-size:0.8rem; line-height:1.6;">
+          <strong>🎯 টিম অবজেক্টিভ ও কোটা:</strong><br>
+          • দৈনিক কল টার্গেট: ৫০ কল / এক্সিকিউটিভ<br>
+          • কনভার্সন রেট টার্গেট: ১৫% - ২০%<br>
+          • অগ্রাধিকার কোর্স: Lean Six Sigma Black Belt & PMP Exam Prep
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Collect Installment Modal -->
   <div class="modal-overlay" id="collectInstallmentModal">
     <div class="modal-card" style="max-width:440px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
@@ -872,7 +1106,7 @@
     </div>
   </div>
 
-  <!-- Print-Ready Invoice / Money Receipt Modal (Only for Course Person: YES) -->
+  <!-- Print-Ready Invoice / Money Receipt Modal -->
   <div class="modal-overlay" id="invoiceModal">
     <div class="invoice-card" id="printableInvoice">
       <div class="inv-header">
@@ -915,9 +1149,9 @@
           <tr>
             <td>
               <strong id="invCourseTitle">Lean Six Sigma Black Belt International Training</strong>
-              <div style="font-size:0.75rem; color:#64748b;">40 Hours Hands-on Practical Training & Certification Prep</div>
+              <div style="font-size:0.75rem; color:#64748b;">Professional Practical Certification Prep</div>
             </td>
-            <td style="text-align:center;">Online / Physical</td>
+            <td style="text-align:center;" id="invCourseMode">Physical Batch</td>
             <td style="text-align:right; font-weight:700;" id="invCourseFeeRow">৳১৮,০০০</td>
           </tr>
         </tbody>
@@ -961,50 +1195,6 @@
     </div>
   </div>
 
-  <!-- Team Leaderboard & Executive KPI Modal -->
-  <div class="modal-overlay" id="leaderboardModal">
-    <div class="modal-card" style="max-width:620px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
-        <h3>🏆 Executive Sales Leaderboard & Performance</h3>
-        <button class="btn btn-outline" onclick="closeModal('leaderboardModal')">✕</button>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:0.75rem;">
-        <div class="leader-row" style="border-left:4px solid var(--primary);">
-          <div>
-            <h4 style="font-size:0.95rem; font-weight:700;">পাবেল (Account Manager / Lead Sales)</h4>
-            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
-              Enrolled: <strong id="pavelEnrolled" style="color:var(--accent-green);">0</strong> | Total Call Leads: <span id="pavelLeads">0</span>
-            </div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:1.1rem; font-weight:800; color:var(--accent-green);" id="pavelRevenue">৳০</div>
-            <div style="font-size:0.72rem; color:var(--primary); font-weight:700;">Revenue Collected</div>
-          </div>
-        </div>
-
-        <div class="leader-row" style="border-left:4px solid var(--accent-purple);">
-          <div>
-            <h4 style="font-size:0.95rem; font-weight:700;">ইমরান (Telesales & Operation Specialist)</h4>
-            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
-              Enrolled: <strong id="imranEnrolled" style="color:var(--accent-green);">0</strong> | Total Call Leads: <span id="imranLeads">0</span>
-            </div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-size:1.1rem; font-weight:800; color:var(--accent-green);" id="imranRevenue">৳০</div>
-            <div style="font-size:0.72rem; color:var(--accent-purple); font-weight:700;">Revenue Collected</div>
-          </div>
-        </div>
-
-        <div style="background:var(--bg-surface); border-radius:6px; padding:1rem; margin-top:0.5rem; font-size:0.8rem; line-height:1.6;">
-          <strong>🎯 টিম অবজেক্টিভ ও কোটা:</strong><br>
-          • দৈনিক কল টার্গেট: ৫০ কল / এক্সিকিউটিভ<br>
-          • কনভার্সন রেট টার্গেট: ১৫% - ২০%<br>
-          • অগ্রাধিকার ব্যাচ: Lean Six Sigma Black Belt & PMP Exam Prep
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- Telemarketing Script Modal -->
   <div class="modal-overlay" id="scriptModal">
     <div class="modal-card">
@@ -1019,24 +1209,7 @@
         </div>
         <div style="background:var(--bg-surface); padding:1rem; border-radius:6px;">
           <strong style="color:var(--text-main);">2. Course Person Qualifying Question:</strong><br>
-          "স্যার, আপনি কি এই ব্যাচে কোর্স কনফার্ম করে এনরোলমেন্ট সম্পন্ন করতে আগ্রহী? যদি হ্যাঁ হয়, তবে আপনার জন্য সিট বুকিং ও সহজ কিস্তির সুযোগ রয়েছে।"
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WhatsApp Templates Modal -->
-  <div class="modal-overlay" id="whatsappModal">
-    <div class="modal-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-        <h3 style="color:var(--accent-green);">💬 WhatsApp Message Templates</h3>
-        <button class="btn btn-outline" onclick="closeModal('whatsappModal')">Close</button>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:0.85rem; font-size:0.85rem;">
-        <div style="background:var(--bg-surface); padding:0.85rem; border-radius:6px;">
-          <strong>Template 1: Course Person Confirmation & Receipt</strong>
-          <p style="color:var(--text-muted); margin:0.4rem 0;">"আসসালামু আলাইকুম। Skills Learner-এ আপনার কোর্স এনরোলমেন্ট ও পেমেন্ট রিসিট পাঠানো হলো..."</p>
-          <button class="btn-xs" style="background:var(--primary); color:#fff;" onclick="copyTemplate(1)">📋 Copy Text</button>
+          "স্যার, আপনি কি এই ব্যাচে ফিজিক্যাল নাকি অনলাইনে ক্লাস করতে স্বাচ্ছন্দ্যবোধ করবেন? আমাদের ২০/২ পশ্চিম পান্থপথ অফিসে সিট কনফার্ম ও সহজ কিস্তির সুযোগ রয়েছে।"
         </div>
       </div>
     </div>
@@ -1140,10 +1313,11 @@
       "Supply Chain Analytics": 15000
     };
 
-    // ==========================================
+    // Load masterRecords with Sheet Allocation & Dates
+    let // ==========================================
     // GitHub JSON Database & Storage Engine
     // ==========================================
-    const DB_STORAGE_KEY = 'sl_crm_enterprise_records';
+    const DB_STORAGE_KEY = 'sl_crm_master_pro_v6';
     const DB_CONFIG_KEY = 'sl_crm_db_config';
 
     let dbConfig = {
@@ -1212,13 +1386,12 @@
       showToast("✅ GitHub DB সেটিংস সংরক্ষিত হয়েছে!");
     }
 
-    function persistRecords() {
+    function saveStorage() {
       const jsonStr = JSON.stringify(masterRecords);
       localStorage.setItem(DB_STORAGE_KEY, jsonStr);
       localStorage.setItem('sl_crm_enterprise_pro_v1', jsonStr);
       localStorage.setItem('sl_crm_enterprise_full_v3', jsonStr);
       updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
-      renderMetrics();
     }
 
     function downloadDbJson() {
@@ -1242,7 +1415,7 @@
           const parsed = JSON.parse(e.target.result);
           if (Array.isArray(parsed)) {
             masterRecords = parsed;
-            persistRecords();
+            saveStorage();
             renderCalendar();
             renderTable();
             showToast(`🎉 সফলভাবে ${masterRecords.length} টি রেকর্ড ইমপোর্ট হয়েছে!`);
@@ -1325,54 +1498,6 @@
       }
     }
 
-        // Fast metrics calculation (only runs when records change)
-    function renderMetrics() {
-      let countYes = 0, countNo = 0, countDue = 0;
-      let totalSales = 0, totalCollected = 0, totalDue = 0;
-
-      for (let i = 0; i < masterRecords.length; i++) {
-        const item = masterRecords[i];
-        if (item.isCoursePerson === 'YES') {
-          countYes++;
-          const fee = Number(item.totalFee || 0);
-          const adv = Number(item.advance || 0);
-          const reg = Number(item.regularPaid || 0);
-          const due = Number(item.due || 0);
-
-          totalSales += fee;
-          totalCollected += (adv + reg);
-          totalDue += due;
-          if (due > 0) countDue++;
-        } else {
-          countNo++;
-        }
-      }
-
-      document.getElementById('statTotalLeads').innerText = masterRecords.length;
-      document.getElementById('statLeadsBreakdown').innerText = `${countNo} Call Leads (NO)`;
-      document.getElementById('statEnrolledMembers').innerText = countYes;
-      document.getElementById('statCollectedRevenue').innerText = `৳${totalCollected.toLocaleString()}`;
-      document.getElementById('statSalesTotal').innerText = `Total Sales: ৳${totalSales.toLocaleString()}`;
-      document.getElementById('statTotalDueBalance').innerText = `৳${totalDue.toLocaleString()}`;
-      document.getElementById('statDueMembers').innerText = `${countDue} Members with Dues`;
-
-      document.getElementById('chipYesCount').innerText = countYes;
-      document.getElementById('chipNoCount').innerText = countNo;
-      document.getElementById('chipDueCount').innerText = countDue;
-      
-      updateCachedCalendarDates();
-    }
-
-    let cachedEventDates = new Set();
-    function updateCachedCalendarDates() {
-      cachedEventDates = new Set();
-      for (let i = 0; i < masterRecords.length; i++) {
-        const s = masterRecords[i];
-        if (s.nextCall) cachedEventDates.add(s.nextCall.slice(0, 10));
-        if (s.nextDueDate) cachedEventDates.add(s.nextDueDate);
-      }
-    }
-
     async function loadDatabase(forceNetwork = false) {
       // 1. Instant 0ms render from localStorage cache
       const localCache = localStorage.getItem(DB_STORAGE_KEY) || localStorage.getItem('sl_crm_enterprise_full_v3') || localStorage.getItem('sl_crm_enterprise_pro_v1');
@@ -1384,7 +1509,6 @@
           if (Array.isArray(cached) && cached.length > 0) {
             masterRecords = cached;
             hasLocalData = true;
-            renderMetrics();
             renderCalendar();
             renderTable();
             updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
@@ -1424,8 +1548,7 @@
         const isDifferent = !hasLocalData || masterRecords.length !== fetchedData.length;
         if (forceNetwork || isDifferent) {
           masterRecords = fetchedData;
-          persistRecords();
-          renderMetrics();
+          saveStorage();
           renderCalendar();
           renderTable();
           if (forceNetwork) showToast(`☁️ ${source} থেকে ডাটাবেস সিঙ্ক হয়েছে (${masterRecords.length} টি রেকর্ড)`);
@@ -1445,17 +1568,88 @@
       if (!rec) return;
       if (confirm(`আপনি কি নিশ্চিত যে [${rec.name}] এর রেকর্ডটি ডিলিট করতে চান?`)) {
         masterRecords = masterRecords.filter(r => r.id !== id);
-        persistRecords();
+        saveStorage();
         renderTable();
         renderCalendar();
         showToast(`🗑️ [${rec.name}] রেকর্ডটি সফলভাবে ডিলিট করা হয়েছে!`);
       }
     }
 
+    let currentConnectedSheet = 'ALL';
     let currentFilter = 'ALL';
     let selectedCalDate = null;
     let calDate = new Date();
+    let currentDisplayMode = 'TABLE';
+    let currentPage = 1;
+    const pageSize = 20;
 
+    const TODAY_STR = "2026-10-06";
+
+    // ----------------- REQ 1: PHYSICAL <-> ONLINE CONNECTED SHEET SWITCHING -----------------
+    function switchConnectedSheet(sheetType) {
+      currentConnectedSheet = sheetType;
+      document.querySelectorAll('.sheet-tab').forEach(t => t.classList.remove('active'));
+      const activeTab = document.getElementById('tab_' + sheetType.toLowerCase());
+      if (activeTab) activeTab.classList.add('active');
+      currentPage = 1;
+      renderTable();
+    }
+
+    function toggleSheetAllocation(id) {
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+
+      if (rec.sheetMode === 'Physical') {
+        rec.sheetMode = 'Online';
+        showToast(`🌐 [${rec.name}] কে Physical থেকে Online Sheet-এ ট্রান্সফার করা হয়েছে!`);
+      } else {
+        rec.sheetMode = 'Physical';
+        showToast(`🏢 [${rec.name}] কে Online থেকে Physical (Offline) Sheet-এ স্থানান্তর করা হয়েছে!`);
+      }
+
+      saveStorage();
+      renderTable();
+    }
+
+    // ----------------- REQ 2: CALLER PROFILE SWITCHING -----------------
+    function switchUserProfile() {
+      currentPage = 1;
+      renderTable();
+    }
+
+    // ----------------- REQ 5 & 10: GOOGLE CALENDAR EVENT NOTIFICATION -----------------
+    function createGoogleCalendarUrl(rec) {
+      const title = encodeURIComponent(`Skills Learner Call: ${rec.name} (${rec.course})`);
+      const details = encodeURIComponent(`Phone: ${rec.phone}\nCompany: ${rec.company || 'N/A'}\nNotes: ${rec.comment || ''}\nExecutive: ${rec.kam}`);
+      const location = encodeURIComponent(`20/2 West Panthapath, Dhaka`);
+
+      let startDateStr = (rec.nextCall ? rec.nextCall.replace(/[-:]/g, '').replace('T', 'T') : '20261006T150000') + '00Z';
+      let endDateStr = (rec.nextCall ? rec.nextCall.replace(/[-:]/g, '').replace('T', 'T') : '20261006T153000') + '00Z';
+
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}&dates=${startDateStr}/${endDateStr}`;
+    }
+
+    function syncLeadToGoogleCalendar(id) {
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+      const url = createGoogleCalendarUrl(rec);
+      window.open(url, '_blank');
+      showToast(`📅 ${rec.name}-এর কল শিডিউল Google Calendar-এ যোগ করা হচ্ছে (ফোন ও ল্যাপটপে নোটিফিকেশন আসবে)!`);
+    }
+
+    function syncAllTodayToCalendar() {
+      const todayLeads = masterRecords.filter(r => r.nextCall && r.nextCall.startsWith(TODAY_STR));
+      if (todayLeads.length === 0) {
+        showToast("আজকের জন্য কোনো কল শিডিউল পাওয়া যায়নি!");
+        return;
+      }
+      todayLeads.slice(0, 3).forEach(r => {
+        window.open(createGoogleCalendarUrl(r), '_blank');
+      });
+      showToast(`🔔 আজকের ${todayLeads.length}টি কল ইভেন্ট Google Calendar-এ সিঙ্ক হচ্ছে!`);
+    }
+
+    // ----------------- FORM CONDITIONAL TOGGLE LOGIC -----------------
     function toggleCoursePersonPaymentFields() {
       const isPerson = document.getElementById('m_isCoursePerson').value;
       const box = document.getElementById('paymentSectionBox');
@@ -1509,12 +1703,11 @@
         showToast(`✅ [${rec.name}] Course Person: YES করা হয়েছে`);
       }
 
-      persistRecords();
+      saveStorage();
       renderTable();
-      renderCalendar();
     }
 
-    // 1-Click Send Bill / Receipt via WhatsApp
+    // ----------------- 1-CLICK WHATSAPP RECEIPT (REQ 9) -----------------
     function sendWhatsAppReceipt(id) {
       const rec = masterRecords.find(r => r.id === id);
       if (!rec) return;
@@ -1524,24 +1717,13 @@
 
       if (rec.isCoursePerson === 'YES') {
         const totalPaid = Number(rec.advance || 0) + Number(rec.regularPaid || 0);
-        message = `আসসালামু আলাইকুম ${rec.name} ভাই,
-
-Skills Learner-এ আপনার কোর্স এনরোলমেন্ট কনফার্মেশন ও মানি রিসিট সামারি:
-
-` +
-                  `📌 কোর্স: ${rec.course}
-` +
-                  `💵 মোট কোর্স ফি: ৳${Number(rec.totalFee).toLocaleString()}
-` +
-                  `✅ পরিশোধিত (Paid): ৳${totalPaid.toLocaleString()}
-` +
-                  `🔴 অবশিষ্ট বকেয়া (Due): ৳${Number(rec.due).toLocaleString()}
-` +
-                  (rec.due > 0 && rec.nextDueDate ? `📅 পরবর্তী কিস্তির তারিখ: ${rec.nextDueDate}
-` : '') +
-                  `
-অফিস: ২০/২ পশ্চিম পান্থপথ, ঢাকা।
-যেকোনো তথ্যে যোগাযোগ করুন। ধন্যবাদ!`;
+        message = `আসসালামু আলাইকুম ${rec.name} ভাই,\n\nSkills Learner-এ আপনার কোর্স এনরোলমেন্ট কনফার্মেশন ও মানি রিসিট সামারি:\n\n` +
+                  `📌 কোর্স: ${rec.course} (${rec.sheetMode || 'Physical'} Batch)\n` +
+                  `💵 মোট কোর্স ফি: ৳${Number(rec.totalFee).toLocaleString()}\n` +
+                  `✅ পরিশোধিত (Paid): ৳${totalPaid.toLocaleString()}\n` +
+                  `🔴 অবশিষ্ট বকেয়া (Due): ৳${Number(rec.due).toLocaleString()}\n` +
+                  (rec.due > 0 && rec.nextDueDate ? `📅 পরবর্তী কিস্তির তারিখ: ${rec.nextDueDate}\n` : '') +
+                  `\nঅফিস: ২০/২ পশ্চিম পান্থপথ, ঢাকা।\nযেকোনো তথ্যে যোগাযোগ করুন। ধন্যবাদ!`;
       } else {
         message = `আসসালামু আলাইকুম ${rec.name} ভাই, আমি পাবেল বলছিলাম Skills Learner থেকে। আমাদের প্রফেশনাল ট্রেনিং প্রোগ্রাম (${rec.course}) সংক্রান্ত বিস্তারিত শেয়ার করার জন্য যোগাযোগ করলাম। আপনার সুবিধাজনক সময়ে জানাবেন। ধন্যবাদ!`;
       }
@@ -1550,7 +1732,7 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       window.open(waUrl, '_blank');
     }
 
-    // 1-Click Installment Quick Collection
+    // ----------------- INSTALLMENT COLLECTION -----------------
     function openCollectInstallmentModal(id) {
       const rec = masterRecords.find(r => r.id === id);
       if (!rec || rec.isCoursePerson !== 'YES') return;
@@ -1559,7 +1741,7 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       document.getElementById('inst_studentName').innerText = rec.name;
       document.getElementById('inst_courseTitle').innerText = rec.course;
       document.getElementById('inst_currentDue').innerText = `বর্তমান বকেয়া: ৳${Number(rec.due).toLocaleString()}`;
-      document.getElementById('inst_amount').value = rec.due; // auto fill remaining
+      document.getElementById('inst_amount').value = rec.due;
       document.getElementById('collectInstallmentModal').classList.add('active');
     }
 
@@ -1575,50 +1757,350 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       rec.payMethod = document.getElementById('inst_method').value;
       rec.nextDueDate = document.getElementById('inst_nextDate').value || '';
       
-      persistRecords();
+      saveStorage();
       closeModal('collectInstallmentModal');
       renderTable();
-      renderCalendar();
       showToast(`🎉 ৳${payment.toLocaleString()} কিস্তি সফলভাবে জমা হয়েছে!`);
       openInvoice(rec.id);
     }
 
-    function editLeadRecord(id) {
-      const rec = masterRecords.find(r => r.id === id);
-      if (!rec) return;
-
-      document.getElementById('m_editId').value = rec.id;
-      document.getElementById('m_name').value = rec.name;
-      document.getElementById('m_phone').value = rec.phone;
-      document.getElementById('m_company').value = rec.company || '';
-      document.getElementById('m_designation').value = rec.designation || '';
-      document.getElementById('m_isCoursePerson').value = rec.isCoursePerson;
-      document.getElementById('m_course').value = rec.course;
-      document.getElementById('m_kam').value = rec.kam || 'পাবেল';
-      document.getElementById('m_disposition').value = rec.disposition || 'Follow-up';
-      document.getElementById('m_nextCall').value = rec.nextCall || '';
-      document.getElementById('m_priority').value = rec.status || 'Cold';
-      document.getElementById('m_comment').value = rec.comment || '';
-
-      if (rec.isCoursePerson === 'YES') {
-        document.getElementById('paymentSectionBox').style.display = 'block';
-        document.getElementById('m_totalFee').value = rec.totalFee;
-        document.getElementById('m_advance').value = rec.advance;
-        document.getElementById('m_regularPaid').value = rec.regularPaid;
-        document.getElementById('m_dueBalance').value = rec.due;
-        document.getElementById('m_payMethod').value = rec.payMethod || 'bKash / Nagad';
-        document.getElementById('m_nextDueDate').value = rec.nextDueDate || '';
-      } else {
-        document.getElementById('paymentSectionBox').style.display = 'none';
+    // ----------------- INVOICE MODAL -----------------
+    function openInvoice(id) {
+      const student = masterRecords.find(s => s.id === id);
+      if (!student || student.isCoursePerson !== 'YES') {
+        alert("This lead is not marked as Course Person: YES!");
+        return;
       }
 
-      document.getElementById('leadModal').classList.add('active');
+      document.getElementById('invNoText').innerText = `INV-${student.id}`;
+      document.getElementById('invDateText').innerText = `Date: ${new Date().toISOString().slice(0, 10)}`;
+      document.getElementById('invStudentName').innerText = student.name;
+      document.getElementById('invStudentCompany').innerText = student.company || 'Individual Professional';
+      document.getElementById('invStudentPhone').innerText = student.phone;
+      document.getElementById('invPayMethod').innerText = student.payMethod || 'bKash / Bank';
+      document.getElementById('invKamName').innerText = student.kam || 'পাবেল';
+      document.getElementById('invCourseMode').innerText = (student.sheetMode === 'Online') ? 'Online Live Batch' : 'Physical Classroom Batch';
+
+      document.getElementById('invCourseTitle').innerText = `${student.course} Professional Training`;
+      document.getElementById('invCourseFeeRow').innerText = `৳${Number(student.totalFee).toLocaleString()}`;
+      document.getElementById('invSubTotal').innerText = `৳${Number(student.totalFee).toLocaleString()}`;
+      document.getElementById('invAdvanceRow').innerText = `- ৳${Number(student.advance).toLocaleString()}`;
+      document.getElementById('invRegularRow').innerText = `- ৳${Number(student.regularPaid).toLocaleString()}`;
+
+      const totalPaid = Number(student.advance || 0) + Number(student.regularPaid || 0);
+      document.getElementById('invTotalPaid').innerText = `৳${totalPaid.toLocaleString()}`;
+      document.getElementById('invDueBalance').innerText = `৳${Number(student.due).toLocaleString()}`;
+
+      const badge = document.getElementById('invBadgePaid');
+      const dueRow = document.getElementById('invNextDueRow');
+
+      if (student.due === 0) {
+        badge.innerText = "FULL PAID";
+        badge.style.background = "#dcfce7";
+        badge.style.color = "#15803d";
+        dueRow.style.display = "none";
+      } else {
+        badge.innerText = "PARTIAL PAYMENT RECEIPT";
+        badge.style.background = "#fef3c7";
+        badge.style.color = "#b45309";
+        dueRow.style.display = "block";
+        dueRow.innerText = student.nextDueDate ? `Next Due Date: ${student.nextDueDate}` : 'Next Due: Pending';
+      }
+
+      document.getElementById('invoiceModal').classList.add('active');
     }
 
-    
-    let currentPage = 1;
-    const pageSize = 20;
+    // ----------------- REQ 4: DAY & WEEKLY SUMMARY REPORT ENGINE -----------------
+    function openReportModal() {
+      generateReport('DAY');
+      document.getElementById('reportModal').classList.add('active');
+    }
 
+    function generateReport(type) {
+      const area = document.getElementById('reportContentArea');
+      let pavelStats = { total: 0, hot: 0, semi: 0, cold: 0, enrolled: 0, rev: 0 };
+      let imranStats = { total: 0, hot: 0, semi: 0, cold: 0, enrolled: 0, rev: 0 };
+
+      masterRecords.forEach(r => {
+        const kam = (r.kam || 'পাবেল').trim();
+        const target = (kam === 'পাবেল') ? pavelStats : imranStats;
+
+        target.total++;
+        if (r.status === 'Hot') target.hot++;
+        else if (r.status === 'Semi-Hot') target.semi++;
+        else target.cold++;
+
+        if (r.isCoursePerson === 'YES') {
+          target.enrolled++;
+          target.rev += (Number(r.advance || 0) + Number(r.regularPaid || 0));
+        }
+      });
+
+      const pConv = pavelStats.total ? ((pavelStats.enrolled / pavelStats.total) * 100).toFixed(1) : 0;
+      const iConv = imranStats.total ? ((imranStats.enrolled / imranStats.total) * 100).toFixed(1) : 0;
+
+      area.innerHTML = `
+        <div style="background:var(--bg-surface); padding:1rem; border-radius:6px; margin-bottom:1rem;">
+          <h4 style="font-size:0.95rem; font-weight:700; color:var(--primary); margin-bottom:0.5rem;">
+            ${type === 'DAY' ? '📅 আজকের কাজের রিপোর্ট (Daily Performance Report - Oct 6, 2026)' : '📈 সাপ্তাহিক পারফরম্যান্স সামারি (Weekly Executive Summary)'}
+          </h4>
+          <p style="font-size:0.8rem; color:var(--text-muted);">এক্সিকিউটিভদের লাইভ লিড কলিং, কনভার্সন এবং রেভিনিউ কালেকশন তালিকা:</p>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; font-size:0.82rem; margin-bottom:1rem;">
+          <thead>
+            <tr style="background:var(--bg-surface);">
+              <th style="padding:0.6rem;">Executive</th>
+              <th style="padding:0.6rem;">Total Assigned</th>
+              <th style="padding:0.6rem; color:var(--accent-red);">Hot</th>
+              <th style="padding:0.6rem; color:var(--accent-amber);">Semi-Hot</th>
+              <th style="padding:0.6rem;">Cold</th>
+              <th style="padding:0.6rem; color:var(--accent-green);">Enrolled</th>
+              <th style="padding:0.6rem;">Conversion</th>
+              <th style="padding:0.6rem;">Collected BDT</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:0.6rem; font-weight:700;">পাবেল</td>
+              <td style="padding:0.6rem;">${pavelStats.total}</td>
+              <td style="padding:0.6rem; color:var(--accent-red); font-weight:700;">${pavelStats.hot}</td>
+              <td style="padding:0.6rem; color:var(--accent-amber); font-weight:700;">${pavelStats.semi}</td>
+              <td style="padding:0.6rem;">${pavelStats.cold}</td>
+              <td style="padding:0.6rem; color:var(--accent-green); font-weight:800;">${pavelStats.enrolled}</td>
+              <td style="padding:0.6rem; font-weight:700;">${pConv}%</td>
+              <td style="padding:0.6rem; font-weight:800; color:var(--accent-green);">৳${pavelStats.rev.toLocaleString()}</td>
+            </tr>
+            <tr>
+              <td style="padding:0.6rem; font-weight:700;">ইমরান</td>
+              <td style="padding:0.6rem;">${imranStats.total}</td>
+              <td style="padding:0.6rem; color:var(--accent-red); font-weight:700;">${imranStats.hot}</td>
+              <td style="padding:0.6rem; color:var(--accent-amber); font-weight:700;">${imranStats.semi}</td>
+              <td style="padding:0.6rem;">${imranStats.cold}</td>
+              <td style="padding:0.6rem; color:var(--accent-green); font-weight:800;">${imranStats.enrolled}</td>
+              <td style="padding:0.6rem; font-weight:700;">${iConv}%</td>
+              <td style="padding:0.6rem; font-weight:800; color:var(--accent-green);">৳${imranStats.rev.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
+
+    // ----------------- CORE RENDER TABLE & AUTO REQ 2 SORTING -----------------
+    function renderTable() {
+      const tbody = document.getElementById('crmTableBody');
+      tbody.innerHTML = '';
+
+      let nPhysical = 0, nOnline = 0, nAdmitted = 0;
+      let countTodayCalls = 0;
+      let countHot = 0, countSemi = 0, countCold = 0, countEnrolled = 0;
+      let totalCollected = 0, totalDue = 0;
+      let countDue = 0;
+
+      // Calculate global counts
+      masterRecords.forEach(r => {
+        if (r.sheetMode === 'Online') nOnline++;
+        else nPhysical++;
+
+        if (r.isCoursePerson === 'YES') {
+          nAdmitted++;
+          countEnrolled++;
+          totalCollected += (Number(r.advance || 0) + Number(r.regularPaid || 0));
+          totalDue += Number(r.due || 0);
+          if (r.due > 0) countDue++;
+        }
+
+        if (r.status === 'Hot') countHot++;
+        else if (r.status === 'Semi-Hot') countSemi++;
+        else countCold++;
+
+        if (r.nextCall && r.nextCall.startsWith(TODAY_STR)) {
+          countTodayCalls++;
+        }
+      });
+
+      // Update Top Nav Pills
+      document.getElementById('pill_all_count').innerText = masterRecords.length;
+      document.getElementById('pill_offline_count').innerText = nPhysical;
+      document.getElementById('pill_online_count').innerText = nOnline;
+      document.getElementById('pill_admitted_count').innerText = nAdmitted;
+
+      // Update KPI Percentage Cards (Req 6)
+      const totalCount = masterRecords.length || 1;
+      document.getElementById('statTodayCount').innerText = countTodayCalls;
+      document.getElementById('statHotCount').innerText = countHot;
+      document.getElementById('statHotPct').innerText = `${((countHot / totalCount) * 100).toFixed(1)}% of total`;
+      document.getElementById('statSemiCount').innerText = countSemi;
+      document.getElementById('statSemiPct').innerText = `${((countSemi / totalCount) * 100).toFixed(1)}% of total`;
+      document.getElementById('statColdCount').innerText = countCold;
+      document.getElementById('statColdPct').innerText = `${((countCold / totalCount) * 100).toFixed(1)}% of total`;
+      document.getElementById('statEnrolledCount').innerText = countEnrolled;
+      document.getElementById('statEnrolledPct').innerText = `${((countEnrolled / totalCount) * 100).toFixed(1)}% converted`;
+
+      document.getElementById('statCollectedRevenue').innerText = `৳${totalCollected.toLocaleString()}`;
+      document.getElementById('statTotalDueBalance').innerText = `৳${totalDue.toLocaleString()}`;
+      document.getElementById('chipTodayCount').innerText = countTodayCalls;
+      document.getElementById('chipYesCount').innerText = countEnrolled;
+      document.getElementById('chipNoCount').innerText = totalCount - countEnrolled;
+      document.getElementById('chipDueCount').innerText = countDue;
+      document.getElementById('todayCallBannerSub').innerText = `আজকে মোট ${countTodayCalls} জন ক্লায়েন্টকে কল দিতে হবে। এগুলো তালিকার সবার উপরে পিন করা আছে।`;
+
+      // Filter Logic
+      const searchQ = document.getElementById('searchInput').value.toLowerCase();
+      const personQ = document.getElementById('coursePersonFilter').value;
+      const courseQ = document.getElementById('courseFilter').value;
+      const dateWorkQ = document.getElementById('dateWorkFilter').value;
+      const callerProfile = document.getElementById('userProfileSelector').value;
+
+      let filtered = masterRecords.filter(item => {
+        // Connected Sheet Filter (Req 1 & 8)
+        if (currentConnectedSheet === 'OFFLINE' && item.sheetMode !== 'Physical') return false;
+        if (currentConnectedSheet === 'ONLINE' && item.sheetMode !== 'Online') return false;
+        if (currentConnectedSheet === 'ADMITTED' && item.isCoursePerson !== 'YES') return false;
+
+        // Caller Profile Filter (Req 2 & 11)
+        if (callerProfile !== 'ALL' && item.kam !== callerProfile) return false;
+
+        // Instant Phone, Name, Company Search
+        const matchesQ = item.name.toLowerCase().includes(searchQ) || 
+                         item.phone.includes(searchQ) || 
+                         (item.company && item.company.toLowerCase().includes(searchQ)) ||
+                         (item.id && item.id.toLowerCase().includes(searchQ));
+        
+        const matchesCourse = courseQ === 'ALL' || item.course === courseQ;
+        const matchesPerson = personQ === 'ALL' || item.isCoursePerson === personQ;
+
+        // Date Specific Filter (Req 3)
+        let matchesDateWork = true;
+        if (dateWorkQ) {
+          matchesDateWork = (item.nextCall && item.nextCall.startsWith(dateWorkQ)) || (item.nextDueDate === dateWorkQ);
+        }
+
+        let matchesChip = true;
+        if (currentFilter === 'YES') matchesChip = item.isCoursePerson === 'YES';
+        else if (currentFilter === 'NO') matchesChip = item.isCoursePerson === 'NO';
+        else if (currentFilter === 'DUE') matchesChip = (item.isCoursePerson === 'YES' && item.due > 0);
+        else if (currentFilter === 'TODAY') matchesChip = (item.nextCall && item.nextCall.startsWith(TODAY_STR));
+        else if (currentFilter === 'Hot') matchesChip = item.status === 'Hot';
+        else if (currentFilter === 'Semi-Hot') matchesChip = item.status === 'Semi-Hot';
+        else if (currentFilter === 'Cold') matchesChip = item.status === 'Cold';
+
+        let matchesCal = true;
+        if (selectedCalDate) {
+          matchesCal = (item.nextCall && item.nextCall.startsWith(selectedCalDate)) || (item.nextDueDate === selectedCalDate);
+        }
+
+        return matchesQ && matchesCourse && matchesPerson && matchesDateWork && matchesChip && matchesCal;
+      });
+
+      // REQ 2: SMART SORTING - TODAY'S CALLS APPEAR AT TOP!
+      filtered.sort((a, b) => {
+        const aToday = (a.nextCall && a.nextCall.startsWith(TODAY_STR)) ? 1 : 0;
+        const bToday = (b.nextCall && b.nextCall.startsWith(TODAY_STR)) ? 1 : 0;
+        return bToday - aToday;
+      });
+
+      renderPagination(filtered.length);
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const paginatedItems = filtered.slice(startIndex, startIndex + pageSize);
+
+      const rows = new Array(paginatedItems.length);
+      for (let i = 0; i < paginatedItems.length; i++) {
+        const item = paginatedItems[i];
+        const isYes = item.isCoursePerson === 'YES';
+        const isToday = item.nextCall && item.nextCall.startsWith(TODAY_STR);
+        const trClass = isToday ? 'class="call-today-highlight"' : '';
+
+        rows[i] = `<tr ${trClass}>
+          <td><strong>${item.id || ''}</strong></td>
+          <td>
+            <strong>${item.name || ''}</strong>
+            <div style="font-size:0.7rem; color:var(--text-muted);">${item.designation || 'N/A'}</div>
+          </td>
+          <td>${item.company || 'Individual'}</td>
+          <td><strong>${item.phone || ''}</strong></td>
+          <td>
+            <span class="mode-badge ${item.sheetMode === 'Online' ? 'mode-online' : 'mode-physical'}" onclick="toggleSheetAllocation('${item.id}')" title="Click to Switch Sheet (Offline <-> Online)">
+              ${item.sheetMode === 'Online' ? '🌐 Online' : '🏢 Physical'}
+            </span>
+          </td>
+          <td>
+            <span class="badge ${isYes ? 'badge-yes' : 'badge-no'}" onclick="toggleCoursePersonStatus('${item.id}')" title="Click to Switch Course Person">
+              ${isYes ? '✅ YES' : '❌ NO'}
+            </span>
+          </td>
+          <td><div>${item.course || ''}</div></td>
+          <td>${isYes ? `<strong>৳${Number(item.totalFee || 0).toLocaleString()}</strong>` : '-'}</td>
+          <td>${isYes ? `<span style="color:var(--accent-green);">৳${(Number(item.advance || 0) + Number(item.regularPaid || 0)).toLocaleString()}</span>` : '-'}</td>
+          <td>${isYes ? `<strong style="color:var(--accent-red);">৳${Number(item.due || 0).toLocaleString()}</strong>` : '-'}</td>
+          <td>
+            <div style="font-size:0.74rem; color:${isToday ? 'var(--accent-purple); font-weight:800;' : 'var(--text-main)'};">
+              ${isToday ? '🚨 ' : ''}${item.nextCall ? item.nextCall.replace('T', ' ') : 'N/A'}
+            </div>
+            ${item.due > 0 && item.nextDueDate ? `<div style="font-size:0.68rem; color:var(--accent-red);">Due: ${item.nextDueDate}</div>` : ''}
+          </td>
+          <td>
+            <span class="badge" style="background:var(--bg-surface);">${item.status || 'Cold'}</span>
+          </td>
+          <td>
+            ${isYes 
+              ? `<button class="btn-fast" style="background:var(--primary); color:#fff;" onclick="openInvoice('${item.id}')" title="মানি রিসিট">🖨️</button>
+                 ${item.due > 0 ? `<button class="btn-fast" style="background:var(--accent-green); color:#fff;" onclick="openCollectInstallmentModal('${item.id}')" title="কিস্তি সংগ্রহ">+কিস্তি</button>` : ''}` 
+              : `<button class="btn-fast" onclick="toggleCoursePersonStatus('${item.id}')" title="Make Course Person">+ Yes</button>`}
+            <button class="btn-fast" onclick="sendWhatsAppReceipt('${item.id}')" style="background:#25D366; color:#fff;" title="WhatsApp Bill">💬</button>
+            <button class="btn-fast" onclick="syncLeadToGoogleCalendar('${item.id}')" style="background:var(--accent-purple); color:#fff;" title="Google Calendar Event Sync">📅</button>
+            <button class="btn-fast" onclick="editLeadRecord('${item.id}')" title="Edit Full Info">✏️</button>
+            <button class="btn-fast" onclick="deleteLeadRecord('${item.id}')" style="background:rgba(239, 68, 68, 0.2); color:var(--accent-red);" title="রেকর্ড ডিলিট">🗑️</button>
+          </td>
+        </tr>`;
+      }
+      tbody.innerHTML = rows.join('');
+    }
+
+    // ----------------- FAST FILTER HELPERS (REQ 7) -----------------
+    function filterTodayOnly() {
+      currentFilter = 'TODAY';
+      currentPage = 1;
+      renderTable();
+    }
+
+    function filterByStatusQuick(status) {
+      currentFilter = status;
+      currentPage = 1;
+      renderTable();
+    }
+
+    function filterByCoursePersonOnly() {
+      currentFilter = 'YES';
+      currentPage = 1;
+      renderTable();
+    }
+
+    function setQuickFilter(type) {
+      currentFilter = type;
+      currentPage = 1;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      const activeChip = document.getElementById('chip_' + type.toLowerCase());
+      if (activeChip) activeChip.classList.add('active');
+      renderTable();
+    }
+
+    let filterTimer = null;
+    function debouncedFilter() {
+      if (filterTimer) clearTimeout(filterTimer);
+      filterTimer = setTimeout(() => {
+        currentPage = 1;
+        renderTable();
+      }, 120);
+    }
+    function filterData() { currentPage = 1; renderTable(); }
+
+    function saveStorage() {
+      localStorage.setItem('sl_crm_master_pro_v6', JSON.stringify(masterRecords));
+    }
+
+    // ----------------- PAGINATION CONTROLLER -----------------
     function renderPagination(totalItems) {
       const totalPages = Math.ceil(totalItems / pageSize) || 1;
       if (currentPage > totalPages) currentPage = totalPages;
@@ -1657,141 +2139,38 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       renderTable();
     }
 
-    function renderTable() {
-      const tbody = document.getElementById('crmTableBody');
-      const searchQ = document.getElementById('searchInput').value.toLowerCase().trim();
-      const personQ = document.getElementById('coursePersonFilter').value;
-      const courseQ = document.getElementById('courseFilter').value;
+    // ----------------- MODALS & SWITCHERS -----------------
+    function editLeadRecord(id) {
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
 
-      const hasSearch = searchQ.length > 0;
-      const hasPerson = personQ !== 'ALL';
-      const hasCourse = courseQ !== 'ALL';
-      const hasChip = currentFilter !== 'ALL';
-      const hasCal = !!selectedCalDate;
+      document.getElementById('m_editId').value = rec.id;
+      document.getElementById('m_name').value = rec.name;
+      document.getElementById('m_phone').value = rec.phone;
+      document.getElementById('m_company').value = rec.company || '';
+      document.getElementById('m_designation').value = rec.designation || '';
+      document.getElementById('m_sheetMode').value = rec.sheetMode || 'Physical';
+      document.getElementById('m_kam').value = rec.kam || 'পাবেল';
+      document.getElementById('m_isCoursePerson').value = rec.isCoursePerson;
+      document.getElementById('m_course').value = rec.course;
+      document.getElementById('m_disposition').value = rec.disposition || 'Follow-up';
+      document.getElementById('m_priority').value = rec.status || 'Cold';
+      document.getElementById('m_nextCall').value = rec.nextCall || '';
+      document.getElementById('m_comment').value = rec.comment || '';
 
-      let filtered = masterRecords;
-      if (hasSearch || hasPerson || hasCourse || hasChip || hasCal) {
-        filtered = masterRecords.filter(item => {
-          if (hasPerson && item.isCoursePerson !== personQ) return false;
-          if (hasCourse && item.course !== courseQ) return false;
-          if (hasChip) {
-            if (currentFilter === 'YES' && item.isCoursePerson !== 'YES') return false;
-            if (currentFilter === 'NO' && item.isCoursePerson !== 'NO') return false;
-            if (currentFilter === 'DUE' && (item.isCoursePerson !== 'YES' || item.due <= 0)) return false;
-          }
-          if (hasCal) {
-            const matchesCal = (item.nextCall && item.nextCall.startsWith(selectedCalDate)) || (item.nextDueDate === selectedCalDate);
-            if (!matchesCal) return false;
-          }
-          if (hasSearch) {
-            const nameMatch = item.name && item.name.toLowerCase().indexOf(searchQ) !== -1;
-            const phoneMatch = item.phone && item.phone.indexOf(searchQ) !== -1;
-            const compMatch = item.company && item.company.toLowerCase().indexOf(searchQ) !== -1;
-            const idMatch = item.id && item.id.toLowerCase().indexOf(searchQ) !== -1;
-            if (!nameMatch && !phoneMatch && !compMatch && !idMatch) return false;
-          }
-          return true;
-        });
-      }
-
-      renderPagination(filtered.length);
-
-      const startIndex = (currentPage - 1) * pageSize;
-      const paginatedItems = filtered.slice(startIndex, startIndex + pageSize);
-
-      if (paginatedItems.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="12" style="text-align:center; padding:2.5rem; color:var(--text-muted); font-size:0.9rem;">কোনো রেকর্ড পাওয়া যায়নি</td></tr>`;
-        return;
-      }
-
-      const rows = new Array(paginatedItems.length);
-      for (let i = 0; i < paginatedItems.length; i++) {
-        const item = paginatedItems[i];
-        const isYes = item.isCoursePerson === 'YES';
-        const totalFeeStr = isYes ? `<strong>৳${Number(item.totalFee || 0).toLocaleString()}</strong>` : '<span style="color:var(--text-muted);">-</span>';
-        const advStr = isYes ? `<span style="color:var(--accent-green);">৳${Number(item.advance || 0).toLocaleString()}</span>` : '<span style="color:var(--text-muted);">-</span>';
-        const regPaidStr = isYes ? `<span style="color:var(--primary);">৳${Number(item.regularPaid || 0).toLocaleString()}</span>` : '<span style="color:var(--text-muted);">-</span>';
-        const dueStr = isYes ? `<strong style="color:var(--accent-red);">৳${Number(item.due || 0).toLocaleString()}</strong>` : '<span style="color:var(--text-muted);">-</span>';
-        const nextCallFormatted = item.nextCall ? item.nextCall.replace('T', ' ') : '';
-
-        rows[i] = `<tr>
-          <td><strong>${item.id || ''}</strong></td>
-          <td>
-            <strong>${item.name || ''}</strong>
-            <div style="font-size:0.7rem; color:var(--text-muted);">${item.designation || 'N/A'}</div>
-          </td>
-          <td>${item.company || 'Individual'}</td>
-          <td><strong>${item.phone || ''}</strong></td>
-          <td>
-            <span class="badge ${isYes ? 'badge-yes' : 'badge-no'}" onclick="toggleCoursePersonStatus('${item.id}')" title="Click to Switch YES/NO">
-              ${isYes ? '✅ YES' : '❌ NO'}
-            </span>
-          </td>
-          <td><div>${item.course || ''}</div></td>
-          <td>${totalFeeStr}</td>
-          <td>${advStr}</td>
-          <td>${regPaidStr}</td>
-          <td>${dueStr}</td>
-          <td>
-            <div><span class="badge" style="background:var(--bg-surface);">${item.disposition || 'Lead'}</span></div>
-            <div style="font-size:0.68rem; color:var(--accent-amber);">${nextCallFormatted}</div>
-          </td>
-          <td>
-            ${isYes 
-              ? `<button class="btn-fast" style="background:var(--primary); color:#fff;" onclick="openInvoice('${item.id}')" title="মানি রিসিট">🖨️ রিসিট</button>
-                 ${item.due > 0 ? `<button class="btn-fast" style="background:var(--accent-green); color:#fff;" onclick="openCollectInstallmentModal('${item.id}')" title="কিস্তি সংগ্রহ">+কিস্তি</button>` : ''}` 
-              : `<button class="btn-fast" onclick="toggleCoursePersonStatus('${item.id}')" title="Make Course Person">+ Yes</button>`}
-            <button class="btn-fast" onclick="sendWhatsAppReceipt('${item.id}')" style="background:#25D366; color:#fff;" title="WhatsApp এ রিসিট ও মেসেজ পাঠান">💬 WA Bill</button>
-            <button class="btn-fast" onclick="editLeadRecord('${item.id}')" title="Edit Full Info">✏️</button>
-            <button class="btn-fast" onclick="deleteLeadRecord('${item.id}')" style="background:rgba(239, 68, 68, 0.2); color:var(--accent-red);" title="রেকর্ড ডিলিট">🗑️</button>
-          </td>
-        </tr>`;
-      }
-      tbody.innerHTML = rows.join('');
-    }
-
-    function openInvoice(id) {
-      const student = masterRecords.find(s => s.id === id);
-      if (!student || student.isCoursePerson !== 'YES') {
-        alert("This lead is not marked as Course Person: YES!");
-        return;
-      }
-
-      document.getElementById('invNoText').innerText = `INV-${student.id}`;
-      document.getElementById('invDateText').innerText = `Date: ${new Date().toISOString().slice(0, 10)}`;
-      document.getElementById('invStudentName').innerText = student.name;
-      document.getElementById('invStudentCompany').innerText = student.company || 'Individual Professional';
-      document.getElementById('invStudentPhone').innerText = student.phone;
-      document.getElementById('invPayMethod').innerText = student.payMethod || 'bKash / Bank';
-      document.getElementById('invKamName').innerText = student.kam || 'পাবেল';
-
-      document.getElementById('invCourseTitle').innerText = `${student.course} Professional Training`;
-      document.getElementById('invCourseFeeRow').innerText = `৳${Number(student.totalFee).toLocaleString()}`;
-      document.getElementById('invSubTotal').innerText = `৳${Number(student.totalFee).toLocaleString()}`;
-      document.getElementById('invAdvanceRow').innerText = `- ৳${Number(student.advance).toLocaleString()}`;
-      document.getElementById('invRegularRow').innerText = `- ৳${Number(student.regularPaid).toLocaleString()}`;
-
-      const totalPaid = Number(student.advance || 0) + Number(student.regularPaid || 0);
-      document.getElementById('invTotalPaid').innerText = `৳${totalPaid.toLocaleString()}`;
-      document.getElementById('invDueBalance').innerText = `৳${Number(student.due).toLocaleString()}`;
-
-      const badge = document.getElementById('invBadgePaid');
-      const dueRow = document.getElementById('invNextDueRow');
-
-      if (student.due === 0) {
-        badge.innerText = "FULL PAID";
-        badge.style.background = "#dcfce7";
-        badge.style.color = "#15803d";
-        dueRow.style.display = "none";
+      if (rec.isCoursePerson === 'YES') {
+        document.getElementById('paymentSectionBox').style.display = 'block';
+        document.getElementById('m_totalFee').value = rec.totalFee;
+        document.getElementById('m_advance').value = rec.advance;
+        document.getElementById('m_regularPaid').value = rec.regularPaid;
+        document.getElementById('m_dueBalance').value = rec.due;
+        document.getElementById('m_payMethod').value = rec.payMethod || 'bKash / Nagad';
+        document.getElementById('m_nextDueDate').value = rec.nextDueDate || '';
       } else {
-        badge.innerText = "PARTIAL PAYMENT RECEIPT";
-        badge.style.background = "#fef3c7";
-        badge.style.color = "#b45309";
-        dueRow.style.display = "block";
-        dueRow.innerText = student.nextDueDate ? `Next Due Date: ${student.nextDueDate}` : 'Next Due: Pending';
+        document.getElementById('paymentSectionBox').style.display = 'none';
       }
 
-      document.getElementById('invoiceModal').classList.add('active');
+      document.getElementById('leadModal').classList.add('active');
     }
 
     function saveLeadRecord(e) {
@@ -1810,6 +2189,8 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
           rec.phone = document.getElementById('m_phone').value;
           rec.company = document.getElementById('m_company').value;
           rec.designation = document.getElementById('m_designation').value;
+          rec.sheetMode = document.getElementById('m_sheetMode').value;
+          rec.kam = document.getElementById('m_kam').value;
           rec.isCoursePerson = isPerson;
           rec.course = document.getElementById('m_course').value;
           rec.totalFee = totalFee;
@@ -1818,10 +2199,9 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
           rec.due = due;
           rec.payMethod = isPerson === 'YES' ? document.getElementById('m_payMethod').value : '-';
           rec.nextDueDate = isPerson === 'YES' ? document.getElementById('m_nextDueDate').value : '';
-          rec.kam = document.getElementById('m_kam').value;
           rec.disposition = document.getElementById('m_disposition').value;
-          rec.nextCall = document.getElementById('m_nextCall').value;
           rec.status = document.getElementById('m_priority').value;
+          rec.nextCall = document.getElementById('m_nextCall').value;
           rec.comment = document.getElementById('m_comment').value;
         }
         showToast("✅ রেকর্ড সফলভাবে আপডেট করা হয়েছে!");
@@ -1832,6 +2212,8 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
           phone: document.getElementById('m_phone').value,
           company: document.getElementById('m_company').value,
           designation: document.getElementById('m_designation').value,
+          sheetMode: document.getElementById('m_sheetMode').value,
+          kam: document.getElementById('m_kam').value,
           isCoursePerson: isPerson,
           course: document.getElementById('m_course').value,
           totalFee: totalFee,
@@ -1840,22 +2222,18 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
           due: due,
           payMethod: isPerson === 'YES' ? document.getElementById('m_payMethod').value : '-',
           nextDueDate: isPerson === 'YES' ? document.getElementById('m_nextDueDate').value : '',
-          kam: document.getElementById('m_kam').value,
           disposition: document.getElementById('m_disposition').value,
-          nextCall: document.getElementById('m_nextCall').value,
           status: document.getElementById('m_priority').value,
+          nextCall: document.getElementById('m_nextCall').value,
           comment: document.getElementById('m_comment').value
         };
         masterRecords.unshift(newRecord);
-        showToast(isPerson === 'YES' ? "🎉 Course Person: YES হিসেবে পেমেন্ট রেকর্ড সংরক্ষিত হয়েছে!" : "✅ নতুন কলিং লিড সংরক্ষিত হয়েছে!");
-        if (isPerson === 'YES') {
-          openInvoice(newRecord.id);
-        }
+        showToast("🎉 নতুন লিড সংরক্ষিত হয়েছে!");
+        if (isPerson === 'YES') openInvoice(newRecord.id);
       }
 
-      persistRecords();
+      saveStorage();
       renderTable();
-      renderCalendar();
       closeModal('leadModal');
       document.getElementById('leadForm').reset();
       document.getElementById('m_editId').value = "";
@@ -1868,135 +2246,7 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       toggleCoursePersonPaymentFields();
     }
     function openScriptModal() { document.getElementById('scriptModal').classList.add('active'); }
-    function openWhatsAppModal() { document.getElementById('whatsappModal').classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
-    function setQuickFilter(type) {
-      currentFilter = type;
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      const activeChip = document.getElementById('chip_' + type.toLowerCase());
-      if (activeChip) activeChip.classList.add('active');
-      renderTable();
-    }
-
-    let filterTimer = null;
-    function debouncedFilter() {
-      if (filterTimer) clearTimeout(filterTimer);
-      filterTimer = setTimeout(() => {
-        currentPage = 1;
-        renderTable();
-      }, 120);
-    }
-    function filterData() { currentPage = 1; renderTable(); }
-
-    function toggleTheme() {
-      const curr = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', curr);
-      document.getElementById('themeIcon').innerText = curr === 'dark' ? '☀️' : '🌙';
-      document.getElementById('themeText').innerText = curr === 'dark' ? 'Light' : 'Dark';
-    }
-
-    function toggleLanguage() {
-      const cur = document.documentElement.lang === 'bn' ? 'en' : 'bn';
-      document.documentElement.lang = cur;
-      document.getElementById('langText').innerText = cur === 'bn' ? 'English' : 'বাংলা';
-      showToast(cur === 'bn' ? "ভাষা বাংলায় পরিবর্তিত হয়েছে।" : "Switched to English.");
-    }
-
-    function renderCalendar() {
-      const year = calDate.getFullYear();
-      const month = calDate.getMonth();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      document.getElementById('calMonthYear').innerText = `${monthNames[month]} ${year}`;
-
-      const firstDay = new Date(year, month, 1).getDay();
-      const totalDays = new Date(year, month + 1, 0).getDate();
-      const todayStr = new Date().toISOString().slice(0, 10);
-
-      let gridHtml = '';
-      const dayLabels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-      for (let i = 0; i < 7; i++) {
-        gridHtml += `<div class="cal-day-label">${dayLabels[i]}</div>`;
-      }
-
-      for (let i = 0; i < firstDay; i++) {
-        gridHtml += `<div></div>`;
-      }
-
-      for (let d = 1; d <= totalDays; d++) {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        let cls = 'cal-day';
-        if (dateStr === todayStr) cls += ' today';
-        if (selectedCalDate === dateStr) cls += ' selected';
-        if (cachedEventDates.has(dateStr)) cls += ' has-event';
-
-        gridHtml += `<div class="${cls}" onclick="onCalendarDateClick('${dateStr}')">${d}</div>`;
-      }
-      document.getElementById('calGrid').innerHTML = gridHtml;
-    }
-
-    function onCalendarDateClick(dateStr) {
-      selectedCalDate = dateStr;
-      renderCalendar();
-      document.getElementById('chip_cal_active').style.display = 'inline-flex';
-      document.getElementById('chipDateText').innerText = dateStr;
-      currentPage = 1;
-      renderTable();
-    }
-
-    function changeMonth(dir) { calDate.setMonth(calDate.getMonth() + dir); renderCalendar(); }
-    function clearDateFilter() { selectedCalDate = null; renderCalendar(); document.getElementById('chip_cal_active').style.display = 'none'; renderTable(); }
-
-    let timerSeconds = 0;
-    let timerInterval = null;
-    function startTimer() {
-      if(!timerInterval) {
-        timerInterval = setInterval(() => {
-          timerSeconds++;
-          const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
-          const secs = String(timerSeconds % 60).padStart(2, '0');
-          document.getElementById('callTimer').innerText = `${mins}:${secs}`;
-        }, 1000);
-      }
-    }
-    function pauseTimer() { clearInterval(timerInterval); timerInterval = null; }
-    function resetTimer() { pauseTimer(); timerSeconds = 0; document.getElementById('callTimer').innerText = "00:00"; }
-
-    function showToast(msg) {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      toast.innerHTML = `<span>🔔</span> <span>${msg}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => { toast.remove(); }, 3500);
-    }
-
-    function copyTemplate(num) {
-      navigator.clipboard.writeText("আসসালামু আলাইকুম। Skills Learner-এ আপনার কোর্স এনরোলমেন্ট ও পেমেন্ট রিসিট কপি সংযুক্ত রয়েছে।");
-      showToast('টেমপ্লেট কপি করা হয়েছে!');
-    }
-
-    function exportDataCSV() {
-      let csv = "ID,Name,Company,Phone,CoursePerson,Course,TotalFee,Advance,MonthlyPaid,Due,Disposition\n";
-      masterRecords.forEach(r => {
-        csv += `"${r.id}","${r.name}","${r.company || ''}","${r.phone}","${r.isCoursePerson}","${r.course}",${r.totalFee},${r.advance},${r.regularPaid},${r.due},"${r.disposition}"\n`;
-      });
-      const link = document.createElement("a");
-      link.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
-      link.download = `crm_enterprise_leads_${new Date().toISOString().slice(0,10)}.csv`;
-      link.click();
-    }
-
-    function requestNotificationPermission() {
-      if ("Notification" in window) {
-        Notification.requestPermission().then(p => {
-          if (p === "granted") showToast("ডেস্কটপ নোটিফিকেশন চালু হয়েছে!");
-        });
-      }
-    }
-
-
-    let currentDisplayMode = 'TABLE';
 
     function switchMainDisplay(mode) {
       currentDisplayMode = mode;
@@ -2090,12 +2340,203 @@ Skills Learner-এ আপনার কোর্স এনরোলমেন্�
       document.getElementById('pavelLeads').innerText = pLeads;
       document.getElementById('pavelEnrolled').innerText = pEnrolled;
       document.getElementById('pavelRevenue').innerText = `৳${pRev.toLocaleString()}`;
+      document.getElementById('pavelConv').innerText = `${pLeads ? ((pEnrolled/pLeads)*100).toFixed(1) : 0}%`;
 
       document.getElementById('imranLeads').innerText = iLeads;
       document.getElementById('imranEnrolled').innerText = iEnrolled;
       document.getElementById('imranRevenue').innerText = `৳${iRev.toLocaleString()}`;
+      document.getElementById('imranConv').innerText = `${iLeads ? ((iEnrolled/iLeads)*100).toFixed(1) : 0}%`;
 
       document.getElementById('leaderboardModal').classList.add('active');
+    }
+
+    function toggleTheme() {
+      const curr = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', curr);
+      document.getElementById('themeIcon').innerText = curr === 'dark' ? '☀️' : '🌙';
+      document.getElementById('themeText').innerText = curr === 'dark' ? 'Light' : 'Dark';
+    }
+
+    function toggleLanguage() {
+      const cur = document.documentElement.lang === 'bn' ? 'en' : 'bn';
+      document.documentElement.lang = cur;
+      document.getElementById('langText').innerText = cur === 'bn' ? 'English' : 'বাংলা';
+      showToast(cur === 'bn' ? "ভাষা বাংলায় পরিবর্তিত হয়েছে।" : "Switched to English.");
+    }
+
+    function showToast(msg) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>🔔</span> <span>${msg}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => { toast.remove(); }, 3500);
+    }
+
+    // Calendar
+    let cachedEventDates = new Set();
+    function updateCachedCalendarDates() {
+      cachedEventDates = new Set();
+      for (let i = 0; i < masterRecords.length; i++) {
+        const s = masterRecords[i];
+        if (s.nextCall) cachedEventDates.add(s.nextCall.slice(0, 10));
+        if (s.nextDueDate) cachedEventDates.add(s.nextDueDate);
+      }
+    }
+
+    function renderCalendar() {
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      document.getElementById('calMonthYear').innerText = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const todayStr = new Date().toISOString().slice(0, 10);
+
+      updateCachedCalendarDates();
+
+      let gridHtml = '';
+      const dayLabels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+      for (let i = 0; i < 7; i++) {
+        gridHtml += `<div class="cal-day-label">${dayLabels[i]}</div>`;
+      }
+
+      for (let i = 0; i < firstDay; i++) {
+        gridHtml += `<div></div>`;
+      }
+
+      for (let d = 1; d <= totalDays; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        let cls = 'cal-day';
+        if (dateStr === todayStr) cls += ' today';
+        if (selectedCalDate === dateStr) cls += ' selected';
+        if (cachedEventDates.has(dateStr)) cls += ' has-event';
+
+        gridHtml += `<div class="${cls}" onclick="onCalendarDateClick('${dateStr}')">${d}</div>`;
+      }
+      document.getElementById('calGrid').innerHTML = gridHtml;
+    }
+
+    function onCalendarDateClick(dateStr) {
+      selectedCalDate = dateStr;
+      renderCalendar();
+      document.getElementById('chip_cal_active').style.display = 'inline-flex';
+      document.getElementById('chipDateText').innerText = dateStr;
+      currentPage = 1;
+      renderTable();
+    }
+
+    function changeMonth(dir) { calDate.setMonth(calDate.getMonth() + dir); renderCalendar(); }
+    function clearDateFilter() { selectedCalDate = null; renderCalendar(); document.getElementById('chip_cal_active').style.display = 'none'; renderTable(); }
+
+    let timerSeconds = 0;
+    let timerInterval = null;
+    function startTimer() {
+      if(!timerInterval) {
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          const mins = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+          const secs = String(timerSeconds % 60).padStart(2, '0');
+          document.getElementById('callTimer').innerText = `${mins}:${secs}`;
+        }, 1000);
+      }
+    }
+    function pauseTimer() { clearInterval(timerInterval); timerInterval = null; }
+    function resetTimer() { pauseTimer(); timerSeconds = 0; document.getElementById('callTimer').innerText = "00:00"; }
+
+    function exportDataCSV() {
+      let csv = "ID,Name,Company,Phone,SheetMode,CoursePerson,Course,TotalFee,Advance,MonthlyPaid,Due,NextCall,Status,Disposition\n";
+      masterRecords.forEach(r => {
+        csv += `"${r.id}","${r.name}","${r.company || ''}","${r.phone}","${r.sheetMode}","${r.isCoursePerson}","${r.course}",${r.totalFee},${r.advance},${r.regularPaid},${r.due},"${r.nextCall || ''}","${r.status}","${r.disposition}"\n`;
+      });
+      const link = document.createElement("a");
+      link.href = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      link.download = `skills_learner_master_crm_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
+
+    // Initialize
+
+    function openObjectionModal() {
+      document.getElementById('objectionModal').classList.add('active');
+    }
+
+    function openAnalyticsModal() {
+      renderVisualAnalytics();
+      document.getElementById('analyticsModal').classList.add('active');
+    }
+
+    function copyObjection(id) {
+      const texts = {
+        1: "আসসালামু আলাইকুম স্যার, Skills Learner-এর আন্তর্জাতিক সার্টিফিকেশন ট্রেনিংটিতে পাচ্ছেন ৪০ ঘণ্টার হ্যান্ডস-অন প্র্যাকটিক্যাল প্রজেক্ট, গ্লোবাল এক্সাম ভাউচার গাইডলাইন এবং আজীবন সাপোর্ট। আপনার সুবিধার্থে আমরা ২-৩টি সহজ মাসিক কিস্তির সুযোগ দিচ্ছি। আপনি কি সহজ কিস্তিতে সিট লক করতে আগ্রহী?",
+        2: "আসসালামু আলাইকুম স্যার, আমাদের ক্লাসগুলো কর্মজীবী প্রফেশনালদের সুবিধার্থে রাত ৮:৩০ থেকে ১০:৩০ টা পর্যন্ত অনলাইনে এবং ছুটির দিনে ফিজিক্যাল ব্যাচে অনুষ্ঠিত হয়। প্রতিটি ক্লাসের রেকর্ডিং ও সাপোর্ট থাকবে, ফলে ব্যস্ততার মধ্যেও কোনো ক্লাস মিস হবে না।",
+        3: "আসসালামু আলাইকুম স্যার, বর্তমান ব্যাচে সীমিত আসনে বিশেষ আর্লি-বার্ড ছাড় কার্যকর রয়েছে। পরের ব্যাচে ফি বৃদ্ধি পাওয়ার সম্ভাবনা রয়েছে। মাত্র ৩,০০০ থেকে ৫,০০০ টাকা দিয়ে সিট বুক করে ক্লাস শুরুর পর বাকি পেমেন্ট সম্পন্ন করতে পারবেন।"
+      };
+      if (texts[id]) {
+        navigator.clipboard.writeText(texts[id]);
+        showToast("📋 অবজেকশন হ্যান্ডলিং মেসেজ কপি করা হয়েছে!");
+      }
+    }
+
+    function renderVisualAnalytics() {
+      let hot = 0, semi = 0, cold = 0, won = 0;
+      let courseRev = {
+        "Lean Six Sigma Black Belt": 0,
+        "Lean Six Sigma Green Belt": 0,
+        "PMP Exam Prep": 0,
+        "Supply Chain Analytics": 0
+      };
+
+      masterRecords.forEach(r => {
+        if (r.status === 'Hot') hot++;
+        else if (r.status === 'Semi-Hot') semi++;
+        else cold++;
+
+        if (r.isCoursePerson === 'YES') {
+          won++;
+          const paid = Number(r.advance || 0) + Number(r.regularPaid || 0);
+          if (courseRev[r.course] !== undefined) {
+            courseRev[r.course] += paid;
+          } else {
+            courseRev[r.course] = paid;
+          }
+        }
+      });
+
+      const totalLeads = masterRecords.length || 1;
+      const funEl = document.getElementById('chartPipelineFunnel');
+      funEl.innerHTML = `
+        <div>
+          <div style="display:flex; justify-content:space-between;"><span>❄️ Cold Prospect Leads</span><strong>${cold} (${((cold/totalLeads)*100).toFixed(0)}%)</strong></div>
+          <div style="background:var(--bg-card); height:8px; border-radius:999px; overflow:hidden; margin:3px 0;"><div style="background:var(--primary); height:100%; width:${(cold/totalLeads)*100}%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between;"><span>⚡ Semi-Hot Warm Inquiries</span><strong>${semi} (${((semi/totalLeads)*100).toFixed(0)}%)</strong></div>
+          <div style="background:var(--bg-card); height:8px; border-radius:999px; overflow:hidden; margin:3px 0;"><div style="background:var(--accent-amber); height:100%; width:${(semi/totalLeads)*100}%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between;"><span>🔥 Hot Qualified Decision</span><strong>${hot} (${((hot/totalLeads)*100).toFixed(0)}%)</strong></div>
+          <div style="background:var(--bg-card); height:8px; border-radius:999px; overflow:hidden; margin:3px 0;"><div style="background:var(--accent-red); height:100%; width:${(hot/totalLeads)*100}%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between;"><span>🟢 Enrolled Won (Course Person)</span><strong>${won} (${((won/totalLeads)*100).toFixed(0)}%)</strong></div>
+          <div style="background:var(--bg-card); height:8px; border-radius:999px; overflow:hidden; margin:3px 0;"><div style="background:var(--accent-green); height:100%; width:${(won/totalLeads)*100}%;"></div></div>
+        </div>
+      `;
+
+      let totalRev = Object.values(courseRev).reduce((a, b) => a + b, 0) || 1;
+      const revEl = document.getElementById('chartCourseRevenue');
+      revEl.innerHTML = '';
+      for (const [cName, amt] of Object.entries(courseRev)) {
+        const pct = ((amt / totalRev) * 100).toFixed(0);
+        revEl.innerHTML += `
+          <div>
+            <div style="display:flex; justify-content:space-between;"><span>${cName}</span><strong>৳${amt.toLocaleString()} (${pct}%)</strong></div>
+            <div style="background:var(--bg-card); height:8px; border-radius:999px; overflow:hidden; margin:3px 0;"><div style="background:var(--accent-cyan); height:100%; width:${pct}%;"></div></div>
+          </div>
+        `;
+      }
     }
 
     renderCalendar();
