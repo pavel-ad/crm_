@@ -207,80 +207,72 @@
   <!-- ==================== MAIN WORKSPACE ==================== -->
   <div id="mainWorkspaceWrapper" class="flex-1 lg:ml-64 flex flex-col min-h-screen min-w-0 transition-all duration-300">
     
-    <!-- Top Header Sticky -->
-    <header class="h-16 bg-slate-900/90 glassmorphism border-b border-slate-800 sticky top-0 z-30 px-5 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3 flex-1 min-w-0">
-        <button onclick="toggleSidebar()" class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center hover:bg-slate-700 transition">
+    <!-- Top Header Sticky (Ultra Clean & Responsive - Never Overlaps!) -->
+    <header class="h-16 bg-slate-900/95 glassmorphism border-b border-slate-800 sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between gap-3">
+      <!-- Left side: Toggle button + Search input -->
+      <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <button onclick="toggleSidebar()" class="w-9 h-9 shrink-0 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white flex items-center justify-center hover:bg-slate-700 transition" title="Toggle Sidebar">
           <i class="fa-solid fa-bars text-sm"></i>
         </button>
 
         <!-- Live Global Search -->
-        <div class="relative max-w-xs w-full">
+        <div class="relative w-44 sm:w-60 md:w-80">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
           <input type="text" id="searchInput" oninput="debouncedFilter()" placeholder="ফোন (017...), নাম বা কোম্পানি..." class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-400 outline-none focus:ring-1 focus:ring-brand-500">
         </div>
-
-        <!-- Quick Filters in Header -->
-        <div class="hidden md:flex items-center gap-2">
-          <input type="date" id="dateWorkFilter" onchange="filterData()" title="কল তারিখ অনুযায়ী ফিল্টার" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-300 outline-none focus:ring-1 focus:ring-brand-500">
-
-          <select id="coursePersonFilter" onchange="filterData()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-300 outline-none focus:ring-1 focus:ring-brand-500 font-semibold">
-            <option value="ALL">Course Person: All</option>
-            <option value="YES">✅ Course Person: YES</option>
-            <option value="NO">❌ Course Person: NO</option>
-          </select>
-
-          <select id="courseFilter" onchange="filterData()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-300 outline-none focus:ring-1 focus:ring-brand-500">
-            <option value="ALL">All Courses (4)</option>
-            <option value="Lean Six Sigma Black Belt">Lean Six Sigma Black Belt</option>
-            <option value="Lean Six Sigma Green Belt">Lean Six Sigma Green Belt</option>
-            <option value="PMP Exam Prep">PMP Exam Prep</option>
-            <option value="Supply Chain Analytics">Supply Chain Analytics</option>
-          </select>
-
-          <select id="userProfileSelector" onchange="switchUserProfile()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1 text-xs text-slate-300 outline-none focus:ring-1 focus:ring-brand-500 font-semibold" title="KAM অনুযায়ী ফিল্টার">
-            <option value="ALL">All KAM (সকল)</option>
-            <option value="পাবেল">👤 পাবেল</option>
-            <option value="ইমরান">👤 ইমরান</option>
-          </select>
-        </div>
       </div>
 
-      <!-- Action Buttons in Header -->
-      <div class="flex items-center gap-2 shrink-0">
-        <button id="dbStatusBadge" onclick="openDbModal()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5" title="GitHub JSON Database Status & Sync">
+      <!-- Right side: DB status + Sync + EOD + Tools dropdown + New Lead -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- GitHub DB Status Badge -->
+        <button id="dbStatusBadge" onclick="openDbModal()" class="px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1.5" title="GitHub JSON Database Status & Sync">
           <span id="dbStatusDot" class="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
           <span id="dbStatusText" class="hidden sm:inline">GitHub DB</span>
         </button>
 
-        <button onclick="loadDatabase(true)" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1" title="GitHub থেকে ডাটাবেস রিলোড / সিঙ্ক করুন">
+        <!-- Sync Button -->
+        <button onclick="loadDatabase(true)" class="px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1" title="GitHub থেকে ডাটাবেস রিলোড / সিঙ্ক করুন">
           <i class="fa-solid fa-arrows-rotate text-xs"></i>
-          <span class="hidden sm:inline">Sync</span>
+          <span class="hidden md:inline">Sync</span>
         </button>
 
-        <button onclick="openEodModal()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30 hover:bg-purple-500 hover:text-white transition flex items-center gap-1.5">
+        <!-- Daily EOD -->
+        <button onclick="openEodModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30 hover:bg-purple-500 hover:text-white transition flex items-center gap-1.5" title="Daily End-of-Day Report">
           <i class="fa-solid fa-file-signature text-xs"></i>
           <span class="hidden sm:inline">Daily EOD</span>
         </button>
 
-        <button onclick="openPinModal()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition" title="Admin Security PIN">
-          <i class="fa-solid fa-lock"></i>
-        </button>
-
-        <button onclick="backupDatabaseJSON()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition hidden sm:inline-flex items-center gap-1" title="JSON Backup">
-          <i class="fa-solid fa-download"></i> Backup
-        </button>
-
-        <button onclick="document.getElementById('restoreFileInput').click()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition hidden sm:inline-flex items-center gap-1" title="JSON Restore">
-          <i class="fa-solid fa-upload"></i> Restore
-        </button>
+        <!-- Data Tools Dropdown (Backup, Restore, CSV, PIN) -->
+        <div class="relative inline-block text-left" id="headerToolsDropdownContainer">
+          <button onclick="toggleHeaderToolsMenu(event)" class="px-2 sm:px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1" title="Backup, Restore, CSV & Admin PIN">
+            <i class="fa-solid fa-gear text-xs text-slate-400"></i>
+            <span class="hidden xl:inline">Tools</span>
+            <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
+          </button>
+          
+          <div id="headerToolsMenu" class="hidden absolute right-0 mt-2 w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-1.5 z-50 space-y-1">
+            <button onclick="backupDatabaseJSON(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2 transition">
+              <i class="fa-solid fa-download text-amber-400 w-4 text-center"></i>
+              <span>Backup JSON</span>
+            </button>
+            <button onclick="document.getElementById('restoreFileInput').click(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2 transition">
+              <i class="fa-solid fa-upload text-indigo-400 w-4 text-center"></i>
+              <span>Restore JSON</span>
+            </button>
+            <button onclick="securedExportCSV(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2 transition">
+              <i class="fa-solid fa-file-csv text-emerald-400 w-4 text-center"></i>
+              <span>Export CSV</span>
+            </button>
+            <button onclick="openPinModal(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2 transition border-t border-slate-800 pt-1.5">
+              <i class="fa-solid fa-lock text-purple-400 w-4 text-center"></i>
+              <span>Admin PIN</span>
+            </button>
+          </div>
+        </div>
         <input type="file" id="restoreFileInput" accept=".json" style="display:none;" onchange="restoreDatabaseJSON(event)">
 
-        <button onclick="securedExportCSV()" class="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 transition hidden md:inline-flex items-center gap-1" title="CSV Export">
-          <i class="fa-solid fa-file-csv"></i> CSV
-        </button>
-
-        <button onclick="openLeadModal()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-500/30 flex items-center gap-1.5 transition">
+        <!-- New Lead Button -->
+        <button onclick="openLeadModal()" class="px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-500/30 flex items-center gap-1.5 transition shrink-0">
           <i class="fa-solid fa-plus text-xs"></i>
           <span>New Lead</span>
         </button>
@@ -341,17 +333,72 @@
           </div>
         </div>
 
-        <!-- Quick Filter Chips -->
-        <div class="flex flex-wrap items-center gap-2 pt-1">
-          <span class="text-xs font-bold text-slate-400 mr-1"><i class="fa-solid fa-filter text-brand-400"></i> Filter:</span>
-          <button onclick="setQuickFilter('ALL')" id="chip-all" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-brand-600 text-white border border-brand-500">All Leads</button>
-          <button onclick="setQuickFilter('TODAY')" id="chip-today" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600">🚨 Today's Calls (<span id="chipTodayCount">0</span>)</button>
-          <button onclick="setQuickFilter('YES')" id="chip-yes" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600">✅ Course Person: YES (<span id="chipYesCount">0</span>)</button>
-          <button onclick="setQuickFilter('NO')" id="chip-no" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600">❌ Course Person: NO (<span id="chipNoCount">0</span>)</button>
-          <button onclick="setQuickFilter('DUE')" id="chip-due" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 text-rose-400">🔴 Due Payments (<span id="chipDueCount">0</span>)</button>
-          <button onclick="clearDateFilter()" id="chip-cal-active" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white items-center gap-1.5">
-            <span id="chipDateText"></span> <i class="fa-solid fa-xmark"></i>
-          </button>
+        <!-- Dedicated Filter & Search Control Panel (Clean Grid - Never Overlaps!) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+          <!-- Row 1: Quick Filter Status Chips + Reset Button -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-bold text-slate-400 mr-1"><i class="fa-solid fa-filter text-brand-400"></i> Status:</span>
+              <button onclick="setQuickFilter('ALL')" id="chip-all" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-brand-600 text-white border border-brand-500 transition">All Leads</button>
+              <button onclick="setQuickFilter('TODAY')" id="chip-today" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">🚨 Today's Calls (<span id="chipTodayCount">0</span>)</button>
+              <button onclick="setQuickFilter('YES')" id="chip-yes" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">✅ Course Person: YES (<span id="chipYesCount">0</span>)</button>
+              <button onclick="setQuickFilter('NO')" id="chip-no" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">❌ Course Person: NO (<span id="chipNoCount">0</span>)</button>
+              <button onclick="setQuickFilter('DUE')" id="chip-due" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 text-rose-400 transition">🔴 Due Payments (<span id="chipDueCount">0</span>)</button>
+              <button onclick="clearDateFilter()" id="chip-cal-active" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white items-center gap-1.5">
+                <span id="chipDateText"></span> <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            
+            <button onclick="resetAllFilters()" class="text-xs font-semibold text-slate-400 hover:text-brand-400 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-rotate-left text-[11px]"></i>
+              <span>ফিল্টার রিসেট (Reset)</span>
+            </button>
+          </div>
+
+          <!-- Row 2: 4-Column Responsive Dropdown Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-2.5 border-t border-slate-800/80 text-xs">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
+                <i class="fa-regular fa-calendar text-brand-400"></i> <span>কল / ডিউ তারিখ (Date)</span>
+              </label>
+              <input type="date" id="dateWorkFilter" onchange="filterData()" title="কল তারিখ অনুযায়ী ফিল্টার" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 transition">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-graduation-cap text-emerald-400"></i> <span>কোর্স পার্সন (Enrollment)</span>
+              </label>
+              <select id="coursePersonFilter" onchange="filterData()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 font-semibold transition">
+                <option value="ALL">All Status (সকল)</option>
+                <option value="YES">✅ Course Person: YES</option>
+                <option value="NO">❌ Course Person: NO</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-book-bookmark text-cyan-400"></i> <span>কোর্স ফিল্টার (Course)</span>
+              </label>
+              <select id="courseFilter" onchange="filterData()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 transition">
+                <option value="ALL">All Courses (৪টি কোর্স)</option>
+                <option value="Lean Six Sigma Black Belt">Lean Six Sigma Black Belt</option>
+                <option value="Lean Six Sigma Green Belt">Lean Six Sigma Green Belt</option>
+                <option value="PMP Exam Prep">PMP Exam Prep</option>
+                <option value="Supply Chain Analytics">Supply Chain Analytics</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-headset text-purple-400"></i> <span>কলার / একাউন্ট ম্যানেজার (KAM)</span>
+              </label>
+              <select id="userProfileSelector" onchange="switchUserProfile()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 font-semibold transition" title="KAM অনুযায়ী ফিল্টার">
+                <option value="ALL">All KAM (সকল কলার)</option>
+                <option value="পাবেল">👤 পাবেল</option>
+                <option value="ইমরান">👤 ইমরান</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- Table Container -->
@@ -1836,6 +1883,48 @@
     
     // ----------------- ACTIONS DROPDOWN CONTROLLER -----------------
     let currentActionLeadId = null;
+
+    
+    // ----------------- HEADER TOOLS & FILTER RESET -----------------
+    function toggleHeaderToolsMenu(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      const menu = document.getElementById('headerToolsMenu');
+      if (menu) menu.classList.toggle('hidden');
+    }
+
+    function closeHeaderToolsMenu() {
+      const menu = document.getElementById('headerToolsMenu');
+      if (menu) menu.classList.add('hidden');
+    }
+
+    function resetAllFilters() {
+      const searchEl = document.getElementById('searchInput');
+      if (searchEl) searchEl.value = '';
+      const dateEl = document.getElementById('dateWorkFilter');
+      if (dateEl) dateEl.value = '';
+      const personEl = document.getElementById('coursePersonFilter');
+      if (personEl) personEl.value = 'ALL';
+      const courseEl = document.getElementById('courseFilter');
+      if (courseEl) courseEl.value = 'ALL';
+      const callerEl = document.getElementById('userProfileSelector');
+      if (callerEl) callerEl.value = 'ALL';
+      selectedCalDate = null;
+      setQuickFilter('ALL');
+      showToast("🔄 সকল ফিল্টার রিসেট করা হয়েছে!");
+    }
+
+    document.addEventListener('click', (e) => {
+      const toolsMenu = document.getElementById('headerToolsMenu');
+      const container = document.getElementById('headerToolsDropdownContainer');
+      if (toolsMenu && !toolsMenu.classList.contains('hidden')) {
+        if (container && !container.contains(e.target)) {
+          closeHeaderToolsMenu();
+        }
+      }
+    });
 
     function toggleActionDropdown(id, event) {
       if (event) {
