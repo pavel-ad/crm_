@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Skills Learner - Enterprise Tailwind CRM & Call Center Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -1872,7 +1875,7 @@
         }
         dbConfig.lastSyncTime = new Date().toLocaleTimeString();
         localStorage.setItem(DB_CONFIG_KEY, JSON.stringify(dbConfig));
-        updateDBSyncStatusUI('synced', `${source} (${masterRecords.length})`);
+        updateDBSyncStatusUI('synced', `DB (${masterRecords.length})`);
       } else if (hasLocalData) {
         updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
       } else {
