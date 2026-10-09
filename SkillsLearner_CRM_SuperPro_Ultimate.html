@@ -1251,6 +1251,23 @@
             </select>
           </div>
 
+          <!-- PRIMARY COURSE SELECTION DROPDOWN (Always Accessible for Any Lead) -->
+          <div class="col-span-1 md:col-span-2 p-3 bg-slate-800/60 border border-slate-700/80 rounded-xl">
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-[11px] font-bold text-slate-300 uppercase flex items-center gap-1.5">
+                <i class="fa-solid fa-graduation-cap text-brand-400"></i>
+                <span>কোর্স / প্রোগ্রাম নির্বাচন (Select Course) *</span>
+              </label>
+              <button type="button" onclick="openCourseManagerModal()" class="text-[11px] text-brand-400 hover:text-brand-300 font-bold transition flex items-center gap-1">
+                <i class="fa-solid fa-gear text-[10px]"></i>
+                <span>কোর্স লিস্ট ম্যানেজ (+নতুন কোর্স)</span>
+              </button>
+            </div>
+            <select id="m_course" onchange="autoFillCourseFee()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-brand-300 font-bold outline-none focus:ring-1 focus:ring-brand-500">
+              <!-- Dynamically populated from course list -->
+            </select>
+          </div>
+
           <!-- THE CRITICAL SWITCH: Course Person (YES / NO) -->
           <div class="col-span-1 md:col-span-2 p-3 bg-slate-800/80 border border-brand-500/40 rounded-xl">
             <label class="font-bold text-xs text-brand-300 block mb-1.5 flex items-center gap-1.5">
@@ -1270,13 +1287,10 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
               <div>
-                <label class="text-[11px] text-slate-400 block mb-1">Select Course *</label>
-                <select id="m_course" onchange="autoFillCourseFee()" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white outline-none">
-                  <option value="Lean Six Sigma Black Belt">Lean Six Sigma Black Belt (40 Hours)</option>
-                  <option value="Lean Six Sigma Green Belt">Lean Six Sigma Green Belt (24 Hours)</option>
-                  <option value="PMP Exam Prep">PMP Exam Prep (35 PDU)</option>
-                  <option value="Supply Chain Analytics">Supply Chain Analytics & Optimization</option>
-                </select>
+                <label class="text-[11px] text-slate-400 block mb-1">Enrolled Course</label>
+                <div class="p-2 bg-slate-900 border border-slate-700 rounded-xl text-brand-300 font-bold text-xs truncate">
+                  (উপরে নির্বাচিত কোর্সটি এখানে কার্যকর)
+                </div>
               </div>
 
               <div>
@@ -2111,6 +2125,93 @@
       <button onclick="dismissAlarmBanner()" class="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
         <i class="fa-solid fa-xmark"></i>
       </button>
+    </div>
+  </div>
+
+  
+  <!-- ==================== COURSE MANAGER MODAL ==================== -->
+  <div id="courseManagerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-4 text-xs">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-sm text-brand-400 flex items-center gap-2">
+          <i class="fa-solid fa-graduation-cap text-lg"></i>
+          <span>কোর্স তালিকা ও ফি ম্যানেজমেন্ট (Course Manager)</span>
+        </h3>
+        <button onclick="closeModal('courseManagerModal')" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Add New Course Form -->
+      <form id="courseAddForm" onsubmit="saveNewCourseRecord(event)" class="p-4 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-3">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">+ নতুন কোর্স যোগ করুন (Add New Course):</span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div class="sm:col-span-2">
+            <label class="text-[10px] font-bold text-slate-400 block mb-1">কোর্সের পুরো নাম (Course Name) *</label>
+            <input type="text" id="cm_name" required placeholder="যেমন: Data Analytics & Power BI" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white outline-none focus:ring-1 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 block mb-1">কোর্স ফি (টাকা) *</label>
+            <input type="number" id="cm_fee" required placeholder="যেমন: 15000" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-emerald-400 font-bold outline-none focus:ring-1 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 block mb-1">কোর্স সময়কাল (Duration)</label>
+            <input type="text" id="cm_duration" placeholder="যেমন: 24 Hours / 35 PDU" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white outline-none focus:ring-1 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 block mb-1">ক্যাটাগরি (Category)</label>
+            <select id="cm_category" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white outline-none">
+              <option value="Quality & Lean">Quality & Lean</option>
+              <option value="Project Management">Project Management</option>
+              <option value="Supply Chain">Supply Chain</option>
+              <option value="Data & Tech">Data & Tech</option>
+              <option value="Finance & Valuation">Finance & Valuation</option>
+              <option value="Management & HR">Management & HR</option>
+              <option value="Other">Other Programs</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 block mb-1">রোল কোড (Code Prefix)</label>
+            <input type="text" id="cm_code" placeholder="যেমন: PBI, LSS" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-brand-300 font-mono font-bold uppercase outline-none focus:ring-1 focus:ring-brand-500">
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-1">
+          <button type="submit" class="px-4 py-2 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center gap-1.5">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>কোর্স সংরক্ষণ করুন</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Existing Courses List Table -->
+      <div class="border border-slate-800 rounded-2xl overflow-hidden shadow-lg">
+        <div class="p-3 bg-slate-900 border-b border-slate-800 flex justify-between items-center">
+          <span class="font-bold text-white text-xs">বিদ্যমান কোর্স তালিকা (Active Courses)</span>
+          <button type="button" onclick="resetCoursesToDefault()" class="text-[10px] text-slate-400 hover:text-amber-400 transition">🔄 ডিফল্ট রিস্টোর</button>
+        </div>
+        <div class="max-h-56 overflow-y-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-950/80 border-b border-slate-800 text-[10px] text-slate-400 uppercase">
+              <tr>
+                <th class="p-2.5">Course Name</th>
+                <th class="p-2.5">Category</th>
+                <th class="p-2.5">Duration</th>
+                <th class="p-2.5 text-right">Fee (BDT)</th>
+                <th class="p-2.5 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody id="cmCoursesTableBody" class="divide-y divide-slate-800">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+        <span class="text-[11px] text-slate-400" id="cmCourseCountLabel">মোট কোর্স: 0</span>
+        <button type="button" onclick="closeModal('courseManagerModal')" class="px-4 py-1.5 bg-slate-800 text-slate-300 hover:bg-slate-700 rounded-xl">বন্ধ করুন</button>
+      </div>
     </div>
   </div>
 
@@ -3536,6 +3637,178 @@ const TODAY_STR = "2026-10-06";
 
     function printAdmissionSlip() {
       window.print();
+    }
+
+    
+    // =========================================================
+    // DYNAMIC COURSE ENGINE & MANAGEMENT
+    // =========================================================
+    const COURSE_STORAGE_KEY = 'sl_crm_courses_v2';
+
+    const INITIAL_DEFAULT_COURSES = [
+      { name: "Lean Six Sigma Black Belt", fee: 18000, duration: "40 Hours", code: "LSSBB", category: "Quality & Lean" },
+      { name: "Lean Six Sigma Green Belt", fee: 12000, duration: "24 Hours", code: "LSSGB", category: "Quality & Lean" },
+      { name: "Lean Six Sigma Yellow Belt", fee: 6000, duration: "12 Hours", code: "LSSYB", category: "Quality & Lean" },
+      { name: "PMP Exam Prep", fee: 20000, duration: "35 PDU", code: "PMP", category: "Project Management" },
+      { name: "Supply Chain Analytics", fee: 15000, duration: "24 Hours", code: "SCM", category: "Supply Chain" },
+      { name: "Certified Supply Chain Professional (CSCP)", fee: 16000, duration: "30 Hours", code: "CSCP", category: "Supply Chain" },
+      { name: "Total Quality Management (TQM & Kaizen)", fee: 10000, duration: "16 Hours", code: "TQM", category: "Quality & Lean" },
+      { name: "Data Analytics & Power BI", fee: 12000, duration: "24 Hours", code: "PBI", category: "Data & Tech" },
+      { name: "Agile & Scrum Master (CSM / PMI-ACP)", fee: 14000, duration: "20 Hours", code: "AGL", category: "Project Management" },
+      { name: "Certified Human Resource Management (CHRM)", fee: 12000, duration: "20 Hours", code: "HRM", category: "Management & HR" },
+      { name: "Financial Modeling & Valuation", fee: 14000, duration: "24 Hours", code: "FMV", category: "Finance & Valuation" },
+      { name: "Digital Marketing & Growth Hacking", fee: 10000, duration: "20 Hours", code: "DMG", category: "Other" }
+    ];
+
+    function getAllCourses() {
+      try {
+        const stored = localStorage.getItem(COURSE_STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch(e) {}
+      localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(INITIAL_DEFAULT_COURSES));
+      return INITIAL_DEFAULT_COURSES;
+    }
+
+    function saveAllCourses(courses) {
+      localStorage.setItem(COURSE_STORAGE_KEY, JSON.stringify(courses));
+      updateCourseDropdowns();
+    }
+
+    function updateCourseDropdowns() {
+      const courses = getAllCourses();
+
+      // 1. Sync global price and prefix maps
+      courses.forEach(c => {
+        coursePrices[c.name] = Number(c.fee) || 0;
+        if (typeof coursePrefixes !== 'undefined' && c.code) {
+          coursePrefixes[c.name] = c.code;
+        }
+      });
+
+      // 2. Populate Toolbar Filter Dropdown (#courseFilter)
+      const filterSelect = document.getElementById('courseFilter');
+      if (filterSelect) {
+        const curVal = filterSelect.value;
+        let optHtml = `<option value="ALL">All Courses (${courses.length}টি কোর্স)</option>`;
+
+        const categories = [...new Set(courses.map(c => c.category || 'Programs'))];
+        categories.forEach(cat => {
+          optHtml += `<optgroup label="📂 ${cat}">`;
+          courses.filter(c => (c.category || 'Programs') === cat).forEach(c => {
+            optHtml += `<option value="${c.name}">${c.name}</option>`;
+          });
+          optHtml += `</optgroup>`;
+        });
+
+        filterSelect.innerHTML = optHtml;
+        if (courses.some(c => c.name === curVal) || curVal === 'ALL') {
+          filterSelect.value = curVal;
+        }
+      }
+
+      // 3. Populate Lead Modal Course Dropdown (#m_course)
+      const modalSelect = document.getElementById('m_course');
+      if (modalSelect) {
+        const curVal = modalSelect.value;
+        let optHtml = '';
+
+        const categories = [...new Set(courses.map(c => c.category || 'Programs'))];
+        categories.forEach(cat => {
+          optHtml += `<optgroup label="📂 ${cat}">`;
+          courses.filter(c => (c.category || 'Programs') === cat).forEach(c => {
+            optHtml += `<option value="${c.name}">${c.name} (${c.duration || 'Program'} - ৳${Number(c.fee).toLocaleString()})</option>`;
+          });
+          optHtml += `</optgroup>`;
+        });
+
+        modalSelect.innerHTML = optHtml;
+        if (courses.some(c => c.name === curVal)) {
+          modalSelect.value = curVal;
+        }
+      }
+
+      renderCourseManagerTable();
+    }
+
+    function openCourseManagerModal() {
+      document.getElementById('courseAddForm')?.reset();
+      renderCourseManagerTable();
+      document.getElementById('courseManagerModal').classList.remove('hidden');
+    }
+
+    function renderCourseManagerTable() {
+      const courses = getAllCourses();
+      const tbody = document.getElementById('cmCoursesTableBody');
+      const countLabel = document.getElementById('cmCourseCountLabel');
+      if (!tbody) return;
+
+      tbody.innerHTML = '';
+      if (countLabel) countLabel.innerText = `মোট কোর্স: ${courses.length}টি`;
+
+      courses.forEach((c, idx) => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/40 transition';
+        tr.innerHTML = `
+          <td class="p-2.5">
+            <strong class="text-white block">${c.name}</strong>
+            <span class="text-[10px] text-brand-300 font-mono">Code: ${c.code || '-'}</span>
+          </td>
+          <td class="p-2.5 text-slate-400">${c.category || 'Other'}</td>
+          <td class="p-2.5 text-slate-300">${c.duration || '-'}</td>
+          <td class="p-2.5 text-right font-bold text-emerald-400">৳${Number(c.fee).toLocaleString()}</td>
+          <td class="p-2.5 text-center">
+            ${courses.length > 1 ? `
+            <button onclick="deleteCourseRecord(${idx})" title="Delete Course" class="p-1 rounded bg-rose-600/20 text-rose-400 hover:bg-rose-600 hover:text-white transition">
+              <i class="fa-solid fa-trash-can text-[10px]"></i>
+            </button>` : ''}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function saveNewCourseRecord(e) {
+      e.preventDefault();
+      const name = document.getElementById('cm_name').value.trim();
+      const fee = Number(document.getElementById('cm_fee').value || 0);
+      const duration = document.getElementById('cm_duration').value.trim() || '24 Hours';
+      const category = document.getElementById('cm_category').value;
+      const code = document.getElementById('cm_code').value.trim().toUpperCase() || 'SL';
+
+      let courses = getAllCourses();
+      if (courses.some(c => c.name.toLowerCase() === name.toLowerCase())) {
+        alert("এই কোর্সটি ইতিপূর্বে তালিকায় বিদ্যমান আছে!");
+        return;
+      }
+
+      courses.push({ name, fee, duration, category, code });
+      saveAllCourses(courses);
+      document.getElementById('courseAddForm').reset();
+      playSoundSuccess();
+      showToast(`🎉 নতুন কোর্স [${name}] সফলভাবে ড্রপডাউনে যুক্ত হয়েছে!`);
+    }
+
+    function deleteCourseRecord(idx) {
+      let courses = getAllCourses();
+      const c = courses[idx];
+      if (!c) return;
+
+      if (confirm(`আপনি কি নিশ্চিত যে [${c.name}] কোর্সটি তালিকা থেকে মুছে ফেলতে চান?`)) {
+        courses.splice(idx, 1);
+        saveAllCourses(courses);
+        showToast(`🗑️ [${c.name}] কোর্সটি মুছে ফেলা হয়েছে।`);
+      }
+    }
+
+    function resetCoursesToDefault() {
+      if (confirm("আপনি কি নিশ্চিত যে কোর্স তালিকা ডিফল্ট অবস্থায় ফিরিয়ে নিতে চান?")) {
+        localStorage.removeItem(COURSE_STORAGE_KEY);
+        updateCourseDropdowns();
+        showToast("🔄 কোর্স তালিকা ডিফল্ট অবস্থায় রিস্টোর করা হয়েছে!");
+      }
     }
 
     function switchTab(tabId) {
