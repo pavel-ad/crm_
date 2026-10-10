@@ -274,6 +274,13 @@
           </span>
           <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Channels</span>
         </button>
+        <button onclick="switchTab('motherdata')" id="nav-motherdata" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800">
+          <span class="flex items-center space-x-2.5">
+            <i class="fa-solid fa-folder-tree w-4 text-center text-amber-400"></i>
+            <span>Mother Data Sheet</span>
+          </span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300" id="badge-motherdata">0</span>
+        </button>
   
         <button onclick="switchTab('master')" id="nav-master" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-brand-600/15 text-brand-400 border border-brand-500/30">
           <span class="flex items-center space-x-2.5">
@@ -475,6 +482,11 @@
         </div>
         <input type="file" id="restoreFileInput" accept=".json" style="display:none;" onchange="restoreDatabaseJSON(event)">
 
+        <!-- Lead Status SOP Rules Button -->
+        <button id="headerSopRulesBtn" onclick="openSopRulesModal()" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-900 transition flex items-center gap-1.5" title="Lead Status & Mother Data Rules SOP">
+          <i class="fa-solid fa-book-bookmark text-xs"></i>
+          <span class="hidden md:inline">SOP Rules</span>
+        </button>
         <!-- New Lead Button -->
         <button onclick="openLeadModal()" class="px-3 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white shadow-lg shadow-brand-500/30 flex items-center gap-1.5 transition shrink-0">
           <i class="fa-solid fa-plus text-xs"></i>
@@ -618,6 +630,147 @@
         </div>
       </section>
 
+      
+      <!-- ==================== TAB: MOTHER DATA SHEET (SOP Implementation) ==================== -->
+      <section id="tab-motherdata" class="tab-section hidden space-y-5">
+        
+        <!-- Header Banner with SOP Rules Highlight -->
+        <div class="p-5 bg-slate-900 border border-slate-800 rounded-2xl shadow-xl space-y-4">
+          <div class="flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center text-white text-xl shadow-lg shadow-amber-500/20">
+                <i class="fa-solid fa-folder-tree"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-black text-white flex items-center gap-2">
+                  <span>Mother Data Sheet & Cold Calling Pool</span>
+                  <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">Master Raw Repository</span>
+                </h3>
+                <p class="text-xs text-slate-400 mt-0.5">নতুন লিডের মূল সংগ্রহশালা। এখান থেকে কোল্ড কলিং করে কোয়ালিফাইড লিডকে নির্দিষ্ট ফাইলে কাট-পেস্ট করুন।</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button onclick="openSopRulesModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-900 transition flex items-center gap-2">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>SOP Rules Matrix</span>
+              </button>
+              <button onclick="switchTab('master')" class="px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Master Leads</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Rules Compact Banner -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-800/80 text-xs">
+            <div class="flex items-start gap-2.5 p-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
+              <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0 text-[11px]">1</span>
+              <div>
+                <strong class="text-white block text-[11px]">Rule 1: New Data In Mother Sheet</strong>
+                <span class="text-[10px] text-slate-400">নতুন সব ডাটা প্রথমে এই শিটেই এন্ট্রি বা ইমপোর্ট হবে।</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2.5 p-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
+              <span class="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold shrink-0 text-[11px]">2</span>
+              <div>
+                <strong class="text-white block text-[11px]">Rule 2: Fill All Columns</strong>
+                <span class="text-[10px] text-slate-400">কল চলাকালীন নাম, পদবী, কোম্পানি ও সোর্স আপডেট করুন।</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-2.5 p-2.5 bg-slate-950/60 rounded-xl border border-slate-800">
+              <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0 text-[11px]">3</span>
+              <div>
+                <strong class="text-white block text-[11px]">Rule 3: Cut & Paste to File</strong>
+                <span class="text-[10px] text-slate-400">কলিং শেষে ১-ক্লিকে কাট করে সংশ্লিষ্ট ফাইলে পাঠান।</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mother Data Metrics & Action Toolbar -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-lg">
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Mother Data Pool</span>
+            <div class="text-2xl font-black text-white mt-0.5" id="mdCountTotal">0</div>
+            <span class="text-[10px] text-amber-400">Available to call</span>
+          </div>
+
+          <div class="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-lg">
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Cold Leads</span>
+            <div class="text-2xl font-black text-yellow-400 mt-0.5" id="mdCountCold">0</div>
+            <span class="text-[10px] text-slate-400">🟡 Yellow</span>
+          </div>
+
+          <div class="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-lg">
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Hot & Semi-Hot</span>
+            <div class="text-2xl font-black text-emerald-400 mt-0.5" id="mdCountHotSemi">0</div>
+            <span class="text-[10px] text-emerald-400">🟢 / 🟣 Ready to Move</span>
+          </div>
+
+          <div class="p-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-lg">
+            <span class="text-[10px] font-bold text-slate-400 uppercase block">Moved to Files</span>
+            <div class="text-2xl font-black text-brand-400 mt-0.5" id="mdCountMoved">0</div>
+            <span class="text-[10px] text-brand-300">✂️ Cut to Destination</span>
+          </div>
+        </div>
+
+        <!-- Mother Data Table Section -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl space-y-0">
+          <div class="p-4 border-b border-slate-800 bg-slate-900/90 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-2">
+              <h4 class="font-bold text-sm text-white flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-amber-400"></i>
+                <span>Mother Data Cold Calling Worklist</span>
+              </h4>
+              <span class="text-xs text-slate-400" id="mdTableSub">Active Leads</span>
+            </div>
+
+            <!-- Quick Filter & Actions -->
+            <div class="flex items-center gap-2 flex-wrap">
+              <div class="relative w-44">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                <input type="text" id="mdSearchInput" oninput="renderMotherDataTable()" placeholder="Search Mother Data..." class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-slate-800 border border-slate-700 text-slate-200 outline-none">
+              </div>
+
+              <select id="mdCourseFilter" onchange="renderMotherDataTable()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 outline-none">
+                <option value="ALL">All Courses (সব কোর্স)</option>
+              </select>
+
+              <button onclick="bulkCutSelectedLeads()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-900 border border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-scissors"></i>
+                <span>Bulk Cut to File</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-950/70 border-b border-slate-800 text-slate-400 uppercase font-bold text-[10px]">
+                  <th class="p-3 w-8 text-center">
+                    <input type="checkbox" id="mdSelectAll" onchange="toggleSelectAllMotherData(this)">
+                  </th>
+                  <th class="p-3">Client & Contact</th>
+                  <th class="p-3">Course</th>
+                  <th class="p-3">Company & Role</th>
+                  <th class="p-3 text-center">SOP Status</th>
+                  <th class="p-3 text-center">Rule 2 Completeness</th>
+                  <th class="p-3 text-right">Rule 3 Actions</th>
+                </tr>
+              </thead>
+              <tbody id="motherDataTableBody" class="divide-y divide-slate-800">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
       <section id="tab-master" class="tab-section space-y-5">
         <!-- Floating KPI Stats Cards -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3.5">
@@ -679,6 +832,13 @@
               <button onclick="setQuickFilter('YES')" id="chip-yes" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">✅ Course Person: YES (<span id="chipYesCount">0</span>)</button>
               <button onclick="setQuickFilter('NO')" id="chip-no" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">❌ Course Person: NO (<span id="chipNoCount">0</span>)</button>
               <button onclick="setQuickFilter('DUE')" id="chip-due" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 text-rose-400 transition">🔴 Due Payments (<span id="chipDueCount">0</span>)</button>
+              <button onclick="setQuickFilter('HOT')" id="chip-hot" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> <span>Hot</span> (<span id="chipHotCount">0</span>)</button>
+              <button onclick="setQuickFilter('SEMI')" id="chip-semi" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-fuchsia-400"></span> <span>Semi-Hot</span> (<span id="chipSemiCount">0</span>)</button>
+              <button onclick="setQuickFilter('COLD')" id="chip-cold" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> <span>Cold</span> (<span id="chipColdCount">0</span>)</button>
+              <button onclick="setQuickFilter('CLOSED')" id="chip-closed" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> <span>Closed</span> (<span id="chipClosedCount">0</span>)</button>
+              <button onclick="setQuickFilter('CONFIRMED')" id="chip-confirmed" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span> <span>Confirmed</span> (<span id="chipConfirmedCount">0</span>)</button>
+              <button onclick="setQuickFilter('MOTHERDATA')" id="chip-motherdata" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><i class="fa-solid fa-folder-tree text-amber-400 text-xs"></i> <span>Mother Data</span> (<span id="chipMotherDataCount">0</span>)</button>
+              <button onclick="openSopRulesModal()" class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-900 transition flex items-center gap-1"><i class="fa-solid fa-book-bookmark text-xs"></i> <span>SOP Rules</span></button>
               <button onclick="clearDateFilter()" id="chip-cal-active" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white items-center gap-1.5">
                 <span id="chipDateText"></span> <i class="fa-solid fa-xmark"></i>
               </button>
@@ -1490,11 +1650,33 @@
 
           <div>
             <label class="text-[11px] font-bold text-slate-400 block mb-1 uppercase">Lead Priority</label>
-            <select id="m_priority" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white outline-none">
-              <option value="Hot">🔥 Hot</option>
-              <option value="Semi-Hot">⚡ Semi-Hot</option>
-              <option value="Cold">❄️ Cold</option>
+            <select id="m_priority" onchange="onModalStatusChange()" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white outline-none font-semibold">
+              <option value="Confirmed">✅ Confirmed (Already Paid the Money)</option>
+              <option value="Hot">🟢 Hot (Verbal Confirmed / Negotiation / Payment Date)</option>
+              <option value="Semi-Hot">🟣 Semi-Hot (Proposal Viewed / Negotiation)</option>
+              <option value="Cold">🟡 Cold (Program Discussed / Proposal Sent)</option>
+              <option value="Closed">🔴 Closed (Not Interested / Other Institute)</option>
             </select>
+            <!-- Dynamic SOP Checklist -->
+            <div id="modalSopChecklistBox" class="mt-2 p-2 bg-slate-900/90 border border-slate-700 rounded-xl space-y-1 text-xs">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-400 block mb-1 uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-folder-tree text-amber-400"></i>
+              <span>File / Data Sheet Location (Rule 1 & 3) *</span>
+            </label>
+            <select id="m_fileSheet" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white outline-none font-semibold">
+              <option value="Mother Data Sheet">📁 Mother Data Sheet (Raw Cold Calling Pool)</option>
+              <option value="PMP Training File">📂 PMP Training File (পিএমপি ব্যাচ)</option>
+              <option value="Lean Six Sigma File">📂 Lean Six Sigma Master File</option>
+              <option value="Supply Chain File">📂 Supply Chain Analytics File</option>
+              <option value="Active Qualified Pipeline">📂 Active Qualified Sales Pipeline</option>
+              <option value="Enrolled Won File">🎓 Enrolled Won File</option>
+            </select>
+            <p class="text-[10px] text-slate-400 mt-1">Rule 1: নতুন লিড প্রথমে Mother Data Sheet-এ এন্ট্রি হবে।</p>
           </div>
 
           <div class="col-span-1 md:col-span-2">
@@ -2424,6 +2606,279 @@
   <button onclick="openLeadModal()" id="mobileFloatingAddLeadBtn" class="lg:hidden fixed bottom-20 right-4 z-40 w-13 h-13 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white shadow-xl shadow-brand-500/40 flex items-center justify-center active:scale-95 transition-all p-3.5" title="নতুন লিড যোগ করুন">
     <i class="fa-solid fa-plus text-xl"></i>
   </button>
+
+  
+  <!-- ==================== LEAD STATUS & MOTHER DATA SOP MODAL ==================== -->
+  <div id="sopRulesModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-5" onclick="closeModal('sopRulesModal')">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-3xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
+      <!-- Header -->
+      <div class="p-5 border-b border-slate-800 bg-slate-950/80 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-book-bookmark"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-white flex items-center gap-2">
+              <span>Lead Status, Color & Definition SOP Rules</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 border border-brand-500/30">Official SOP</span>
+            </h3>
+            <p class="text-xs text-slate-400">কোম্পানির লিড কোয়ালিফিকেশন মানদণ্ড এবং মাদার ডাটা শিট ব্যবহারের নিয়মাবলী।</p>
+          </div>
+        </div>
+        <button onclick="closeModal('sopRulesModal')" class="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-slate-800 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="p-5 overflow-y-auto space-y-6 flex-1 text-xs">
+        
+        <!-- Status & Color Definition Table (Replicating User PDF) -->
+        <div class="border border-slate-800 rounded-2xl overflow-hidden shadow-lg bg-slate-950/50">
+          <div class="p-3 bg-slate-900/90 border-b border-slate-800 flex justify-between items-center">
+            <h4 class="font-bold text-white text-xs uppercase tracking-wider flex items-center gap-2">
+              <i class="fa-solid fa-palette text-brand-400"></i> Lead Status Color & Definition Matrix
+            </h4>
+            <span class="text-[11px] text-slate-400">5-Stage Classification</span>
+          </div>
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-800 text-slate-400 uppercase text-[10px] font-bold">
+                <th class="p-3 w-28">Lead Status</th>
+                <th class="p-3 w-32 text-center">Color Badge</th>
+                <th class="p-3">Official Definition & Qualification Criteria</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+              <!-- Confirmed -->
+              <tr class="hover:bg-slate-900/40 transition">
+                <td class="p-3 font-bold text-white align-top">
+                  <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-check text-teal-400"></i>
+                    <span>Confirmed</span>
+                  </div>
+                </td>
+                <td class="p-3 text-center align-top">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-teal-500/20 text-teal-300 border border-teal-500/40 inline-block shadow-sm">
+                    Already Paid
+                  </span>
+                </td>
+                <td class="p-3 text-slate-300 leading-relaxed align-top">
+                  <div class="font-bold text-teal-300">Already Paid the Money</div>
+                  <div class="text-[11px] text-slate-400 mt-0.5">সম্পূর্ণ বা আংশিক এডভান্স পেমেন্ট সম্পন্ন করেছে। মানি রিসিট ও অ্যাডমিশন স্লিপ জেনারেট হয়েছে।</div>
+                </td>
+              </tr>
+
+              <!-- Hot -->
+              <tr class="hover:bg-slate-900/40 transition bg-emerald-950/10">
+                <td class="p-3 font-bold text-white align-top">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-emerald-400">Hot</span>
+                  </div>
+                </td>
+                <td class="p-3 text-center align-top">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 inline-block shadow-sm">
+                    🟢 Green
+                  </span>
+                </td>
+                <td class="p-3 text-slate-200 leading-relaxed align-top space-y-1">
+                  <div class="font-bold text-emerald-300">1. Verbal Confirmation</div>
+                  <div class="font-bold text-emerald-300">2. Completed Negotiation on Payment</div>
+                  <div class="font-bold text-emerald-300">3. Payment Date Given By the Client</div>
+                  <div class="font-bold text-emerald-300">4. Office visit done</div>
+                  <div class="text-[10px] text-slate-400 pt-0.5">ভর্তির মৌখিক সম্মতি, পেমেন্ট নেগোসিয়েশন সম্পন্ন, নির্দিষ্ট তারিখ প্রদান অথবা অফিস ভিজিট সম্পন্ন।</div>
+                </td>
+              </tr>
+
+              <!-- Semi-Hot -->
+              <tr class="hover:bg-slate-900/40 transition bg-fuchsia-950/10">
+                <td class="p-3 font-bold text-white align-top">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-fuchsia-400"></span>
+                    <span class="text-fuchsia-400">Semi-hot</span>
+                  </div>
+                </td>
+                <td class="p-3 text-center align-top">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/40 inline-block shadow-sm">
+                    🟣 Magenta / Pink
+                  </span>
+                </td>
+                <td class="p-3 text-slate-200 leading-relaxed align-top space-y-1">
+                  <div class="font-bold text-fuchsia-300">1. Proposal viewed by the client</div>
+                  <div class="font-bold text-fuchsia-300">2. Payment Negotiation On-going</div>
+                  <div class="font-bold text-fuchsia-300">3. Positively Answer all concern about training</div>
+                  <div class="font-bold text-fuchsia-300">4. Office visit date confirmed</div>
+                  <div class="text-[10px] text-slate-400 pt-0.5">কোর্স প্রপোজাল দেখেছে, পেমেন্ট নিয়ে আলোচনা চলমান, ইতিবাচক সাড়া দিয়েছে অথবা অফিস ভিজিটের তারিখ নির্দিষ্ট হয়েছে।</div>
+                </td>
+              </tr>
+
+              <!-- Cold -->
+              <tr class="hover:bg-slate-900/40 transition bg-amber-950/10">
+                <td class="p-3 font-bold text-white align-top">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                    <span class="text-yellow-400">Cold</span>
+                  </div>
+                </td>
+                <td class="p-3 text-center align-top">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 inline-block shadow-sm">
+                    🟡 Yellow
+                  </span>
+                </td>
+                <td class="p-3 text-slate-200 leading-relaxed align-top space-y-1">
+                  <div class="font-bold text-yellow-300">1. Discussed about our training Program</div>
+                  <div class="font-bold text-yellow-300">2. Send Proposal</div>
+                  <div class="font-bold text-yellow-300">3. Raises concern about our training</div>
+                  <div class="text-[10px] text-slate-400 pt-0.5">ট্রেনিং প্রোগ্রাম নিয়ে প্রাথমিক আলোচনা হয়েছে, প্রপোজাল পাঠানো হয়েছে অথবা ট্রেনিং/সময় নিয়ে চিন্তা বা দ্বিধাদ্বন্দ্ব আছে।</div>
+                </td>
+              </tr>
+
+              <!-- Closed -->
+              <tr class="hover:bg-slate-900/40 transition bg-rose-950/10">
+                <td class="p-3 font-bold text-white align-top">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    <span class="text-rose-400">Closed</span>
+                  </div>
+                </td>
+                <td class="p-3 text-center align-top">
+                  <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/40 inline-block shadow-sm">
+                    🔴 Red
+                  </span>
+                </td>
+                <td class="p-3 text-slate-200 leading-relaxed align-top space-y-1">
+                  <div class="font-bold text-rose-300">1. Not Interested In Training (e.g. PMP/Course)</div>
+                  <div class="font-bold text-rose-300">2. Completed Training</div>
+                  <div class="font-bold text-rose-300">3. Not Prospect</div>
+                  <div class="font-bold text-rose-300">4. Already admitted on other institute</div>
+                  <div class="text-[10px] text-slate-400 pt-0.5">ট্রেনিংয়ে অনাগ্রহী, কোর্স ইতিমধ্যে সম্পন্ন, উপযুক্ত প্রসপেক্ট নয় অথবা অন্য কোনো প্রতিষ্ঠানে ভর্তি হয়ে গেছে।</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mother Data Using Rules Banner -->
+        <div class="p-4 bg-gradient-to-r from-amber-500/10 via-slate-900 to-indigo-500/10 border border-amber-500/30 rounded-2xl space-y-3">
+          <div class="flex items-center gap-2 text-amber-400 font-extrabold text-sm">
+            <i class="fa-solid fa-folder-tree text-base"></i>
+            <span>Mother Data Using Rules (মাদার ডাটা ব্যবহারের অফিসিয়াল নিয়মাবলী)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-300 pt-1">
+            <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1">
+              <span class="font-black text-amber-400 block text-xs">Rule 1: New Data Entry</span>
+              <p class="text-[11px] text-slate-300"><strong>Enter any new data in the Mother Data Sheet</strong></p>
+              <p class="text-[10px] text-slate-400">যেকোনো নতুন বা র-ডাটা সরাসরি মাদার ডাটা শিটে এন্ট্রি অথবা বাল্ক ইমপোর্ট করতে হবে।</p>
+            </div>
+
+            <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1">
+              <span class="font-black text-blue-400 block text-xs">Rule 2: Complete All Columns</span>
+              <p class="text-[11px] text-slate-300"><strong>Always keep the data update and fill all the column</strong></p>
+              <p class="text-[10px] text-slate-400">প্রতিটি লিডের নাম, ফোন, কোম্পানি, পদবী, সোর্স এবং কোর্স সম্পূর্ণ ফিল্ড নির্ভুলভাবে পূরণ রাখুন।</p>
+            </div>
+
+            <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1">
+              <span class="font-black text-emerald-400 block text-xs">Rule 3: Cold Calling & Move</span>
+              <p class="text-[11px] text-slate-300"><strong>After Cold Calling from All Mother Data Sheet - cut the data and paste in in respective File</strong></p>
+              <p class="text-[10px] text-slate-400">কোল্ড কলিং শেষে কোয়ালিফাইড লিডকে মাদার ডাটা থেকে কেটে সংশ্লিষ্ট কোর্স বা সেলস ফাইলে পেস্ট করুন।</p>
+            </div>
+
+            <div class="p-3 bg-slate-900/80 border border-slate-800 rounded-xl space-y-1">
+              <span class="font-black text-purple-400 block text-xs">Rule 4: Systematic Follow-up</span>
+              <p class="text-[11px] text-slate-300"><strong>Maintain Pipeline Discipline & Follow-ups</strong></p>
+              <p class="text-[10px] text-slate-400">হট ও সেমি-হট লিডগুলোর নিয়মিত ফলো-আপ টাইম এবং পেমেন্ট ডেট ট্র্যাকিং নিশ্চিত করুন।</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="p-4 border-t border-slate-800 bg-slate-950 flex justify-between items-center shrink-0">
+        <span class="text-[11px] text-slate-500 font-mono">SkillsLearner Operational Quality Standard (ISO/SOP)</span>
+        <button onclick="closeModal('sopRulesModal')" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white transition">
+          বুঝেছি (Got It)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- ==================== CUT TO TARGET FILE MODAL ==================== -->
+  <div id="cutToTargetFileModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4" onclick="closeModal('cutToTargetFileModal')">
+    <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4" onclick="event.stopPropagation()">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center">
+            <i class="fa-solid fa-scissors"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white text-sm">Cut & Move to Respective File</h4>
+            <p class="text-[10px] text-slate-400">SOP Rule 3: মাদার ডাটা থেকে সংশ্লিষ্ট ফাইলে স্থানান্তর</p>
+          </div>
+        </div>
+        <button onclick="closeModal('cutToTargetFileModal')" class="text-slate-400 hover:text-white p-1">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Target Lead Info -->
+      <div class="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-1">
+        <input type="hidden" id="cutLeadId" value="">
+        <div class="font-bold text-white text-xs flex justify-between">
+          <span id="cutLeadName">Client Name</span>
+          <span id="cutLeadPhone" class="text-brand-300 font-mono text-[11px]">017...</span>
+        </div>
+        <div class="text-[11px] text-slate-400 flex justify-between">
+          <span>Course: <strong id="cutLeadCourse" class="text-slate-200">Lean Six Sigma</strong></span>
+          <span id="cutLeadCurrentStatus" class="font-bold">Cold</span>
+        </div>
+      </div>
+
+      <!-- Target File Destination -->
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-bold text-slate-300 uppercase block">1. Destination File (সংশ্লিষ্ট ফাইল নির্বাচন করুন) *</label>
+        <select id="cutDestinationFile" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none font-semibold">
+          <option value="PMP Training File">📂 PMP Training File (পিএমপি ব্যাচ ফাইল)</option>
+          <option value="Lean Six Sigma File">📂 Lean Six Sigma Master File</option>
+          <option value="Supply Chain File">📂 Supply Chain Analytics File</option>
+          <option value="Active Qualified Pipeline">📂 Active Qualified Sales Pipeline</option>
+          <option value="KAM Assigned File">📂 KAM Dedicated File (পাবেল / ইমরান)</option>
+          <option value="Enrolled Won File">🎓 Enrolled Won File (ভর্তি শিক্ষার্থী)</option>
+        </select>
+      </div>
+
+      <!-- Qualified Status -->
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-bold text-slate-300 uppercase block">2. Post-Call Qualified Status (নতুন স্ট্যাটাস) *</label>
+        <select id="cutPostCallStatus" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none font-semibold">
+          <option value="Hot">🟢 Hot (Verbal Confirmed / Negotiation / Payment Date)</option>
+          <option value="Semi-Hot">🟣 Semi-Hot (Proposal Viewed / Negotiation On-going)</option>
+          <option value="Cold">🟡 Cold (Program Discussed / Follow-up)</option>
+          <option value="Confirmed">✅ Confirmed (Already Paid the Money)</option>
+          <option value="Closed">🔴 Closed (Not Interested / Other Institute)</option>
+        </select>
+      </div>
+
+      <!-- Follow-up or Comment -->
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-bold text-slate-300 uppercase block">3. Call Notes & Follow-up (কলের মন্তব্য)</label>
+        <input type="text" id="cutCallNotes" placeholder="মন্তব্য বা আলোচনা..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white outline-none">
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="pt-2 flex gap-2">
+        <button type="button" onclick="closeModal('cutToTargetFileModal')" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">
+          বাতিল (Cancel)
+        </button>
+        <button type="button" onclick="executeCutAndMoveLead()" class="flex-1 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500 to-brand-600 hover:from-amber-600 hover:to-brand-700 text-white shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-scissors"></i>
+          <span>Cut & Move to File</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div id="toastContainer" class="fixed bottom-20 lg:bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
@@ -4298,6 +4753,342 @@ const TODAY_STR = "2026-10-06";
       });
     }
 
+    
+    // =========================================================
+    // OFFICIAL LEAD STATUS SOP RULES & DEFINITIONS (PDF MATRIX)
+    // =========================================================
+    const STATUS_SOP_RULES = {
+      "Confirmed": {
+        color: "Teal",
+        badgeText: "Already Paid",
+        badgeClass: "bg-teal-500/20 text-teal-300 border border-teal-500/40",
+        summary: "Already Paid the Money",
+        criteria: [
+          "Already Paid the Money (সম্পূর্ণ বা আংশিক পেমেন্ট সম্পন্ন করেছে)",
+          "Money Receipt & Admission Slip Generated"
+        ]
+      },
+      "Hot": {
+        color: "Green",
+        badgeText: "🟢 Hot",
+        badgeClass: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40",
+        summary: "High Probability / Verbal Confirmed",
+        criteria: [
+          "1. Verbal Confirmation (ভর্তির মৌখিক সম্মতি দিয়েছে)",
+          "2. Completed Negotiation on Payment (পেমেন্ট নেগোসিয়েশন সম্পন্ন)",
+          "3. Payment Date Given By the Client (পেমেন্টের নির্দিষ্ট তারিখ দিয়েছে)",
+          "4. Office visit done (অফিস ভিজিট সম্পন্ন করেছে)"
+        ]
+      },
+      "Semi-Hot": {
+        color: "Magenta / Pink",
+        badgeText: "🟣 Semi-Hot",
+        badgeClass: "bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/40",
+        summary: "Evaluating & Actively Interested",
+        criteria: [
+          "1. Proposal viewed by the client (কোর্স প্রপোজাল দেখেছে)",
+          "2. Payment Negotiation On-going (পেমেন্ট নেগোসিয়েশন চলমান)",
+          "3. Positively Answer all concern about training (প্রশ্নের ইতিবাচক উত্তর দিয়েছে)",
+          "4. Office visit date confirmed (অফিস ভিজিটের তারিখ নিশ্চিত করেছে)"
+        ]
+      },
+      "Cold": {
+        color: "Yellow",
+        badgeText: "🟡 Cold",
+        badgeClass: "bg-yellow-400/20 text-yellow-300 border border-yellow-400/40",
+        summary: "Initial Contact / Hesitant",
+        criteria: [
+          "1. Discussed about our training Program (প্রোগ্রাম নিয়ে আলোচনা হয়েছে)",
+          "2. Send Proposal (প্রপোজাল পাঠানো হয়েছে)",
+          "3. Raises concern about our training (ট্রেনিং বা সময় নিয়ে দ্বিধাদ্বন্দ্ব আছে)"
+        ]
+      },
+      "Closed": {
+        color: "Red",
+        badgeText: "🔴 Closed",
+        badgeClass: "bg-rose-500/20 text-rose-400 border border-rose-500/40",
+        summary: "Disqualified / Other Institute",
+        criteria: [
+          "1. Not Interested In Training (ট্রেনিংয়ে অনাগ্রহী)",
+          "2. Completed Training (ইতিমধ্যে এই কোর্স সম্পন্ন করেছে)",
+          "3. Not Prospect (উপযুক্ত প্রসপেক্ট নয়)",
+          "4. Already admitted on other institute (অন্য প্রতিষ্ঠানে ভর্তি হয়েছে)"
+        ]
+      }
+    };
+
+    function renderStatusBadge(status) {
+      const s = (status || 'Cold').trim();
+      if (s === 'Hot') {
+        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 cursor-pointer hover:scale-105 transition" onclick="openSopRulesModal()" title="Hot: Verbal Confirmed, Payment Date, Office Visit"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>🟢 Hot</span>`;
+      } else if (s === 'Semi-Hot' || s === 'Semi-hot') {
+        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/40 cursor-pointer hover:scale-105 transition" onclick="openSopRulesModal()" title="Semi-Hot: Proposal Viewed, Negotiation On-going, Visit Confirmed"><span class="w-1.5 h-1.5 rounded-full bg-fuchsia-400"></span>🟣 Semi-Hot</span>`;
+      } else if (s === 'Cold') {
+        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 cursor-pointer hover:scale-105 transition" onclick="openSopRulesModal()" title="Cold: Program Discussed, Proposal Sent, Raises Concern"><span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>🟡 Cold</span>`;
+      } else if (s === 'Closed') {
+        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/40 cursor-pointer hover:scale-105 transition" onclick="openSopRulesModal()" title="Closed: Not Interested, Completed Training, Other Institute"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>🔴 Closed</span>`;
+      } else if (s === 'Confirmed') {
+        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-extrabold bg-teal-500/20 text-teal-300 border border-teal-500/40 cursor-pointer hover:scale-105 transition" onclick="openSopRulesModal()" title="Confirmed: Already Paid the Money"><span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span>✅ Confirmed</span>`;
+      } else {
+        return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${s}</span>`;
+      }
+    }
+
+    function openSopRulesModal() {
+      document.getElementById('sopRulesModal').classList.remove('hidden');
+    }
+
+    function onModalStatusChange() {
+      const val = document.getElementById('m_priority').value;
+      const box = document.getElementById('modalSopChecklistBox');
+      if (!box) return;
+      
+      const rule = STATUS_SOP_RULES[val] || STATUS_SOP_RULES['Cold'];
+      let html = `<div class="font-bold text-[11px] text-white flex items-center justify-between pb-1 border-b border-slate-800">
+        <span>${rule.badgeText} Criteria Checklist (SOP Guide):</span>
+        <span class="text-[9px] font-mono text-slate-400">${rule.color}</span>
+      </div>`;
+      
+      rule.criteria.forEach((crit, i) => {
+        html += `
+          <label class="flex items-start gap-2 text-slate-300 cursor-pointer hover:text-white pt-1">
+            <input type="checkbox" checked class="mt-0.5 rounded bg-slate-800 border-slate-700 text-brand-500 focus:ring-0">
+            <span class="text-[11px] leading-tight">${crit}</span>
+          </label>
+        `;
+      });
+      box.innerHTML = html;
+    }
+
+    // =========================================================
+    // MOTHER DATA SHEET & CUT-MOVE SYSTEM (RULE 1, 2, 3)
+    // =========================================================
+    function getLeadFileSheet(r) {
+      if (r.fileSheet) return r.fileSheet;
+      if (r.sheetCategory === 'Mother Data') return 'Mother Data Sheet';
+      if (r.isCoursePerson === 'YES') return 'Enrolled Won File';
+      if (r.status === 'Cold' && (!r.fileSheet || r.fileSheet === 'Mother Data Sheet')) return 'Mother Data Sheet';
+      return r.fileSheet || 'Mother Data Sheet';
+    }
+
+    function openCutToTargetFileModal(id) {
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+
+      document.getElementById('cutLeadId').value = rec.id;
+      document.getElementById('cutLeadName').innerText = rec.name;
+      document.getElementById('cutLeadPhone').innerText = rec.phone;
+      document.getElementById('cutLeadCourse').innerText = rec.course;
+      document.getElementById('cutLeadCurrentStatus').innerHTML = renderStatusBadge(rec.status);
+      document.getElementById('cutCallNotes').value = rec.comment || '';
+      document.getElementById('cutPostCallStatus').value = rec.status === 'Cold' ? 'Hot' : rec.status;
+
+      // Select default destination file based on course
+      const destEl = document.getElementById('cutDestinationFile');
+      if (destEl) {
+        if (rec.course && rec.course.includes('PMP')) destEl.value = 'PMP Training File';
+        else if (rec.course && rec.course.includes('Lean')) destEl.value = 'Lean Six Sigma File';
+        else if (rec.course && rec.course.includes('Supply')) destEl.value = 'Supply Chain File';
+        else destEl.value = 'Active Qualified Pipeline';
+      }
+
+      document.getElementById('cutToTargetFileModal').classList.remove('hidden');
+    }
+
+    function executeCutAndMoveLead() {
+      const id = document.getElementById('cutLeadId').value;
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+
+      const targetFile = document.getElementById('cutDestinationFile').value;
+      const targetStatus = document.getElementById('cutPostCallStatus').value;
+      const notes = document.getElementById('cutCallNotes').value.trim();
+
+      // Rule 3: Cut from Mother Data & Move into target file
+      rec.fileSheet = targetFile;
+      rec.sheetCategory = 'Respective File';
+      rec.status = targetStatus;
+      if (notes) rec.comment = notes;
+
+      if (targetStatus === 'Confirmed') {
+        rec.isCoursePerson = 'YES';
+      }
+
+      closeModal('cutToTargetFileModal');
+      playSoundSuccess();
+      saveStorage();
+      renderMotherDataTable();
+      renderTable();
+
+      showToast(`✂️ [${rec.name}] কে Mother Data থেকে কেটে "${targetFile}"-এ সফলভাবে স্থানান্তর করা হয়েছে!`);
+    }
+
+    function checkRule2Completeness(r) {
+      let score = 0;
+      let total = 5;
+      if (r.name && r.name.length > 2) score++;
+      if (r.phone && r.phone.length >= 10) score++;
+      if (r.course && r.course !== 'General') score++;
+      if (r.company && r.company.length > 2 && r.company !== '-') score++;
+      if (r.designation && r.designation.length > 1 && r.designation !== '-') score++;
+      return { score, total, pct: Math.round((score / total) * 100) };
+    }
+
+    function renderMotherDataTable() {
+      const q = (document.getElementById('mdSearchInput')?.value || '').trim().toLowerCase();
+      const courseFilter = document.getElementById('mdCourseFilter')?.value || 'ALL';
+
+      // Update Mother Data course dropdown if empty
+      const cFilterEl = document.getElementById('mdCourseFilter');
+      if (cFilterEl && cFilterEl.options.length <= 1) {
+        cFilterEl.innerHTML = '<option value="ALL">All Courses (সব কোর্স)</option>';
+        if (typeof ACTIVE_COURSES !== 'undefined') {
+          ACTIVE_COURSES.forEach(c => {
+            cFilterEl.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+          });
+        }
+      }
+
+      // Filter leads in Mother Data
+      let motherLeads = masterRecords.filter(r => {
+        const file = getLeadFileSheet(r);
+        return file === 'Mother Data Sheet';
+      });
+
+      // Update counters
+      let countCold = 0, countHotSemi = 0;
+      motherLeads.forEach(r => {
+        if (r.status === 'Cold') countCold++;
+        else if (r.status === 'Hot' || r.status === 'Semi-Hot') countHotSemi++;
+      });
+      const countMoved = masterRecords.filter(r => getLeadFileSheet(r) !== 'Mother Data Sheet').length;
+
+      if (document.getElementById('mdCountTotal')) document.getElementById('mdCountTotal').innerText = motherLeads.length;
+      if (document.getElementById('mdCountCold')) document.getElementById('mdCountCold').innerText = countCold;
+      if (document.getElementById('mdCountHotSemi')) document.getElementById('mdCountHotSemi').innerText = countHotSemi;
+      if (document.getElementById('mdCountMoved')) document.getElementById('mdCountMoved').innerText = countMoved;
+      if (document.getElementById('badge-motherdata')) document.getElementById('badge-motherdata').innerText = motherLeads.length;
+
+      // Apply search & course filter
+      let filtered = motherLeads.filter(r => {
+        const matchesQ = !q || r.name.toLowerCase().includes(q) || r.phone.includes(q) || (r.company && r.company.toLowerCase().includes(q));
+        const matchesC = courseFilter === 'ALL' || r.course === courseFilter;
+        return matchesQ && matchesC;
+      });
+
+      const tbody = document.getElementById('motherDataTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="p-8 text-center text-slate-500">
+              <i class="fa-solid fa-folder-open text-2xl text-amber-500/40 mb-2 block"></i>
+              মাদার ডাটা শিটে বর্তমানে কোনো লিড নেই। নতুন ডাটা যোগ করতে উপরের "New Lead" বাটনে চাপুন।
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const comp = checkRule2Completeness(item);
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-800/40 transition border-l-4 ' + (item.status === 'Hot' ? 'border-l-emerald-500' : item.status === 'Semi-Hot' ? 'border-l-fuchsia-500' : item.status === 'Closed' ? 'border-l-rose-500' : item.status === 'Confirmed' ? 'border-l-teal-400' : 'border-l-yellow-400');
+
+        tr.innerHTML = `
+          <td class="p-3 text-center">
+            <input type="checkbox" class="md-row-chk rounded bg-slate-800 border-slate-700 text-brand-500" value="${item.id}">
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            <div class="flex items-center gap-2.5">
+              ${item.photo ? `
+                <img src="${item.photo}" alt="${item.name}" onclick="viewLeadPhoto('${item.id}')" class="w-8 h-8 rounded-xl object-cover border border-slate-700 shadow-md cursor-pointer shrink-0">
+              ` : `
+                <div class="w-8 h-8 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-amber-300 text-xs shadow shrink-0">
+                  ${(item.name || 'MD').slice(0, 2).toUpperCase()}
+                </div>
+              `}
+              <div>
+                <div class="font-bold text-white text-xs flex items-center gap-1.5">
+                  <span>${item.name}</span>
+                  ${typeof renderSourceBadge === 'function' ? renderSourceBadge(item.source) : ''}
+                </div>
+                <div class="text-[11px] text-slate-400 font-mono flex items-center gap-1 mt-0.5">
+                  <a href="tel:${item.phone}" class="hover:text-amber-400 text-slate-300">${item.phone}</a>
+                  <a href="https://wa.me/88${item.phone.replace(/[^0-9]/g, '')}" target="_blank" class="text-emerald-400 hover:scale-110 transition ml-1" title="WhatsApp Message">
+                    <i class="fa-brands fa-whatsapp"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="p-3 whitespace-nowrap font-medium text-slate-200">
+            ${item.course || 'General'}
+          </td>
+          <td class="p-3 whitespace-nowrap">
+            <div class="text-white font-semibold text-xs">${item.company || '<span class="text-slate-500 italic">No Company</span>'}</div>
+            <div class="text-[10px] text-slate-400">${item.designation || '<span class="text-slate-500 italic">No Designation</span>'}</div>
+          </td>
+          <td class="p-3 text-center whitespace-nowrap">
+            ${renderStatusBadge(item.status)}
+          </td>
+          <td class="p-3 text-center whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5">
+              <div class="w-16 h-2 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                <div class="h-full ${comp.pct === 100 ? 'bg-emerald-500' : comp.pct >= 60 ? 'bg-amber-500' : 'bg-rose-500'}" style="width: ${comp.pct}%"></div>
+              </div>
+              <span class="text-[10px] font-bold ${comp.pct === 100 ? 'text-emerald-400' : 'text-slate-400'}">${comp.pct}%</span>
+            </div>
+          </td>
+          <td class="p-3 text-right whitespace-nowrap">
+            <div class="inline-flex items-center gap-1.5">
+              <button onclick="openCutToTargetFileModal('${item.id}')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-900 border border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1" title="SOP Rule 3: Cut & Move to Respective File">
+                <i class="fa-solid fa-scissors text-[11px]"></i>
+                <span>Cut to File</span>
+              </button>
+              <button onclick="editLeadRecord('${item.id}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition" title="Edit Lead">
+                <i class="fa-solid fa-pen text-xs"></i>
+              </button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toggleSelectAllMotherData(masterChk) {
+      document.querySelectorAll('.md-row-chk').forEach(c => c.checked = masterChk.checked);
+    }
+
+    function bulkCutSelectedLeads() {
+      const checkedBoxes = Array.from(document.querySelectorAll('.md-row-chk:checked'));
+      if (checkedBoxes.length === 0) {
+        alert("দয়া করে স্থানান্তর করার জন্য এক বা একাধিক লিড নির্বাচন করুন!");
+        return;
+      }
+
+      const targetFile = prompt(`নির্বাচিত ${checkedBoxes.length} টি লিড কোন ফাইলে স্থানান্তর (Cut & Move) করতে চান?\n\n1. PMP Training File\n2. Lean Six Sigma File\n3. Supply Chain File\n4. Active Qualified Pipeline\n\nফাইল নাম লিখুন:`, "Active Qualified Pipeline");
+      if (!targetFile) return;
+
+      checkedBoxes.forEach(chk => {
+        const id = chk.value;
+        const rec = masterRecords.find(r => r.id === id);
+        if (rec) {
+          rec.fileSheet = targetFile;
+          rec.sheetCategory = 'Respective File';
+          if (rec.status === 'Cold') rec.status = 'Semi-Hot';
+        }
+      });
+
+      saveStorage();
+      playSoundSuccess();
+      renderMotherDataTable();
+      renderTable();
+      showToast(`✂️ সফলভাবে ${checkedBoxes.length} টি লিড "${targetFile}"-এ স্থানান্তর করা হয়েছে!`);
+    }
+
     function switchTab(tabId) {
       activeTab = tabId;
       if (typeof updateMobileBottomNav === 'function') updateMobileBottomNav(tabId);
@@ -4328,6 +5119,7 @@ const TODAY_STR = "2026-10-06";
       }
 
       if (tabId === 'team') renderTeamTab();
+      else if (tabId === 'motherdata') renderMotherDataTable();
       else if (tabId === 'sources') renderSourcesTab();
       else if (tabId === 'master') renderTable();
       else if (tabId === 'today') renderTodayTab();
@@ -5504,10 +6296,20 @@ const TODAY_STR = "2026-10-06";
         else countCold++;
 
         if (r.nextCall && r.nextCall.startsWith(TODAY_STR)) countTodayCalls++;
+        if (r.status === 'Closed') countClosed++;
+        if (r.status === 'Confirmed' || r.isCoursePerson === 'YES') countConfirmed++;
+        if (r.sheetCategory === 'Mother Data' || r.fileSheet === 'Mother Data Sheet' || (!r.sheetCategory && !r.fileSheet)) countMotherData++;
       });
 
       document.getElementById('badge-master').innerText = masterRecords.length;
       document.getElementById('badge-today').innerText = countTodayCalls;
+      if (document.getElementById('chipHotCount')) document.getElementById('chipHotCount').innerText = countHot;
+      if (document.getElementById('chipSemiCount')) document.getElementById('chipSemiCount').innerText = countSemi;
+      if (document.getElementById('chipColdCount')) document.getElementById('chipColdCount').innerText = countCold;
+      if (document.getElementById('chipClosedCount')) document.getElementById('chipClosedCount').innerText = countClosed;
+      if (document.getElementById('chipConfirmedCount')) document.getElementById('chipConfirmedCount').innerText = countConfirmed;
+      if (document.getElementById('chipMotherDataCount')) document.getElementById('chipMotherDataCount').innerText = countMotherData;
+      if (document.getElementById('badge-motherdata')) document.getElementById('badge-motherdata').innerText = countMotherData;
       document.getElementById('badge-admitted').innerText = countEnrolled;
 
       const totalCount = masterRecords.length || 1;
@@ -5562,6 +6364,12 @@ const TODAY_STR = "2026-10-06";
         else if (currentFilter === 'NO') matchesChip = item.isCoursePerson === 'NO';
         else if (currentFilter === 'DUE') matchesChip = (item.isCoursePerson === 'YES' && item.due > 0);
         else if (currentFilter === 'TODAY') matchesChip = (item.nextCall && item.nextCall.startsWith(TODAY_STR));
+        else if (currentFilter === 'HOT') matchesChip = item.status === 'Hot';
+        else if (currentFilter === 'SEMI') matchesChip = (item.status === 'Semi-Hot' || item.status === 'Semi-hot');
+        else if (currentFilter === 'COLD') matchesChip = item.status === 'Cold';
+        else if (currentFilter === 'CLOSED') matchesChip = item.status === 'Closed';
+        else if (currentFilter === 'CONFIRMED') matchesChip = item.status === 'Confirmed' || item.isCoursePerson === 'YES';
+        else if (currentFilter === 'MOTHERDATA') matchesChip = (item.sheetCategory === 'Mother Data' || item.fileSheet === 'Mother Data Sheet' || (!item.sheetCategory && !item.fileSheet));
 
         let matchesCal = true;
         if (selectedCalDate) {
@@ -5634,7 +6442,7 @@ const TODAY_STR = "2026-10-06";
             ${item.due > 0 && item.nextDueDate ? `<div class="text-[10px] text-rose-400 font-medium">Due: ${item.nextDueDate}</div>` : ''}
           </td>
           <td class="p-3 whitespace-nowrap">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${item.status || 'Cold'}</span>
+            ${typeof renderStatusBadge === 'function' ? renderStatusBadge(item.status) : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${item.status || 'Cold'}</span>`}
             <div class="text-[10px] mt-0.5 ${lScore >= 75 ? 'text-amber-400 font-extrabold' : 'text-slate-400'}">
               ${lScore >= 75 ? '⭐ VIP ' : ''}${lScore}/100
             </div>
@@ -5769,6 +6577,9 @@ const TODAY_STR = "2026-10-06";
       document.getElementById('m_course').value = rec.course;
       document.getElementById('m_disposition').value = rec.disposition || 'Follow-up';
       document.getElementById('m_priority').value = rec.status || 'Cold';
+      const fileEl = document.getElementById('m_fileSheet');
+      if (fileEl) fileEl.value = rec.fileSheet || (rec.sheetCategory === 'Mother Data' ? 'Mother Data Sheet' : 'Mother Data Sheet');
+      if (typeof onModalStatusChange === 'function') onModalStatusChange();
       document.getElementById('m_nextCall').value = rec.nextCall || '';
       document.getElementById('m_comment').value = rec.comment || '';
 
@@ -5823,6 +6634,11 @@ const TODAY_STR = "2026-10-06";
           rec.nextDueDate = isPerson === 'YES' ? document.getElementById('m_nextDueDate').value : '';
           rec.disposition = document.getElementById('m_disposition').value;
           rec.status = document.getElementById('m_priority').value;
+          const fsEl = document.getElementById('m_fileSheet');
+          if (fsEl) {
+            rec.fileSheet = fsEl.value;
+            rec.sheetCategory = fsEl.value === 'Mother Data Sheet' ? 'Mother Data' : 'Respective File';
+          }
           rec.nextCall = document.getElementById('m_nextCall').value;
           rec.comment = document.getElementById('m_comment').value;
         }
@@ -5850,6 +6666,8 @@ const TODAY_STR = "2026-10-06";
           nextDueDate: isPerson === 'YES' ? document.getElementById('m_nextDueDate').value : '',
           disposition: document.getElementById('m_disposition').value,
           status: document.getElementById('m_priority').value,
+          fileSheet: document.getElementById('m_fileSheet') ? document.getElementById('m_fileSheet').value : 'Mother Data Sheet',
+          sheetCategory: (document.getElementById('m_fileSheet') && document.getElementById('m_fileSheet').value === 'Mother Data Sheet') ? 'Mother Data' : 'Respective File',
           nextCall: document.getElementById('m_nextCall').value,
           comment: document.getElementById('m_comment').value
         };
