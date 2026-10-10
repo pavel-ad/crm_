@@ -429,7 +429,10 @@
         <!-- Live Global Search -->
         <div class="relative w-44 sm:w-60 md:w-80">
           <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-          <input type="text" id="searchInput" oninput="debouncedFilter()" placeholder="ফোন (017...), নাম বা কোম্পানি..." class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-400 outline-none focus:ring-1 focus:ring-brand-500">
+          <input type="text" id="searchInput" name="crm_global_search_q" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="debouncedFilter()" placeholder="ফোন (017...), নাম, ইমেইল বা কোম্পানি..." class="w-full pl-8 pr-7 py-1.5 rounded-xl text-xs bg-slate-800 border border-slate-700 text-slate-200 placeholder-slate-400 outline-none focus:ring-1 focus:ring-brand-500">
+          <button id="searchClearBtn" onclick="clearSearchInput()" class="absolute right-2.5 top-2 text-slate-400 hover:text-slate-200 text-xs hidden" title="Clear search">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
         </div>
       </div>
 
@@ -2896,7 +2899,7 @@
     // ==========================================
     // GitHub JSON Database & Storage Engine
     // ==========================================
-    const DB_STORAGE_KEY = 'sl_crm_tailwind_v12_sanitized';
+    const DB_STORAGE_KEY = 'sl_crm_tailwind_v13_renderfix';
     const DB_CONFIG_KEY = 'sl_crm_db_config';
 
     let dbConfig = {
@@ -6305,6 +6308,7 @@ const TODAY_STR = "2026-10-06";
       let countTodayCalls = 0;
       let countHot = 0, countSemi = 0, countCold = 0, countEnrolled = 0;
       let countDue = 0;
+      let countClosed = 0, countConfirmed = 0, countMotherData = 0;
 
       masterRecords.forEach(r => {
         if (r.isCoursePerson === 'YES') {
@@ -6368,6 +6372,7 @@ const TODAY_STR = "2026-10-06";
         const matchesQ = item.name.toLowerCase().includes(searchQ) || 
                          item.phone.includes(searchQ) || 
                          (item.company && item.company.toLowerCase().includes(searchQ)) ||
+                         (item.email && item.email.toLowerCase().includes(searchQ)) ||
                          (item.id && item.id.toLowerCase().includes(searchQ));
         
         const matchesCourse = courseQ === 'ALL' || item.course === courseQ;
@@ -6505,7 +6510,22 @@ const TODAY_STR = "2026-10-06";
     }
 
     let filterTimer = null;
+    function clearSearchInput() {
+      const el = document.getElementById('searchInput');
+      if (el) { el.value = ''; }
+      const btn = document.getElementById('searchClearBtn');
+      if (btn) { btn.classList.add('hidden'); }
+      currentPage = 1;
+      renderTable();
+    }
+
     function debouncedFilter() {
+      const el = document.getElementById('searchInput');
+      const btn = document.getElementById('searchClearBtn');
+      if (btn) {
+        if (el && el.value.trim().length > 0) btn.classList.remove('hidden');
+        else btn.classList.add('hidden');
+      }
       if (filterTimer) clearTimeout(filterTimer);
       filterTimer = setTimeout(() => {
         currentPage = 1;
