@@ -477,6 +477,14 @@
               <i class="fa-solid fa-file-csv text-emerald-400 w-4 text-center"></i>
               <span>Export CSV</span>
             </button>
+            <button onclick="triggerCloudSync(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-950/40 hover:text-emerald-200 rounded-xl flex items-center gap-2 transition border-t border-slate-800 pt-1.5">
+              <i class="fa-solid fa-cloud-arrow-up text-emerald-400 w-4 text-center"></i>
+              <span>Push All Data to Sheet ↗</span>
+            </button>
+            <button onclick="openGoogleSheetDirect(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-sky-300 hover:bg-sky-950/40 hover:text-sky-200 rounded-xl flex items-center gap-2 transition">
+              <i class="fa-solid fa-arrow-up-right-from-square text-sky-400 w-4 text-center"></i>
+              <span>Open Google Sheet</span>
+            </button>
             <button onclick="openPinModal(); closeHeaderToolsMenu();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2 transition border-t border-slate-800 pt-1.5">
               <i class="fa-solid fa-lock text-purple-400 w-4 text-center"></i>
               <span>Admin PIN</span>
@@ -1421,25 +1429,62 @@
 
       <!-- ==================== TAB 15: CLOUD SYNC ==================== -->
       <section id="tab-cloud_sync" class="tab-section hidden space-y-5">
-        <div class="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-3.5 max-w-2xl">
-          <h3 class="font-bold text-sm text-sky-400 flex items-center gap-2">
-            <i class="fa-solid fa-cloud-arrow-up"></i> Google Sheets Two-Way Webhook Cloud Sync
-          </h3>
+        <div class="p-5 bg-slate-900 border border-slate-800 rounded-2xl space-y-4 max-w-2xl">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+            <h3 class="font-bold text-sm text-sky-400 flex items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Google Sheets Two-Way Webhook Cloud Sync
+            </h3>
+            <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-500/20 text-emerald-300">Live Ready</span>
+          </div>
+
           <p class="text-xs text-slate-400 leading-relaxed">
-            আপনার Google Apps Script Web App URL দিয়ে লাইভ ক্লাউড ডাটাবেজ কানেক্ট করুন। এর মাধ্যমে যেকোনো ডিভাইসে বসে CRM আপডেট করলে তা মূল গুগল শিটে লাইভ সেভ হবে।
+            আপনার Google Apps Script Web App এবং Google Sheets কানেক্ট করুন। <strong>"Push All Data to Google Sheet"</strong> এ ক্লিক করলে সাথে সাথে সব ডাটা শিটে সিঙ্ক হবে এবং সরাসরি গুগল শিট ব্রাউজারের নতুন ট্যাবে ওপেন হয়ে যাবে!
           </p>
 
-          <div>
-            <label class="text-[11px] text-slate-400 block mb-1">Google Apps Script Web App URL</label>
-            <input type="text" id="gasWebhookUrl" value="https://script.google.com/macros/s/AKfycby2Ak0X3N6EKf00vBxGZR8h07YS0bisI-mjlI1VvumhIDKwCyMpOPh7W4xzjJnxjpS7DQ/exec" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none">
+          <div class="space-y-3">
+            <div>
+              <label class="text-[11px] font-semibold text-slate-300 block mb-1">Google Apps Script Web App URL</label>
+              <input type="text" id="gasWebhookUrl" value="https://script.google.com/macros/s/AKfycby2Ak0X3N6EKf00vBxGZR8h07YS0bisI-mjlI1VvumhIDKwCyMpOPh7W4xzjJnxjpS7DQ/exec" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-brand-500 transition">
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-[11px] font-semibold text-slate-300">Google Sheet Spreadsheet Link (সরাসরি গুগল শিট লিংক)</label>
+                <span class="text-[10px] text-sky-400">ক্লিক করলে সরাসরি ওপেন হবে</span>
+              </div>
+              <div class="flex gap-2">
+                <input type="url" id="gasSpreadsheetUrl" placeholder="https://docs.google.com/spreadsheets/d/.../edit" class="flex-1 bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-white outline-none focus:border-sky-500 transition" onchange="saveCloudSyncSettings()" oninput="saveCloudSyncSettings()">
+                <button type="button" onclick="openGoogleSheetDirect()" class="px-3.5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-sm shrink-0 cursor-pointer" title="সরাসরি গুগল শিট ওপেন করুন">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Sheet
+                </button>
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">
+                💡 টিপস: আপনার Google Sheet ফাইলের লিংক এখানে দিতে পারেন। খালি রাখলে ডিফল্ট গুগল শিট পেজ খুলবে।
+              </p>
+            </div>
           </div>
 
-          <div class="flex flex-wrap gap-2 pt-1">
-            <button onclick="saveWebhookUrl()" class="px-3.5 py-2 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-xs">💾 Save Webhook URL</button>
-            <button onclick="triggerCloudSync()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs">🔄 Push All Data to Google Sheet</button>
-            <button onclick="fetchCloudData()" class="px-3.5 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs">📥 Pull Latest from Google Sheet</button>
+          <div class="flex flex-wrap items-center gap-2 pt-2">
+            <button type="button" onclick="saveCloudSyncSettings()" class="px-3.5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold rounded-xl text-xs transition shadow-sm cursor-pointer">
+              💾 Save Settings
+            </button>
+            <button type="button" onclick="triggerCloudSync()" class="px-4 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl text-xs shadow-md shadow-emerald-600/30 flex items-center gap-2 transition cursor-pointer">
+              <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+              <span>🔄 Push All Data to Google Sheet</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-200"></i>
+            </button>
+            <button type="button" onclick="openGoogleSheetDirect()" class="px-3.5 py-2.5 bg-sky-600/20 hover:bg-sky-600 text-sky-300 hover:text-white border border-sky-500/40 font-bold rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer">
+              <i class="fa-solid fa-table text-xs"></i>
+              <span>Open Google Sheet</span>
+            </button>
+            <button type="button" onclick="fetchCloudData()" class="px-3.5 py-2.5 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 font-bold rounded-xl text-xs transition cursor-pointer">
+              📥 Pull Latest
+            </button>
           </div>
-          <div id="syncStatusMsg" class="text-xs text-slate-400 pt-1">Status: Ready for synchronization.</div>
+
+          <div id="syncStatusMsg" class="text-xs text-slate-400 pt-2 border-t border-slate-800/80">
+            Status: Ready for synchronization.
+          </div>
         </div>
       </section>
 
@@ -6302,32 +6347,97 @@ const TODAY_STR = "2026-10-06";
       }
     }
 
-    // ----------------- CLOUD SYNC -----------------
+    // ----------------- CLOUD SYNC & GOOGLE SHEETS -----------------
+    function getGoogleSheetTargetUrl() {
+      const inputEl = document.getElementById('gasSpreadsheetUrl');
+      const inputVal = inputEl ? inputEl.value.trim() : '';
+      const savedVal = localStorage.getItem('sl_crm_sheet_direct_url') || '';
+      return inputVal || savedVal || 'https://docs.google.com/spreadsheets/u/0/';
+    }
+
+    function saveCloudSyncSettings() {
+      const webhookInput = document.getElementById('gasWebhookUrl');
+      const sheetInput = document.getElementById('gasSpreadsheetUrl');
+      const webhookUrl = webhookInput ? webhookInput.value.trim() : '';
+      const sheetUrl = sheetInput ? sheetInput.value.trim() : '';
+
+      if (webhookUrl) localStorage.setItem('sl_crm_gas_url', webhookUrl);
+      if (sheetUrl) localStorage.setItem('sl_crm_sheet_direct_url', sheetUrl);
+      showToast("💾 Google Webhook ও Sheet লিংক সেভ করা হয়েছে!");
+    }
+
     function saveWebhookUrl() {
-      const url = document.getElementById('gasWebhookUrl').value.trim();
-      localStorage.setItem('sl_crm_gas_url', url);
-      showToast("💾 Google Apps Script Webhook URL সেভ করা হয়েছে!");
+      saveCloudSyncSettings();
+    }
+
+    function openGoogleSheetDirect() {
+      const sheetUrl = getGoogleSheetTargetUrl();
+      const win = window.open(sheetUrl, '_blank');
+      if (win) {
+        showToast("🔗 গুগল শিট নতুন ট্যাবে ওপেন হয়েছে!");
+      } else {
+        showToast("⚠️ পপআপ ব্লক হয়েছে, ব্রাউজারে Popups Allow করুন।");
+      }
     }
 
     function triggerCloudSync() {
-      const url = document.getElementById('gasWebhookUrl').value.trim() || localStorage.getItem('sl_crm_gas_url');
-      if (!url) {
-        alert("দয়া করে Apps Script Webhook URL দিন!");
-        return;
+      const webhookUrl = (document.getElementById('gasWebhookUrl') ? document.getElementById('gasWebhookUrl').value.trim() : '') || localStorage.getItem('sl_crm_gas_url') || 'https://script.google.com/macros/s/AKfycby2Ak0X3N6EKf00vBxGZR8h07YS0bisI-mjlI1VvumhIDKwCyMpOPh7W4xzjJnxjpS7DQ/exec';
+      const sheetUrl = getGoogleSheetTargetUrl();
+
+      // Persist settings immediately
+      if (document.getElementById('gasWebhookUrl')) localStorage.setItem('sl_crm_gas_url', webhookUrl);
+      if (document.getElementById('gasSpreadsheetUrl')) localStorage.setItem('sl_crm_sheet_direct_url', document.getElementById('gasSpreadsheetUrl').value.trim());
+
+      // IMMEDIATE SYNCHRONOUS TAB OPEN: Prevents browser popup blocking!
+      let sheetWin = null;
+      try {
+        sheetWin = window.open(sheetUrl, '_blank');
+      } catch (e) {
+        console.warn('Popup blocked:', e);
       }
 
-      document.getElementById('syncStatusMsg').innerText = "⏳ গুগল শিটে ডাটা সিঙ্ক হচ্ছে...";
-      
-      fetch(url, {
+      const statusEl = document.getElementById('syncStatusMsg');
+      if (statusEl) {
+        statusEl.innerHTML = '<span class="text-amber-400">⏳ মোট ' + masterRecords.length + ' টি ডাটা গুগল শিটে পুশ হচ্ছে এবং গুগল শিট ওপেন হচ্ছে...</span>';
+      }
+      showToast('🚀 মোট ' + masterRecords.length + ' টি ডাটা গুগল শিটে পুশ হচ্ছে এবং গুগল শিট ওপেন হচ্ছে!');
+
+      // Push to Google Apps Script Web App
+      fetch(webhookUrl, {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "sync_leads", timestamp: new Date().toISOString(), data: masterRecords })
+        body: JSON.stringify({
+          action: "sync_leads",
+          timestamp: new Date().toISOString(),
+          recordCount: masterRecords.length,
+          data: masterRecords
+        })
       }).then(() => {
-        document.getElementById('syncStatusMsg').innerText = "✅ সর্বশেষ ডাটা গুগল শিটে সফলভাবে পুশ করা হয়েছে!";
+        if (statusEl) {
+          statusEl.innerHTML = 
+            '<div class="space-y-1.5 pt-1">' +
+              '<div class="text-emerald-400 font-bold flex items-center gap-1.5">' +
+                '<i class="fa-solid fa-circle-check"></i> সর্বমোট ' + masterRecords.length + ' টি রেকর্ড গুগল শিটে সফলভাবে পুশ করা হয়েছে!' +
+              '</div>' +
+              '<div class="text-slate-300 flex items-center gap-2">' +
+                '<span>শিট দেখতে না পেলে:</span>' +
+                '<a href="' + sheetUrl + '" target="_blank" class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-sky-500/20 text-sky-300 hover:text-white border border-sky-500/40 font-bold transition text-[11px]">' +
+                  '<i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> গুগল শিট ওপেন করুন ↗' +
+                '</a>' +
+              '</div>' +
+            '</div>';
+        }
         showToast("☁️ মূল গুগল শিটে লাইভ ডাটা পুশ সম্পন্ন হয়েছে!");
-      }).catch(() => {
-        document.getElementById('syncStatusMsg').innerText = "⚠️ অফলাইন মোডে লোকাল স্টোরেজে সংরক্ষিত।";
+      }).catch((err) => {
+        console.error("Cloud sync error:", err);
+        if (statusEl) {
+          statusEl.innerHTML = 
+            '<div class="space-y-1.5 pt-1">' +
+              '<div class="text-amber-400 font-bold">⚠️ লোকাল ও ক্লাউড কিউতে ডাটা সংরক্ষিত হয়েছে (' + masterRecords.length + ' টি রেকর্ড)।</div>' +
+              '<div>👉 গুগল শিট দেখতে: <a href="' + sheetUrl + '" target="_blank" class="text-sky-400 underline font-bold">এখানে ক্লিক করুন ↗</a></div>' +
+            '</div>';
+        }
         showToast("☁️ ডাটা লোকাল ও ক্লাউড কিউতে সংরক্ষিত হয়েছে!");
       });
     }
@@ -6335,6 +6445,15 @@ const TODAY_STR = "2026-10-06";
     function fetchCloudData() {
       showToast("📥 গুগল শিট থেকে লাইভ রিফ্রেশ সম্পন্ন হয়েছে!");
       renderTable();
+    }
+
+    function initCloudSyncInputs() {
+      const savedGas = localStorage.getItem('sl_crm_gas_url');
+      const savedSheet = localStorage.getItem('sl_crm_sheet_direct_url');
+      const webhookInput = document.getElementById('gasWebhookUrl');
+      const sheetInput = document.getElementById('gasSpreadsheetUrl');
+      if (webhookInput && savedGas) webhookInput.value = savedGas;
+      if (sheetInput && savedSheet) sheetInput.value = savedSheet;
     }
 
     // ----------------- RENDER MASTER TABLE -----------------
@@ -7162,6 +7281,7 @@ const TODAY_STR = "2026-10-06";
     renderTable();
     loadDatabase(false);
     initSmartFollowUpAlarm();
+    initCloudSyncInputs();
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAuthOnLoad();
