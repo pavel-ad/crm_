@@ -1017,12 +1017,15 @@
           <p class="text-xs text-slate-400 max-w-3xl leading-relaxed">
             কোনো শিক্ষার্থী যদি ফিজিক্যাল ব্যাচ থেকে অনলাইন জুমে বা অনলাইন থেকে পান্থপথ ক্লাসরুম ব্যাচে মাইগ্রেশন করতে চায়, শুধু ১-ক্লিকে ট্রান্সফার বাটনে চাপ দিলেই স্বয়ংক্রিয়ভাবে মোড পরিবর্তিত হবে।
           </p>
-          <div class="flex gap-2.5 pt-2">
+          <div class="flex flex-wrap gap-2.5 pt-2">
             <button onclick="setSheetFilterMode('Physical')" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-900 transition flex items-center gap-2">
-              <i class="fa-solid fa-building"></i> Physical Classroom Only (<span id="countSheetPhysical">0</span>)
+              <i class="fa-solid fa-building"></i> Physical Classroom (<span id="countSheetPhysical">0</span>)
             </button>
             <button onclick="setSheetFilterMode('Online')" class="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500 hover:text-slate-900 transition flex items-center gap-2">
-              <i class="fa-solid fa-globe"></i> Online Live Zoom Batch (<span id="countSheetOnline">0</span>)
+              <i class="fa-solid fa-globe"></i> Online Live Zoom (<span id="countSheetOnline">0</span>)
+            </button>
+            <button onclick="setSheetFilterMode('None')" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-700/40 text-slate-300 border border-slate-600 hover:bg-slate-700 hover:text-white transition flex items-center gap-2">
+              <i class="fa-solid fa-circle-question"></i> None / Non (<span id="countSheetNone">0</span>)
             </button>
           </div>
         </div>
@@ -1577,10 +1580,11 @@
           </div>
   
           <div>
-            <label class="text-[11px] font-bold text-slate-400 block mb-1 uppercase">Batch Mode (Offline vs Online)</label>
+            <label class="text-[11px] font-bold text-slate-400 block mb-1 uppercase">Batch Mode (Offline vs Online vs None)</label>
             <select id="m_sheetMode" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white outline-none font-semibold">
               <option value="Physical">🏢 Physical (Offline) Sheet</option>
               <option value="Online">🌐 Online Batch Sheet</option>
+              <option value="None">⚪ None / Non (নন / অনির্ধারিত)</option>
             </select>
           </div>
 
@@ -5350,7 +5354,7 @@ const TODAY_STR = "2026-10-06";
         "Supply Chain Analytics": "SCM"
       };
       const cCode = coursePrefixes[course] || "SL";
-      const mCode = (mode === 'Online') ? "ON" : "PHY";
+      const mCode = (mode === 'Online') ? "ON" : (mode === 'None' || mode === 'non') ? "NON" : "PHY";
       const numeric = (leadId || Date.now().toString()).replace(/[^0-9]/g, '').slice(-3) || "001";
       return `${cCode}-${mCode}26-${numeric}`;
     }
@@ -5968,24 +5972,32 @@ const TODAY_STR = "2026-10-06";
     // ----------------- SHEETS TAB -----------------
     function setSheetFilterMode(mode) {
       currentSheetFilter = mode;
-      document.getElementById('sheetViewTitle').innerText = (mode === 'Physical') ? '🏢 Physical Classroom Sheet' : '🌐 Online Live Zoom Sheet';
+      document.getElementById('sheetViewTitle').innerText = (mode === 'Physical') ? '🏢 Physical Classroom Sheet' : (mode === 'Online') ? '🌐 Online Live Zoom Sheet' : '⚪ None / Pending Batch Sheet';
       renderSheetsTab();
     }
 
     function renderSheetsTab() {
-      let pCount = 0, oCount = 0;
+      let pCount = 0, oCount = 0, nCount = 0;
       masterRecords.forEach(r => {
         if (r.sheetMode === 'Online') oCount++;
+        else if (r.sheetMode === 'None' || r.sheetMode === 'non') nCount++;
         else pCount++;
       });
       document.getElementById('countSheetPhysical').innerText = pCount;
       document.getElementById('countSheetOnline').innerText = oCount;
+      if (document.getElementById('countSheetNone')) document.getElementById('countSheetNone').innerText = nCount;
 
       const tbody = document.getElementById('sheetTableBody');
       tbody.innerHTML = '';
-      const list = masterRecords.filter(r => r.sheetMode === currentSheetFilter).slice(0, 30);
+      const list = masterRecords.filter(r => {
+        if (currentSheetFilter === 'None') return r.sheetMode === 'None' || r.sheetMode === 'non';
+        if (currentSheetFilter === 'Online') return r.sheetMode === 'Online';
+        return r.sheetMode === 'Physical' || (!r.sheetMode && currentSheetFilter === 'Physical');
+      }).slice(0, 30);
 
       list.forEach(item => {
+        const isOnline = item.sheetMode === 'Online';
+        const isNone = item.sheetMode === 'None' || item.sheetMode === 'non';
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-800/40 transition';
         tr.innerHTML = `
@@ -5994,12 +6006,14 @@ const TODAY_STR = "2026-10-06";
           <td class="p-3 text-slate-400">${item.company || 'Individual'}</td>
           <td class="p-3 font-semibold text-slate-200">${item.phone}</td>
           <td class="p-3">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.sheetMode === 'Online' ? 'bg-cyan-500/20 text-cyan-300' : 'bg-amber-500/20 text-amber-300'}">${item.sheetMode}</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isOnline ? 'bg-cyan-500/20 text-cyan-300' : isNone ? 'bg-slate-700 text-slate-300 border border-slate-600' : 'bg-amber-500/20 text-amber-300'}">
+              ${isOnline ? 'Online' : isNone ? 'None' : 'Physical'}
+            </span>
           </td>
           <td class="p-2 text-brand-300 font-medium whitespace-nowrap">${renderCourseSelectDropdown(item.id, item.course)}</td>
           <td class="p-3">
-            <button onclick="toggleSheetAllocation('${item.id}')" class="px-3 py-1 rounded-lg text-[11px] font-bold ${item.sheetMode === 'Physical' ? 'bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600 hover:text-white' : 'bg-amber-600/20 text-amber-300 hover:bg-amber-600 hover:text-slate-900'} transition">
-              Transfer to ${item.sheetMode === 'Physical' ? 'Online' : 'Physical'} 🔄
+            <button onclick="toggleSheetAllocation('${item.id}')" class="px-3 py-1 rounded-lg text-[11px] font-bold ${isOnline ? 'bg-slate-700/60 text-slate-300 hover:bg-slate-600' : isNone ? 'bg-amber-600/20 text-amber-300 hover:bg-amber-600 hover:text-slate-900' : 'bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600 hover:text-white'} transition">
+              Transfer to ${isOnline ? 'None' : isNone ? 'Physical' : 'Online'} 🔄
             </button>
           </td>
           <td class="p-3 text-center">
@@ -6017,9 +6031,12 @@ const TODAY_STR = "2026-10-06";
       if (rec.sheetMode === 'Physical') {
         rec.sheetMode = 'Online';
         showToast(`🌐 [${rec.name}] কে Physical থেকে Online Sheet-এ পাঠানো হয়েছে!`);
+      } else if (rec.sheetMode === 'Online') {
+        rec.sheetMode = 'None';
+        showToast(`⚪ [${rec.name}] এর Batch Mode 'None'-এ সেট করা হয়েছে!`);
       } else {
         rec.sheetMode = 'Physical';
-        showToast(`🏢 [${rec.name}] কে Online থেকে Physical Sheet-এ স্থানান্তর করা হয়েছে!`);
+        showToast(`🏢 [${rec.name}] কে Physical Sheet-এ স্থানান্তর করা হয়েছে!`);
       }
       saveStorage();
       if (activeTab === 'sheets') renderSheetsTab();
@@ -6624,8 +6641,8 @@ const TODAY_STR = "2026-10-06";
           <td class="p-3 text-slate-300 max-w-[150px] truncate">${item.company || 'Individual'}</td>
           <td class="p-3 font-semibold text-slate-200 whitespace-nowrap">${item.phone}</td>
           <td class="p-3 whitespace-nowrap">
-            <button onclick="toggleSheetAllocation('${item.id}')" title="Click to Switch Mode" class="px-2 py-0.5 rounded text-[10px] font-bold ${item.sheetMode === 'Online' ? 'bg-cyan-500/20 text-cyan-300' : 'bg-amber-500/20 text-amber-300'}">
-              ${item.sheetMode === 'Online' ? '🌐 Online' : '🏢 Physical'}
+            <button onclick="toggleSheetAllocation('${item.id}')" title="Click to Switch Mode (Physical / Online / None)" class="px-2 py-0.5 rounded text-[10px] font-bold ${item.sheetMode === 'Online' ? 'bg-cyan-500/20 text-cyan-300' : (item.sheetMode === 'None' || item.sheetMode === 'non') ? 'bg-slate-700/60 text-slate-300 border border-slate-600' : 'bg-amber-500/20 text-amber-300'}">
+              ${item.sheetMode === 'Online' ? '🌐 Online' : (item.sheetMode === 'None' || item.sheetMode === 'non') ? '⚪ None' : '🏢 Physical'}
             </button>
           </td>
           <td class="p-3 whitespace-nowrap">
@@ -6784,7 +6801,7 @@ const TODAY_STR = "2026-10-06";
       document.getElementById('m_phone').value = rec.phone;
       document.getElementById('m_company').value = rec.company || '';
       document.getElementById('m_designation').value = rec.designation || '';
-      document.getElementById('m_sheetMode').value = rec.sheetMode || 'Physical';
+      document.getElementById('m_sheetMode').value = (rec.sheetMode === 'Online' || rec.sheetMode === 'Physical') ? rec.sheetMode : (rec.sheetMode === 'None' || rec.sheetMode === 'non' ? 'None' : (rec.sheetMode || 'Physical'));
       if (!rec.rollNo && rec.isCoursePerson === 'YES') {
         rec.rollNo = generateRollNo(rec.course, rec.sheetMode, rec.id);
       }
