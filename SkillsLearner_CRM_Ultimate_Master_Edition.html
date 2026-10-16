@@ -549,7 +549,7 @@
     </header>
 
     <!-- Content Workspace -->
-    <main class="p-3 sm:p-5 flex-1 space-y-5 pb-28 lg:pb-8">
+    <main class="p-3 sm:p-5 flex-1 space-y-5 pb-36 lg:pb-24">
 
       <!-- ==================== TAB 1: MASTER PIPELINE ==================== -->
       
@@ -2901,6 +2901,92 @@
       </button>
     </div>
   </nav>
+
+
+  <!-- ==================== PERSISTENT BOTTOM PENDING DUE STUDENTS NOTIFICATION BAR (ADMIN & ALL EMPLOYEES) ==================== -->
+  <div id="persistentDueAlertWidget" class="no-print fixed bottom-[58px] lg:bottom-0 left-0 lg:left-64 right-0 z-[45] transition-all duration-300">
+    <!-- Expanded Queue Drawer (Popup above bottom bar) -->
+    <div id="bottomDueExpandedDrawer" class="hidden mx-2 sm:mx-4 mb-1.5 bg-slate-900/98 backdrop-blur-2xl border-2 border-rose-500/60 rounded-2xl shadow-[0_-12px_40px_rgba(244,63,94,0.28)] overflow-hidden">
+      <div class="px-4 py-2.5 bg-gradient-to-r from-rose-950/90 via-slate-900 to-slate-900 border-b border-rose-500/30 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+          <h4 class="font-extrabold text-xs sm:text-sm text-white flex items-center gap-2">
+            <span>🚨 Pending Due Students Live Queue (সকল বকেয়া শিক্ষার্থীর তালিকা)</span>
+            <span id="drawerDueBadgeCount" class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px]">0 জন</span>
+          </h4>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-extrabold text-rose-400">মোট বকেয়া: <strong id="drawerDueTotalAmount">৳০</strong></span>
+          <button type="button" onclick="switchTab('due_reminders'); toggleBottomDueDrawer(false);" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 text-[11px] font-bold transition">
+            📋 Full Due Tab
+          </button>
+          <button type="button" onclick="toggleBottomDueDrawer(false)" class="p-1 rounded-lg bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white transition" title="তালিকা বন্ধ করুন">
+            <i class="fa-solid fa-xmark text-xs"></i>
+          </button>
+        </div>
+      </div>
+      <div class="max-h-60 overflow-y-auto overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-400 uppercase font-bold text-[10px] sticky top-0">
+              <th class="p-2.5">ID</th>
+              <th class="p-2.5">Student Name & Phone</th>
+              <th class="p-2.5">Course & Mode</th>
+              <th class="p-2.5">KAM / Caller</th>
+              <th class="p-2.5 text-right">Total Fee</th>
+              <th class="p-2.5 text-right">Paid</th>
+              <th class="p-2.5 text-right text-rose-400">Due Amount (বকেয়া)</th>
+              <th class="p-2.5">Next Due Date</th>
+              <th class="p-2.5 text-center">Quick Action</th>
+            </tr>
+          </thead>
+          <tbody id="bottomDueDrawerTableBody" class="divide-y divide-slate-800/80 text-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Always-Visible Bottom Notification Bar -->
+    <div id="bottomDueMainBar" class="bg-gradient-to-r from-rose-950/95 via-slate-900/98 to-slate-950/98 backdrop-blur-xl border-t-2 border-rose-500/70 px-3 sm:px-4 py-2 shadow-[0_-6px_25px_rgba(0,0,0,0.65)] flex items-center justify-between gap-2.5 text-xs">
+      <!-- Left: Live Alert Title & Total Due -->
+      <div onclick="toggleBottomDueDrawer()" class="flex items-center gap-2 shrink-0 cursor-pointer group" title="ক্লিক করে সকল বকেয়া শিক্ষার্থীর সম্পূর্ণ তালিকা দেখুন">
+        <div class="w-7 h-7 rounded-xl bg-rose-600/25 border border-rose-500/50 text-rose-400 flex items-center justify-center shrink-0 relative">
+          <i class="fa-solid fa-bell text-xs animate-bounce"></i>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+        </div>
+        <div>
+          <div class="font-extrabold text-white text-[11px] sm:text-xs flex items-center gap-1.5 leading-tight">
+            <span class="text-rose-400">🚨 Pending Due Queue:</span>
+            <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px]" id="bottomDueCountText">0 জন</span>
+            <span class="hidden md:inline text-slate-400">•</span>
+            <span class="text-amber-300 font-black" id="bottomDueTotalText">মোট বকেয়া: ৳০</span>
+          </div>
+          <div class="text-[10px] text-slate-400 hidden sm:block">অ্যাডমিন ও সকল এমপ্লয়ির জন্য লাইভ বকেয়া নোটিফিকেশন (ক্লিক করে বিস্তারিত দেখুন)</div>
+        </div>
+      </div>
+
+      <!-- Center: Horizontally Scrollable Student Due Cards/Pills -->
+      <div id="bottomDueTickerList" class="flex-1 flex items-center gap-2 overflow-x-auto py-0.5 px-1 no-scrollbar">
+        <!-- Dynamically populated with each student's Name + Due Amount + 1-Click Actions -->
+      </div>
+
+      <!-- Right: Expand / Due Tab / Minimize Controls -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <button type="button" onclick="toggleBottomDueDrawer()" id="bottomDueExpandBtn" class="px-2.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-[11px] transition flex items-center gap-1 shadow-md shadow-rose-600/30 cursor-pointer" title="কে কত টাকা পাবে তার পূর্ণাঙ্গ তালিকা উপরে ওপেন করুন">
+          <i class="fa-solid fa-chevron-up text-[10px]" id="bottomDueExpandIcon"></i>
+          <span class="hidden sm:inline">সব বকেয়া দেখুন</span>
+        </button>
+        <button type="button" onclick="minimizeBottomDueBar(true)" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition cursor-pointer" title="মিনিমাইজ করে ছোট বাটন করে রাখুন">
+          <i class="fa-solid fa-minus text-[10px]"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minimized Floating Due Alert Pill (Shown only when user minimizes the bar) -->
+  <button id="minimizedDueAlertPill" onclick="minimizeBottomDueBar(false)" class="no-print hidden fixed bottom-20 lg:bottom-4 left-4 lg:left-68 z-[46] px-3.5 py-2 rounded-2xl bg-gradient-to-r from-rose-700 to-rose-600 hover:from-rose-600 hover:to-rose-500 text-white font-extrabold text-xs shadow-2xl shadow-rose-600/50 border border-rose-400/50 flex items-center gap-2 cursor-pointer animate-pulse">
+    <i class="fa-solid fa-bell"></i>
+    <span id="minimizedDuePillText">🚨 Pending Due (0 জন • ৳০)</span>
+  </button>
 
   <!-- Mobile Floating Action Button: Quick Add Lead (+) -->
   <button onclick="openLeadModal()" id="mobileFloatingAddLeadBtn" class="lg:hidden fixed bottom-20 right-4 z-40 w-13 h-13 rounded-full bg-gradient-to-tr from-brand-600 to-indigo-500 hover:from-brand-500 hover:to-indigo-400 text-white shadow-xl shadow-brand-500/40 flex items-center justify-center active:scale-95 transition-all p-3.5" title="নতুন লিড যোগ করুন">
@@ -6728,6 +6814,7 @@ const TODAY_STR = "2026-10-06";
       const dueStudents = masterRecords.filter(r => r.isCoursePerson === 'YES' && Number(r.due || 0) > 0);
       document.getElementById('dueReminderCount').innerText = dueStudents.length;
       document.getElementById('badge-due').innerText = dueStudents.length;
+      if (typeof renderPersistentBottomDueAlert === 'function') renderPersistentBottomDueAlert();
 
       dueStudents.forEach(st => {
         const tr = document.createElement('tr');
@@ -7050,6 +7137,7 @@ const TODAY_STR = "2026-10-06";
         const optEl = document.getElementById(optId);
         if (optEl) optEl.textContent = labelText;
       }
+      if (typeof renderPersistentBottomDueAlert === 'function') renderPersistentBottomDueAlert();
       const statusDropEl = document.getElementById('statusQuickFilterDropdown');
       if (statusDropEl && currentFilter && statusDropEl.value !== currentFilter) {
         statusDropEl.value = currentFilter;
@@ -8453,6 +8541,129 @@ const TODAY_STR = "2026-10-06";
       document.getElementById('certificateModal').classList.remove('hidden');
     }
 
+
+    // ----------------- PERSISTENT BOTTOM PENDING DUE STUDENTS NOTIFICATION BAR -----------------
+    let isBottomDueDrawerOpen = false;
+
+    function toggleBottomDueDrawer(forceState) {
+      const drawer = document.getElementById('bottomDueExpandedDrawer');
+      const icon = document.getElementById('bottomDueExpandIcon');
+      if (!drawer) return;
+
+      isBottomDueDrawerOpen = (typeof forceState === 'boolean') ? forceState : !isBottomDueDrawerOpen;
+      if (isBottomDueDrawerOpen) {
+        drawer.classList.remove('hidden');
+        if (icon) icon.className = 'fa-solid fa-chevron-down text-[10px]';
+      } else {
+        drawer.classList.add('hidden');
+        if (icon) icon.className = 'fa-solid fa-chevron-up text-[10px]';
+      }
+    }
+
+    function minimizeBottomDueBar(minimize) {
+      const widget = document.getElementById('persistentDueAlertWidget');
+      const pill = document.getElementById('minimizedDueAlertPill');
+      if (!widget || !pill) return;
+
+      if (minimize) {
+        widget.classList.add('hidden');
+        pill.classList.remove('hidden');
+      } else {
+        widget.classList.remove('hidden');
+        pill.classList.add('hidden');
+      }
+    }
+
+    function renderPersistentBottomDueAlert() {
+      const tickerEl = document.getElementById('bottomDueTickerList');
+      const drawerBody = document.getElementById('bottomDueDrawerTableBody');
+      const countText = document.getElementById('bottomDueCountText');
+      const totalText = document.getElementById('bottomDueTotalText');
+      const drawerCount = document.getElementById('drawerDueBadgeCount');
+      const drawerTotal = document.getElementById('drawerDueTotalAmount');
+      const minPillText = document.getElementById('minimizedDuePillText');
+      if (!tickerEl) return;
+
+      const dueStudents = masterRecords.filter(r => r.isCoursePerson === 'YES' && Number(r.due || 0) > 0);
+      const totalDueAmt = dueStudents.reduce((sum, r) => sum + Number(r.due || 0), 0);
+
+      if (countText) countText.innerText = `${dueStudents.length} জন`;
+      if (totalText) totalText.innerText = `মোট বকেয়া: ৳${totalDueAmt.toLocaleString()}`;
+      if (drawerCount) drawerCount.innerText = `${dueStudents.length} জন`;
+      if (drawerTotal) drawerTotal.innerText = `৳${totalDueAmt.toLocaleString()}`;
+      if (minPillText) minPillText.innerText = `🚨 Pending Due (${dueStudents.length} জন • ৳${totalDueAmt.toLocaleString()})`;
+      if (document.getElementById('badge-due')) document.getElementById('badge-due').innerText = dueStudents.length;
+
+      if (dueStudents.length === 0) {
+        tickerEl.innerHTML = `
+          <div class="px-3 py-1 rounded-xl bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 font-bold text-[11px] flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+            <span>🎉 বর্তমানে কোনো শিক্ষার্থীর কিস্তি বা ফি বকেয়া নেই (All Paid)!</span>
+          </div>
+        `;
+        if (drawerBody) {
+          drawerBody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-emerald-400 font-bold">🎉 কোনো বকেয়া শিক্ষার্থী নেই!</td></tr>`;
+        }
+        return;
+      }
+
+      // Render live student pills in the bottom bar
+      tickerEl.innerHTML = dueStudents.map(st => {
+        const safeId = String(st.id).replace(/'/g, "\\'");
+        const dueAmt = Number(st.due || 0).toLocaleString();
+        const isOverdue = st.nextDueDate && st.nextDueDate < TODAY_STR;
+        return `
+          <div class="shrink-0 px-2.5 py-1 rounded-xl bg-slate-900/95 border ${isOverdue ? 'border-rose-500/70' : 'border-slate-700/90'} hover:border-rose-400 flex items-center gap-2 transition shadow-sm">
+            <div onclick="editLeadRecord('${safeId}')" class="cursor-pointer flex items-center gap-1.5" title="ক্লিক করে ${st.name}-এর বিস্তারিত দেখুন">
+              <span class="font-extrabold text-white text-[11px]">${st.name}</span>
+              <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 font-black text-[10px]">৳${dueAmt}</span>
+              <span class="text-[10px] text-slate-400 hidden xl:inline">(${st.course} • 👤 ${st.kam || 'পাবেল'})</span>
+            </div>
+            <div class="flex items-center gap-1 pl-1 border-l border-slate-800">
+              <button type="button" onclick="openCollectInstallmentModal('${safeId}')" class="px-1.5 py-0.5 rounded bg-emerald-600/25 hover:bg-emerald-600 text-emerald-300 hover:text-white text-[9px] font-extrabold transition cursor-pointer" title="কিস্তি জমা নিন">+কিস্তি</button>
+              <button type="button" onclick="sendDueWhatsAppNotice('${safeId}')" class="px-1.5 py-0.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-extrabold transition cursor-pointer" title="WhatsApp-এ বকেয়া রিমাইন্ডার পাঠান"><i class="fa-brands fa-whatsapp"></i></button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render full table inside expandable drawer
+      if (drawerBody) {
+        drawerBody.innerHTML = dueStudents.map(st => {
+          const safeId = String(st.id).replace(/'/g, "\\'");
+          const paidAmt = Number(st.advance || 0) + Number(st.regularPaid || 0);
+          const isOverdue = st.nextDueDate && st.nextDueDate < TODAY_STR;
+          return `
+            <tr class="hover:bg-slate-800/60 transition">
+              <td class="p-2.5 font-mono font-bold text-brand-400">${st.id}</td>
+              <td class="p-2.5">
+                <div class="font-bold text-white">${st.name}</div>
+                <div class="text-[10px] text-slate-400 font-mono">${st.phone}</div>
+              </td>
+              <td class="p-2.5">
+                <div class="text-brand-300 font-semibold">${st.course}</div>
+                <div class="text-[10px] text-slate-400">${st.sheetMode || 'Physical'}</div>
+              </td>
+              <td class="p-2.5 font-bold text-cyan-300">👤 ${st.kam || 'পাবেল'}</td>
+              <td class="p-2.5 text-right font-bold text-white">৳${Number(st.totalFee || 0).toLocaleString()}</td>
+              <td class="p-2.5 text-right font-bold text-emerald-400">৳${paidAmt.toLocaleString()}</td>
+              <td class="p-2.5 text-right font-black text-rose-400 text-xs">৳${Number(st.due || 0).toLocaleString()}</td>
+              <td class="p-2.5">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isOverdue ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-amber-500/20 text-amber-300'}">
+                  ${isOverdue ? '⏰ Overdue: ' : '📅 '}${st.nextDueDate || 'Pending'}
+                </span>
+              </td>
+              <td class="p-2.5 text-center space-x-1 whitespace-nowrap">
+                <button type="button" onclick="openCollectInstallmentModal('${safeId}')" class="px-2 py-1 rounded-lg bg-emerald-600/25 hover:bg-emerald-600 text-emerald-300 hover:text-white font-bold text-[10px] transition cursor-pointer">+কিস্তি জমা</button>
+                <button type="button" onclick="sendDueWhatsAppNotice('${safeId}')" class="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition cursor-pointer"><i class="fa-brands fa-whatsapp mr-1"></i>WA Notice</button>
+                <button type="button" onclick="openInvoice('${safeId}')" class="px-2 py-1 rounded-lg bg-indigo-600/25 hover:bg-indigo-600 text-indigo-300 hover:text-white font-bold text-[10px] transition cursor-pointer">🧾 রিসিট</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
     // ----------------- THEME & LANGUAGE TOGGLE (ADDED) -----------------
     let isDarkTheme = true;
     let isEnglish = false;
@@ -8497,6 +8708,7 @@ const TODAY_STR = "2026-10-06";
     loadDatabase(false);
     initSmartFollowUpAlarm();
     initCloudSyncInputs();
+    renderPersistentBottomDueAlert();
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAuthOnLoad();
