@@ -862,7 +862,7 @@
           </div>
 
           <!-- Row 2: 4-Column Responsive Dropdown Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2.5 border-t border-slate-800/80 text-xs">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 pt-2.5 border-t border-slate-800/80 text-xs">
             <div>
               <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
                 <i class="fa-regular fa-calendar text-brand-400"></i> <span>কল / ডিউ তারিখ (Date)</span>
@@ -878,6 +878,18 @@
                 <option value="ALL">All Status (সকল)</option>
                 <option value="YES">✅ Course Person: YES</option>
                 <option value="NO">❌ Course Person: NO</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-layer-group text-amber-400"></i> <span>ব্যাচ মোড (Batch Mode)</span>
+              </label>
+              <select id="batchModeFilter" onchange="filterData()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 font-semibold transition cursor-pointer">
+                <option value="ALL">All Modes (সকল মোড)</option>
+                <option value="Online">🌐 Online</option>
+                <option value="Physical">🏢 Physical</option>
+                <option value="None">⚪ none</option>
               </select>
             </div>
 
@@ -1031,8 +1043,16 @@
         </div>
 
         <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-          <div class="p-4 border-b border-slate-800 flex justify-between items-center">
+          <div class="p-4 border-b border-slate-800 flex flex-wrap justify-between items-center gap-3">
             <h4 class="font-bold text-sm text-white" id="sheetViewTitle">🏢 Physical Classroom Sheet</h4>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-slate-400 font-semibold">Batch Mode Filter:</span>
+              <select id="sheetTabModeDropdown" onchange="setSheetFilterMode(this.value)" class="bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white font-bold outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer">
+                <option value="Physical">🏢 Physical</option>
+                <option value="Online">🌐 Online</option>
+                <option value="None">⚪ none</option>
+              </select>
+            </div>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
@@ -1580,11 +1600,11 @@
           </div>
   
           <div>
-            <label class="text-[11px] font-bold text-slate-400 block mb-1 uppercase">Batch Mode (Offline vs Online vs None)</label>
-            <select id="m_sheetMode" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white outline-none font-semibold">
-              <option value="Physical">🏢 Physical (Offline) Sheet</option>
-              <option value="Online">🌐 Online Batch Sheet</option>
-              <option value="None">⚪ None / Non (নন / অনির্ধারিত)</option>
+            <label class="text-[11px] font-bold text-slate-400 block mb-1 uppercase">Batch Mode (Online / Physical / none)</label>
+            <select id="m_sheetMode" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white outline-none font-semibold cursor-pointer">
+              <option value="Online">🌐 Online</option>
+              <option value="Physical">🏢 Physical</option>
+              <option value="None">⚪ none</option>
             </select>
           </div>
 
@@ -5152,7 +5172,12 @@ const TODAY_STR = "2026-10-06";
               </div>
             </div>
           </td>
-          <td class="p-2 whitespace-nowrap font-medium text-slate-200">${renderCourseSelectDropdown(item.id, item.course)}</td>
+          <td class="p-2 whitespace-nowrap font-medium text-slate-200">
+            <div class="flex items-center gap-1.5">
+              ${renderCourseSelectDropdown(item.id, item.course)}
+              ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
+            </div>
+          </td>
           <td class="p-3 whitespace-nowrap">
             <div class="text-white font-semibold text-xs">${item.company || '<span class="text-slate-500 italic">No Company</span>'}</div>
             <div class="text-[10px] text-slate-400">${item.designation || '<span class="text-slate-500 italic">No Designation</span>'}</div>
@@ -5514,7 +5539,12 @@ const TODAY_STR = "2026-10-06";
             <div class="font-bold text-white">${st.name}</div>
             <div class="text-[11px] text-slate-400">${st.phone}</div>
           </td>
-          <td class="p-3 font-medium">${st.course} (${st.sheetMode || 'Physical'})</td>
+          <td class="p-2 font-medium whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              ${renderCourseSelectDropdown(st.id, st.course)}
+              ${renderBatchModeSelectDropdown(st.id, st.sheetMode)}
+            </div>
+          </td>
           <td class="p-3">
             <span class="font-bold ${st.attendance >= 80 ? 'text-emerald-400' : 'text-amber-400'}">${st.attendance}%</span>
           </td>
@@ -5629,9 +5659,9 @@ const TODAY_STR = "2026-10-06";
           card.onclick = () => { editLeadRecord(item.id); };
 
           card.innerHTML = `
-            <div class="flex justify-between items-start">
+            <div class="flex justify-between items-start gap-1">
               <strong class="font-bold text-xs text-white">${item.name}</strong>
-              <span class="px-1.5 py-0.5 rounded text-[9px] font-bold ${item.sheetMode === 'Online' ? 'bg-cyan-500/20 text-cyan-300' : 'bg-amber-500/20 text-amber-300'}">${item.sheetMode}</span>
+              ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
             </div>
             <div class="text-[10px] text-slate-400 truncate">${item.company || 'Individual'} • ${item.phone}</div>
             <div class="text-[10px] font-bold text-brand-300">${item.course}</div>
@@ -5955,7 +5985,12 @@ const TODAY_STR = "2026-10-06";
           <td class="p-3 font-bold text-white">${item.name}</td>
           <td class="p-3 text-slate-400">${item.company || 'Individual'}</td>
           <td class="p-3 font-bold text-slate-200">${item.phone}</td>
-          <td class="p-2 font-medium text-brand-300 whitespace-nowrap">${renderCourseSelectDropdown(item.id, item.course)}</td>
+          <td class="p-2 font-medium text-brand-300 whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              ${renderCourseSelectDropdown(item.id, item.course)}
+              ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
+            </div>
+          </td>
           <td class="p-3 font-bold text-purple-400">${item.nextCall.replace('T', ' ')}</td>
           <td class="p-3 text-slate-400 max-w-xs truncate">${item.comment || 'N/A'}</td>
           <td class="p-3 font-semibold text-slate-300">${item.kam}</td>
@@ -5973,6 +6008,8 @@ const TODAY_STR = "2026-10-06";
     function setSheetFilterMode(mode) {
       currentSheetFilter = mode;
       document.getElementById('sheetViewTitle').innerText = (mode === 'Physical') ? '🏢 Physical Classroom Sheet' : (mode === 'Online') ? '🌐 Online Live Zoom Sheet' : '⚪ None / Pending Batch Sheet';
+      const tabDrop = document.getElementById('sheetTabModeDropdown');
+      if (tabDrop && tabDrop.value !== mode) tabDrop.value = mode;
       renderSheetsTab();
     }
 
@@ -5996,8 +6033,6 @@ const TODAY_STR = "2026-10-06";
       }).slice(0, 30);
 
       list.forEach(item => {
-        const isOnline = item.sheetMode === 'Online';
-        const isNone = item.sheetMode === 'None' || item.sheetMode === 'non';
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-slate-800/40 transition';
         tr.innerHTML = `
@@ -6005,16 +6040,12 @@ const TODAY_STR = "2026-10-06";
           <td class="p-3 font-bold text-white">${item.name}</td>
           <td class="p-3 text-slate-400">${item.company || 'Individual'}</td>
           <td class="p-3 font-semibold text-slate-200">${item.phone}</td>
-          <td class="p-3">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isOnline ? 'bg-cyan-500/20 text-cyan-300' : isNone ? 'bg-slate-700 text-slate-300 border border-slate-600' : 'bg-amber-500/20 text-amber-300'}">
-              ${isOnline ? 'Online' : isNone ? 'None' : 'Physical'}
-            </span>
+          <td class="p-2 whitespace-nowrap">
+            ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
           </td>
           <td class="p-2 text-brand-300 font-medium whitespace-nowrap">${renderCourseSelectDropdown(item.id, item.course)}</td>
-          <td class="p-3">
-            <button onclick="toggleSheetAllocation('${item.id}')" class="px-3 py-1 rounded-lg text-[11px] font-bold ${isOnline ? 'bg-slate-700/60 text-slate-300 hover:bg-slate-600' : isNone ? 'bg-amber-600/20 text-amber-300 hover:bg-amber-600 hover:text-slate-900' : 'bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600 hover:text-white'} transition">
-              Transfer to ${isOnline ? 'None' : isNone ? 'Physical' : 'Online'} 🔄
-            </button>
+          <td class="p-2 whitespace-nowrap">
+            ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
           </td>
           <td class="p-3 text-center">
             <button onclick="editLeadRecord('${item.id}')" class="p-1.5 text-slate-400 hover:text-white"><i class="fa-solid fa-pen-to-square"></i></button>
@@ -6069,7 +6100,12 @@ const TODAY_STR = "2026-10-06";
           <td class="p-3 font-bold text-white">${item.name}</td>
           <td class="p-3 text-slate-400">${item.company || 'Individual'}</td>
           <td class="p-3 font-semibold text-slate-200">${item.phone}</td>
-          <td class="p-3 text-brand-300 font-medium">${item.course} (${item.sheetMode || 'Physical'})</td>
+          <td class="p-2 text-brand-300 font-medium whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              ${renderCourseSelectDropdown(item.id, item.course)}
+              ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
+            </div>
+          </td>
           <td class="p-3 font-bold text-white">৳${Number(item.totalFee).toLocaleString()}</td>
           <td class="p-3 font-bold text-emerald-400">৳${(Number(item.advance) + Number(item.regularPaid)).toLocaleString()}</td>
           <td class="p-3 font-extrabold text-rose-400">৳${Number(item.due).toLocaleString()}</td>
@@ -6244,7 +6280,12 @@ const TODAY_STR = "2026-10-06";
           <td class="p-3 font-mono font-bold text-white">${st.id}</td>
           <td class="p-3 font-bold text-white">${st.name}</td>
           <td class="p-3 text-slate-300 font-semibold">${st.phone}</td>
-          <td class="p-3 text-brand-300 font-medium">${st.course} (${st.sheetMode || 'Physical'})</td>
+          <td class="p-2 text-brand-300 font-medium whitespace-nowrap">
+            <div class="flex items-center gap-1.5">
+              ${renderCourseSelectDropdown(st.id, st.course)}
+              ${renderBatchModeSelectDropdown(st.id, st.sheetMode)}
+            </div>
+          </td>
           <td class="p-3 font-bold text-white">৳${Number(st.totalFee || 0).toLocaleString()}</td>
           <td class="p-3 font-bold text-emerald-400">৳${(Number(st.advance || 0) + Number(st.regularPaid || 0)).toLocaleString()}</td>
           <td class="p-3 font-extrabold text-rose-400">৳${Number(st.due || 0).toLocaleString()}</td>
@@ -6530,6 +6571,8 @@ const TODAY_STR = "2026-10-06";
       const searchQ = (searchEl ? searchEl.value : '').toLowerCase();
       const personEl = document.getElementById('coursePersonFilter');
       const personQ = personEl ? personEl.value : 'ALL';
+      const batchModeEl = document.getElementById('batchModeFilter');
+      const batchModeQ = batchModeEl ? batchModeEl.value : 'ALL';
       const courseEl = document.getElementById('courseFilter');
       const courseQ = courseEl ? courseEl.value : 'ALL';
       const sourceEl = document.getElementById('sourceFilter');
@@ -6574,7 +6617,10 @@ const TODAY_STR = "2026-10-06";
           matchesCal = (item.nextCall && item.nextCall.startsWith(selectedCalDate)) || (item.nextDueDate === selectedCalDate);
         }
 
-        return matchesQ && matchesCourse && matchesSource && matchesPerson && matchesDateWork && matchesChip && matchesCal;
+        const normItemMode = (item.sheetMode === 'Online') ? 'Online' : (item.sheetMode === 'None' || item.sheetMode === 'non') ? 'None' : 'Physical';
+        const matchesBatchMode = batchModeQ === 'ALL' || normItemMode === batchModeQ;
+
+        return matchesQ && matchesCourse && matchesBatchMode && matchesSource && matchesPerson && matchesDateWork && matchesChip && matchesCal;
       });
 
       // AUTO-PIN TODAY'S CALLS AT TOP
@@ -6640,10 +6686,8 @@ const TODAY_STR = "2026-10-06";
           </td>
           <td class="p-3 text-slate-300 max-w-[150px] truncate">${item.company || 'Individual'}</td>
           <td class="p-3 font-semibold text-slate-200 whitespace-nowrap">${item.phone}</td>
-          <td class="p-3 whitespace-nowrap">
-            <button onclick="toggleSheetAllocation('${item.id}')" title="Click to Switch Mode (Physical / Online / None)" class="px-2 py-0.5 rounded text-[10px] font-bold ${item.sheetMode === 'Online' ? 'bg-cyan-500/20 text-cyan-300' : (item.sheetMode === 'None' || item.sheetMode === 'non') ? 'bg-slate-700/60 text-slate-300 border border-slate-600' : 'bg-amber-500/20 text-amber-300'}">
-              ${item.sheetMode === 'Online' ? '🌐 Online' : (item.sheetMode === 'None' || item.sheetMode === 'non') ? '⚪ None' : '🏢 Physical'}
-            </button>
+          <td class="p-2 whitespace-nowrap">
+            ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
           </td>
           <td class="p-3 whitespace-nowrap">
             <button onclick="toggleCoursePersonStatus('${item.id}')" title="Click to Toggle Status" class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isYes ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
@@ -7000,6 +7044,71 @@ const TODAY_STR = "2026-10-06";
       } catch (err) {
         console.error('Error in updateLeadCourseDirectly:', err);
       }
+    }
+
+    function renderBatchModeSelectDropdown(leadId, currentMode) {
+      const normMode = (currentMode === 'Online') ? 'Online' : (currentMode === 'None' || currentMode === 'non' || currentMode === 'Non') ? 'None' : 'Physical';
+      const colorClass = normMode === 'Online'
+        ? 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40 hover:border-cyan-400'
+        : normMode === 'None'
+          ? 'bg-slate-800/90 text-slate-300 border-slate-600 hover:border-slate-400'
+          : 'bg-amber-500/15 text-amber-300 border-amber-500/40 hover:border-amber-400';
+
+      return `<select onclick="event.stopPropagation()" onchange="updateLeadBatchModeDirectly('${leadId}', this.value)" class="border font-bold text-[11px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer ${colorClass}" title="Batch Mode পরিবর্তন করতে ক্লিক করুন">
+        <option value="Online" class="bg-slate-900 text-cyan-300" ${normMode === 'Online' ? 'selected' : ''}>🌐 Online</option>
+        <option value="Physical" class="bg-slate-900 text-amber-300" ${normMode === 'Physical' ? 'selected' : ''}>🏢 Physical</option>
+        <option value="None" class="bg-slate-900 text-slate-300" ${normMode === 'None' ? 'selected' : ''}>⚪ none</option>
+      </select>`;
+    }
+
+    function updateLeadBatchModeDirectly(id, newMode) {
+      try {
+        const rec = masterRecords.find(r => r.id === id);
+        if (!rec) return;
+
+        rec.sheetMode = newMode;
+        if (rec.isCoursePerson === 'YES') {
+          rec.rollNo = generateRollNo(rec.course, rec.sheetMode, rec.id);
+        }
+
+        try { saveStorage(); } catch(e) {}
+        if (typeof showToast === 'function') {
+          const modeLabel = newMode === 'Online' ? '🌐 Online' : newMode === 'None' ? '⚪ none' : '🏢 Physical';
+          showToast(`🔄 [${rec.name}]-এর Batch Mode আপডেট হয়েছে: ${modeLabel}`);
+        }
+
+        if (typeof renderTable === 'function') renderTable();
+        if (typeof renderSheetsTab === 'function' && typeof activeTab !== 'undefined' && activeTab === 'sheets') renderSheetsTab();
+        if (typeof renderAdmittedTab === 'function' && typeof activeTab !== 'undefined' && activeTab === 'admitted') renderAdmittedTab();
+        if (typeof renderDueRemindersTab === 'function' && typeof activeTab !== 'undefined' && activeTab === 'due_reminders') renderDueRemindersTab();
+        if (typeof renderAlumniTab === 'function' && typeof activeTab !== 'undefined' && activeTab === 'alumni') renderAlumniTab();
+        if (typeof renderKanbanBoard === 'function' && typeof activeTab !== 'undefined' && activeTab === 'kanban') renderKanbanBoard();
+        if (typeof renderMotherDataTable === 'function' && typeof activeTab !== 'undefined' && activeTab === 'motherdata') renderMotherDataTable();
+        if (typeof renderTodayTab === 'function' && typeof activeTab !== 'undefined' && activeTab === 'today') renderTodayTab();
+      } catch (err) {
+        console.error('Error in updateLeadBatchModeDirectly:', err);
+      }
+    }
+
+    function resetAllFilters() {
+      const sEl = document.getElementById('searchInput');
+      if (sEl) sEl.value = '';
+      const pEl = document.getElementById('coursePersonFilter');
+      if (pEl) pEl.value = 'ALL';
+      const bEl = document.getElementById('batchModeFilter');
+      if (bEl) bEl.value = 'ALL';
+      const cEl = document.getElementById('courseFilter');
+      if (cEl) cEl.value = 'ALL';
+      const srcEl = document.getElementById('sourceFilter');
+      if (srcEl) srcEl.value = 'ALL';
+      const dEl = document.getElementById('dateWorkFilter');
+      if (dEl) dEl.value = '';
+      const uEl = document.getElementById('userProfileSelector');
+      if (uEl) uEl.value = 'ALL';
+      currentFilter = 'ALL';
+      selectedCalDate = null;
+      currentPage = 1;
+      renderTable();
     }
 
     function toggleCoursePersonStatus(id) {
