@@ -923,7 +923,7 @@
               <label class="block text-[11px] font-bold text-slate-400 mb-1 flex items-center gap-1.5">
                 <i class="fa-solid fa-graduation-cap text-emerald-400"></i> <span>কোর্স পার্সন (Enrollment)</span>
               </label>
-              <select id="coursePersonFilter" onchange="filterData()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 font-semibold transition">
+              <select id="coursePersonFilter" onchange="handleCoursePersonFilterChange(this.value)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:ring-1 focus:ring-brand-500 font-semibold transition">
                 <option value="ALL">All Status (সকল)</option>
                 <option value="YES">✅ Course Person: YES</option>
                 <option value="NO">❌ Course Person: NO</option>
@@ -2267,35 +2267,12 @@
   </div>
 
     <!-- Floating Actions Dropdown Menu (Fixed in body to prevent any overflow clipping) -->
-  <div id="actionDropdownMenu" class="fixed hidden z-50 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl p-1.5 space-y-1 transition-all duration-150">
+  <div id="actionDropdownMenu" class="fixed hidden z-[9999] w-60 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl p-1.5 space-y-1 transition-all duration-150">
     <div class="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 flex items-center justify-between">
       <span>Lead Actions</span>
       <span class="text-brand-400 font-mono font-bold" id="actionDropdownLeadId"></span>
     </div>
-
-    <button onclick="editLeadRecord(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2.5 transition">
-      <i class="fa-solid fa-pen-to-square w-4 text-center text-cyan-400"></i>
-      <span>সম্পূর্ণ তথ্য এডিট (Edit)</span>
-    </button>
-
-    <button onclick="sendWhatsAppReceipt(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-xl flex items-center gap-2.5 transition">
-      <i class="fa-brands fa-whatsapp w-4 text-center text-emerald-400"></i>
-      <span>WhatsApp মেসেজ পাঠান</span>
-    </button>
-
-    <button onclick="syncLeadToGoogleCalendar(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-purple-300 hover:bg-purple-600/20 hover:text-purple-200 rounded-xl flex items-center gap-2.5 transition">
-      <i class="fa-regular fa-calendar-plus w-4 text-center text-purple-400"></i>
-      <span>Google Calendar শিডিউল</span>
-    </button>
-
-    <div id="actionDropdownDynamicItems" class="space-y-1 border-t border-slate-800/80 pt-1"></div>
-
-    <div class="border-t border-slate-800/80 pt-1">
-      <button onclick="deleteLeadRecord(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-600/20 hover:text-rose-300 rounded-xl flex items-center gap-2.5 transition">
-        <i class="fa-solid fa-trash-can w-4 text-center text-rose-400"></i>
-        <span>লিড ডিলিট করুন (Delete)</span>
-      </button>
-    </div>
+    <div id="actionDropdownDynamicItems" class="space-y-1 pt-0.5"></div>
   </div>
 
   
@@ -3125,6 +3102,7 @@
       localStorage.setItem(DB_STORAGE_KEY, jsonStr);
       localStorage.setItem('sl_crm_master_pro_v6', jsonStr);
       localStorage.setItem('sl_crm_enterprise_full_v3', jsonStr);
+      localStorage.setItem('sl_crm_tailwind_v9', jsonStr);
       updateDBSyncStatusUI('local', `DB (${masterRecords.length})`);
     }
 
@@ -3279,10 +3257,12 @@
       }
 
       if (fetchedData && Array.isArray(fetchedData)) {
-        const isDifferent = !hasLocalData || masterRecords.length !== fetchedData.length;
-        if (forceNetwork || isDifferent) {
+        if (forceNetwork || !hasLocalData) {
           masterRecords = fetchedData;
           saveStorage();
+          if (typeof updateCourseDropdowns === 'function') updateCourseDropdowns();
+          if (typeof updateSourceDropdowns === 'function') updateSourceDropdowns();
+          if (typeof updateKamDropdowns === 'function') updateKamDropdowns();
           renderCalendar();
           renderTable();
           if (forceNetwork) showToast(`☁️ ${source} থেকে ডাটাবেস সিঙ্ক হয়েছে (${masterRecords.length} টি রেকর্ড)`);
@@ -3301,7 +3281,6 @@
     // ----------------- ACTIONS DROPDOWN CONTROLLER -----------------
     let currentActionLeadId = null;
 
-    
     // ----------------- HEADER TOOLS & FILTER RESET -----------------
     function toggleHeaderToolsMenu(event) {
       if (event) {
@@ -3317,22 +3296,6 @@
       if (menu) menu.classList.add('hidden');
     }
 
-    function resetAllFilters() {
-      const searchEl = document.getElementById('searchInput');
-      if (searchEl) searchEl.value = '';
-      const dateEl = document.getElementById('dateWorkFilter');
-      if (dateEl) dateEl.value = '';
-      const personEl = document.getElementById('coursePersonFilter');
-      if (personEl) personEl.value = 'ALL';
-      const courseEl = document.getElementById('courseFilter');
-      if (courseEl) courseEl.value = 'ALL';
-      const callerEl = document.getElementById('userProfileSelector');
-      if (callerEl) callerEl.value = 'ALL';
-      selectedCalDate = null;
-      setQuickFilter('ALL');
-      showToast("🔄 সকল ফিল্টার রিসেট করা হয়েছে!");
-    }
-
     document.addEventListener('click', (e) => {
       const toolsMenu = document.getElementById('headerToolsMenu');
       const container = document.getElementById('headerToolsDropdownContainer');
@@ -3342,6 +3305,88 @@
         }
       }
     });
+
+    function initiateDirectCall(id) {
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+      if (typeof startTimer === 'function') startTimer();
+      const cleanPhone = (rec.phone || '').replace(/[^0-9+]/g, '');
+      if (cleanPhone) {
+        window.open(`tel:${cleanPhone}`, '_self');
+      }
+      showToast(`📞 [${rec.name}] (${rec.phone})-কে কল করা হচ্ছে...`);
+    }
+
+    function executeLeadQuickAction(id, action) {
+      if (!action) return;
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+
+      switch (action) {
+        case 'edit':
+          editLeadRecord(id);
+          break;
+        case 'wa_template':
+          openQuickMessageModal(id);
+          break;
+        case 'wa_direct':
+          sendWhatsAppReceipt(id);
+          break;
+        case 'call':
+          initiateDirectCall(id);
+          break;
+        case 'calendar':
+          syncLeadToGoogleCalendar(id);
+          break;
+        case 'cut_file':
+          openCutToTargetFileModal(id);
+          break;
+        case 'toggle_person':
+          toggleCoursePersonStatus(id);
+          break;
+        case 'invoice':
+          openInvoice(id);
+          break;
+        case 'admission_slip':
+          openAdmissionSlip(id);
+          break;
+        case 'installment':
+          openCollectInstallmentModal(id);
+          break;
+        case 'delete':
+          deleteLeadRecord(id);
+          break;
+      }
+    }
+
+    function renderActionSelectDropdown(item) {
+      const isYes = item.isCoursePerson === 'YES';
+      const safeId = String(item.id).replace(/'/g, "\\'");
+      return `
+        <div class="inline-flex items-center gap-1">
+          <button type="button" onclick="openQuickMessageModal('${safeId}')" title="WhatsApp মেসেজ টেমপ্লেট" class="p-1.5 rounded-xl bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white transition shrink-0">
+            <i class="fa-brands fa-whatsapp text-xs"></i>
+          </button>
+          <button type="button" onclick="editLeadRecord('${safeId}')" title="সম্পূর্ণ তথ্য এডিট (Edit)" class="p-1.5 rounded-xl bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600 hover:text-white transition shrink-0">
+            <i class="fa-solid fa-pen-to-square text-xs"></i>
+          </button>
+          <select onclick="event.stopPropagation()" onchange="const v=this.value; this.selectedIndex=0; executeLeadQuickAction('${safeId}', v);" class="bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-brand-500 font-bold text-[11px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer shadow-sm" title="লিড অ্যাকশন নির্বাচন করুন">
+            <option value="" selected>⚡ Actions ▾</option>
+            <option value="edit" class="bg-slate-900 text-cyan-300 font-bold">✏️ সম্পূর্ণ তথ্য এডিট (Edit)</option>
+            <option value="wa_template" class="bg-slate-900 text-emerald-400 font-bold">💬 WhatsApp মেসেজ টেমপ্লেট</option>
+            <option value="wa_direct" class="bg-slate-900 text-emerald-300 font-bold">📲 সরাসরি WhatsApp মেসেজ</option>
+            <option value="call" class="bg-slate-900 text-sky-300 font-bold">📞 সরাসরি কল করুন (Call)</option>
+            <option value="calendar" class="bg-slate-900 text-purple-300 font-bold">📅 Google Calendar শিডিউল</option>
+            <option value="cut_file" class="bg-slate-900 text-amber-300 font-bold">✂️ Cut & Move to File</option>
+            <option value="toggle_person" class="bg-slate-900 text-teal-300 font-bold">${isYes ? '❌ Course Person: NO করুন' : '✅ Course Person: YES করুন'}</option>
+            <option value="invoice" class="bg-slate-900 text-indigo-300 font-bold">🧾 মানি রিসিট (Receipt)</option>
+            <option value="admission_slip" class="bg-slate-900 text-blue-300 font-bold">🎓 ভর্তি স্লিপ (Admission Slip)</option>
+            <option value="installment" class="bg-slate-900 text-emerald-300 font-bold">💵 কিস্তি সংগ্রহ (+Installment)</option>
+            <option value="delete" class="bg-slate-900 text-rose-400 font-bold">🗑️ লিড ডিলিট করুন (Delete)</option>
+          </select>
+        </div>
+      `;
+    }
 
     function toggleActionDropdown(id, event) {
       if (event) {
@@ -3360,53 +3405,68 @@
       const lead = masterRecords.find(r => r.id === id);
       if (!lead) return;
 
+      const safeId = String(lead.id).replace(/'/g, "\\'");
       const leadIdEl = document.getElementById('actionDropdownLeadId');
       if (leadIdEl) leadIdEl.innerText = lead.id;
 
       const isYes = lead.isCoursePerson === 'YES';
-      const hasDue = isYes && (Number(lead.due || 0) > 0);
 
       const dynContainer = document.getElementById('actionDropdownDynamicItems');
       if (dynContainer) {
-        if (isYes) {
-          dynContainer.innerHTML = `
-            <button onclick="openInvoice(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-indigo-300 hover:bg-indigo-600/20 hover:text-indigo-200 rounded-xl flex items-center gap-2.5 transition">
-              <i class="fa-solid fa-receipt w-4 text-center text-indigo-400"></i>
-              <span>মানি রিসিট (Receipt)</span>
-            </button>
-            <button onclick="openAdmissionSlip(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-blue-300 hover:bg-blue-600/20 hover:text-blue-200 rounded-xl flex items-center gap-2.5 transition">
-              <i class="fa-solid fa-graduation-cap w-4 text-center text-blue-400"></i>
-              <span>ভর্তি স্লিপ (Admission Slip)</span>
-            </button>
-            ${hasDue ? `
-            <button onclick="openCollectInstallmentModal(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-600/20 hover:text-emerald-200 rounded-xl flex items-center gap-2.5 transition">
-              <i class="fa-solid fa-money-bill-wave w-4 text-center text-emerald-400"></i>
-              <span>কিস্তি সংগ্রহ (+Installment)</span>
-            </button>` : ''}
-            <button onclick="toggleCoursePersonStatus(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-600/20 hover:text-amber-200 rounded-xl flex items-center gap-2.5 transition">
-              <i class="fa-solid fa-user-xmark w-4 text-center text-amber-400"></i>
-              <span>Course Person: NO করুন</span>
-            </button>
-          `;
-        } else {
-          dynContainer.innerHTML = `
-            <button onclick="toggleCoursePersonStatus(currentActionLeadId); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-600/20 hover:text-emerald-200 rounded-xl flex items-center gap-2.5 transition">
-              <i class="fa-solid fa-user-check w-4 text-center text-emerald-400"></i>
-              <span>Course Person: YES করুন</span>
-            </button>
-          `;
-        }
+        dynContainer.innerHTML = `
+          <button type="button" onclick="editLeadRecord('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-800 hover:text-white rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-pen-to-square w-4 text-center text-cyan-400"></i>
+            <span>সম্পূর্ণ তথ্য এডিট (Edit)</span>
+          </button>
+          <button type="button" onclick="openQuickMessageModal('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-400 hover:bg-emerald-600/20 hover:text-emerald-300 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-brands fa-whatsapp w-4 text-center text-emerald-400"></i>
+            <span>WhatsApp মেসেজ টেমপ্লেট</span>
+          </button>
+          <button type="button" onclick="sendWhatsAppReceipt('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-600/20 hover:text-emerald-200 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-paper-plane w-4 text-center text-emerald-300"></i>
+            <span>সরাসরি WhatsApp মেসেজ</span>
+          </button>
+          <button type="button" onclick="syncLeadToGoogleCalendar('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-purple-300 hover:bg-purple-600/20 hover:text-purple-200 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-regular fa-calendar-plus w-4 text-center text-purple-400"></i>
+            <span>Google Calendar শিডিউল</span>
+          </button>
+          <button type="button" onclick="openCutToTargetFileModal('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-600/20 hover:text-amber-200 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-scissors w-4 text-center text-amber-400"></i>
+            <span>Cut & Move to File</span>
+          </button>
+          <div class="border-t border-slate-800/80 my-1"></div>
+          <button type="button" onclick="openInvoice('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-indigo-300 hover:bg-indigo-600/20 hover:text-indigo-200 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-receipt w-4 text-center text-indigo-400"></i>
+            <span>মানি রিসিট (Receipt)</span>
+          </button>
+          <button type="button" onclick="openAdmissionSlip('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-blue-300 hover:bg-blue-600/20 hover:text-blue-200 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-graduation-cap w-4 text-center text-blue-400"></i>
+            <span>ভর্তি স্লিপ (Admission Slip)</span>
+          </button>
+          <button type="button" onclick="openCollectInstallmentModal('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-emerald-300 hover:bg-emerald-600/20 hover:text-emerald-200 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-money-bill-wave w-4 text-center text-emerald-400"></i>
+            <span>কিস্তি সংগ্রহ (+Installment)</span>
+          </button>
+          <button type="button" onclick="toggleCoursePersonStatus('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold ${isYes ? 'text-amber-300 hover:bg-amber-600/20' : 'text-emerald-300 hover:bg-emerald-600/20'} rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid ${isYes ? 'fa-user-xmark text-amber-400' : 'fa-user-check text-emerald-400'} w-4 text-center"></i>
+            <span>${isYes ? 'Course Person: NO করুন' : 'Course Person: YES করুন'}</span>
+          </button>
+          <div class="border-t border-slate-800/80 my-1"></div>
+          <button type="button" onclick="deleteLeadRecord('${safeId}'); closeActionDropdown();" class="w-full text-left px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-600/20 hover:text-rose-300 rounded-xl flex items-center gap-2.5 transition">
+            <i class="fa-solid fa-trash-can w-4 text-center text-rose-400"></i>
+            <span>লিড ডিলিট করুন (Delete)</span>
+          </button>
+        `;
       }
 
-      // Positioning using getBoundingClientRect
       const triggerBtn = event ? (event.currentTarget || (event.target && event.target.closest('button')) || event.target) : null;
       if (!triggerBtn) return;
       const rect = triggerBtn.getBoundingClientRect();
       
       menu.classList.remove('hidden');
 
-      const menuWidth = 224; // w-56
-      const menuHeight = menu.offsetHeight || 280;
+      const menuWidth = 240;
+      const menuHeight = menu.offsetHeight || 340;
       
       let left = rect.right - menuWidth;
       if (left < 10) left = 10;
@@ -3439,10 +3499,6 @@
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeActionDropdown();
     });
-
-    window.addEventListener('scroll', () => {
-      closeActionDropdown();
-    }, true);
 
     function deleteLeadRecord(id) {
       const rec = masterRecords.find(r => r.id === id);
@@ -3574,7 +3630,17 @@ const TODAY_STR = "2026-10-06";
         const stored = localStorage.getItem(AUTH_USERS_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            let changed = false;
+            INITIAL_DEFAULT_USERS.forEach(defU => {
+              if (!parsed.some(u => u.id === defU.id || u.email.toLowerCase() === defU.email.toLowerCase())) {
+                parsed.push(defU);
+                changed = true;
+              }
+            });
+            if (changed) localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(parsed));
+            return parsed;
+          }
         }
       } catch(e) {}
       localStorage.setItem(AUTH_USERS_KEY, JSON.stringify(INITIAL_DEFAULT_USERS));
@@ -3645,14 +3711,10 @@ const TODAY_STR = "2026-10-06";
         }
       }
 
-      // If employee logs in, set their default KAM filter
+      // Keep KAM filter at ALL by default so all leads remain visible unless user filters manually
       const kamSelector = document.getElementById('userProfileSelector');
-      if (kamSelector) {
-        if (currentUser.role === 'employee' && currentUser.kamTag) {
-          kamSelector.value = currentUser.kamTag;
-        } else {
-          kamSelector.value = 'ALL';
-        }
+      if (kamSelector && !kamSelector.value) {
+        kamSelector.value = 'ALL';
       }
 
       // Auto-set lead modal KAM to current user
@@ -3848,21 +3910,41 @@ const TODAY_STR = "2026-10-06";
       }
     }
 
-    // ----------------- DYNAMIC KAM DROPDOWNS -----------------
+    // ----------------- DYNAMIC KAM & SOURCE DROPDOWNS -----------------
     function updateKamDropdowns() {
       const users = getAllUsers();
-      const kamList = users.map(u => u.kamTag || u.name).filter((v, i, a) => v && v !== 'ALL' && a.indexOf(v) === i);
+      const kamCounts = {};
+      if (typeof masterRecords !== 'undefined' && Array.isArray(masterRecords)) {
+        masterRecords.forEach(r => {
+          const k = (r.kam || '').trim();
+          if (k) kamCounts[k] = (kamCounts[k] || 0) + 1;
+        });
+      }
+
+      const rawKams = [
+        ...Object.keys(kamCounts).sort((a, b) => (kamCounts[b] || 0) - (kamCounts[a] || 0)),
+        ...users.map(u => (u.kamTag || u.name || '').trim())
+      ];
+      const kamList = [];
+      rawKams.forEach(k => {
+        if (k && k !== 'ALL' && !kamList.includes(k)) kamList.push(k);
+      });
 
       // 1. Header/Toolbar KAM filter selector
       const selector = document.getElementById('userProfileSelector');
       if (selector) {
-        const curVal = selector.value;
-        let htmlOpts = '<option value="ALL">All KAM (সকল কলার)</option>';
+        const curVal = selector.value || 'ALL';
+        const totalLeads = (typeof masterRecords !== 'undefined' && Array.isArray(masterRecords)) ? masterRecords.length : 0;
+        let htmlOpts = `<option value="ALL">All KAM (সকল কলার - ${totalLeads.toLocaleString()}টি)</option>`;
         kamList.forEach(k => {
-          htmlOpts += `<option value="${k}">👤 ${k}</option>`;
+          let cnt = kamCounts[k] || 0;
+          if (k === 'ইমরান' && kamCounts['Imran']) cnt += kamCounts['Imran'];
+          if (k === 'Imran' && kamCounts['ইমরান']) cnt += kamCounts['ইমরান'];
+          htmlOpts += `<option value="${k}">👤 ${k} (${cnt.toLocaleString()})</option>`;
         });
         selector.innerHTML = htmlOpts;
         if (kamList.includes(curVal) || curVal === 'ALL') selector.value = curVal;
+        else selector.value = 'ALL';
       }
 
       // 2. Lead edit modal KAM selector
@@ -3871,10 +3953,87 @@ const TODAY_STR = "2026-10-06";
         const curVal = mKam.value;
         let htmlOpts = '';
         kamList.forEach(k => {
-          htmlOpts += `<option value="${k}">${k}</option>`;
+          htmlOpts += `<option value="${k}">👤 ${k}</option>`;
         });
         mKam.innerHTML = htmlOpts;
         if (kamList.includes(curVal)) mKam.value = curVal;
+      }
+    }
+
+    function updateSourceDropdowns() {
+      const sourceCounts = {};
+      if (typeof masterRecords !== 'undefined' && Array.isArray(masterRecords)) {
+        masterRecords.forEach(r => {
+          const s = (r.source || 'Facebook Lead').trim();
+          sourceCounts[s] = (sourceCounts[s] || 0) + 1;
+        });
+      }
+
+      const srcSelect = document.getElementById('sourceFilter');
+      if (srcSelect) {
+        const curVal = srcSelect.value || 'ALL';
+        const totalLeads = (typeof masterRecords !== 'undefined' && Array.isArray(masterRecords)) ? masterRecords.length : 0;
+        let htmlOpts = `<option value="ALL">All Sources (সকল সোর্স - ${totalLeads.toLocaleString()}টি)</option>`;
+
+        Object.keys(sourceCounts).sort((a, b) => sourceCounts[b] - sourceCounts[a]).forEach(s => {
+          let icon = '📌';
+          const sl = s.toLowerCase();
+          if (sl.includes('facebook') || sl.includes('fb')) icon = '📱';
+          else if (sl.includes('linkedin')) icon = '💼';
+          else if (sl.includes('web')) icon = '🌐';
+          else if (sl.includes('whatsapp') || sl.includes('wa')) icon = '💬';
+          else if (sl.includes('workshop')) icon = '🎓';
+          else if (sl.includes('ref')) icon = '👥';
+          else if (sl.includes('google')) icon = '🔍';
+          htmlOpts += `<option value="${s}">${icon} ${s} (${sourceCounts[s].toLocaleString()})</option>`;
+        });
+
+        const extraDefaults = [
+          { val: 'Facebook Ads', label: '📱 Facebook Ads' },
+          { val: 'Google Ads', label: '🔍 Google Ads / Search' },
+          { val: 'Website', label: '🌐 Website Form' },
+          { val: 'WhatsApp', label: '💬 WhatsApp Direct' },
+          { val: 'Referral', label: '👥 Referral / Alumni' },
+          { val: 'Direct Call', label: '📞 Direct Call / Walk-in' }
+        ];
+        extraDefaults.forEach(d => {
+          if (!sourceCounts[d.val]) {
+            htmlOpts += `<option value="${d.val}">${d.label}</option>`;
+          }
+        });
+
+        srcSelect.innerHTML = htmlOpts;
+        if (curVal === 'ALL' || sourceCounts[curVal] || extraDefaults.some(d => d.val === curVal)) {
+          srcSelect.value = curVal;
+        } else {
+          srcSelect.value = 'ALL';
+        }
+      }
+
+      const mSource = document.getElementById('m_source');
+      if (mSource) {
+        const curVal = mSource.value;
+        const allSources = new Set([
+          'Facebook Lead',
+          'Facebook Ads',
+          'LinkedIn',
+          'Free Workshop',
+          'Website Form',
+          'WhatsApp Marketing',
+          'New Lead Sheet',
+          'Personal',
+          'PMP Lead Generation',
+          'Google Ads',
+          'Referral',
+          'Direct Call',
+          ...Object.keys(sourceCounts)
+        ]);
+        let htmlOpts = '';
+        allSources.forEach(s => {
+          htmlOpts += `<option value="${s}">${s}</option>`;
+        });
+        mSource.innerHTML = htmlOpts;
+        if (curVal && allSources.has(curVal)) mSource.value = curVal;
       }
     }
 
@@ -4592,6 +4751,20 @@ const TODAY_STR = "2026-10-06";
         }
       }
 
+      // 4. Populate Mother Data Course Filter (#mdCourseFilter)
+      const mdCourseSelect = document.getElementById('mdCourseFilter');
+      if (mdCourseSelect) {
+        const curMdVal = mdCourseSelect.value || 'ALL';
+        let mdHtml = '<option value="ALL">All Courses (সব কোর্স)</option>';
+        courses.forEach(c => {
+          mdHtml += `<option value="${c.name}">${c.name}</option>`;
+        });
+        mdCourseSelect.innerHTML = mdHtml;
+        if (curMdVal === 'ALL' || courses.some(c => c.name === curMdVal)) {
+          mdCourseSelect.value = curMdVal;
+        }
+      }
+
       renderCourseManagerTable();
     }
 
@@ -5139,12 +5312,12 @@ const TODAY_STR = "2026-10-06";
       // Update Mother Data course dropdown if empty
       const cFilterEl = document.getElementById('mdCourseFilter');
       if (cFilterEl && cFilterEl.options.length <= 1) {
-        cFilterEl.innerHTML = '<option value="ALL">All Courses (সব কোর্স)</option>';
-        if (typeof ACTIVE_COURSES !== 'undefined') {
-          ACTIVE_COURSES.forEach(c => {
-            cFilterEl.innerHTML += `<option value="${c.name}">${c.name}</option>`;
-          });
-        }
+        const allCoursesList = typeof getAllCourses === 'function' ? getAllCourses() : INITIAL_DEFAULT_COURSES;
+        let mdOpts = '<option value="ALL">All Courses (সব কোর্স)</option>';
+        allCoursesList.forEach(c => {
+          mdOpts += `<option value="${c.name}">${c.name}</option>`;
+        });
+        cFilterEl.innerHTML = mdOpts;
       }
 
       // Filter leads in Mother Data
@@ -5244,16 +5417,8 @@ const TODAY_STR = "2026-10-06";
               <span class="text-[10px] font-bold ${comp.pct === 100 ? 'text-emerald-400' : 'text-slate-400'}">${comp.pct}%</span>
             </div>
           </td>
-          <td class="p-3 text-right whitespace-nowrap">
-            <div class="inline-flex items-center gap-1.5">
-              <button onclick="openCutToTargetFileModal('${item.id}')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-900 border border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1" title="SOP Rule 3: Cut & Move to Respective File">
-                <i class="fa-solid fa-scissors text-[11px]"></i>
-                <span>Cut to File</span>
-              </button>
-              <button onclick="editLeadRecord('${item.id}')" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition" title="Edit Lead">
-                <i class="fa-solid fa-pen text-xs"></i>
-              </button>
-            </div>
+          <td class="p-2 text-right whitespace-nowrap">
+            ${typeof renderActionSelectDropdown === 'function' ? renderActionSelectDropdown(item) : ''}
           </td>
         `;
         tbody.appendChild(tr);
@@ -5486,10 +5651,9 @@ const TODAY_STR = "2026-10-06";
     // ----------------- OFFICIAL ADMISSION SLIP -----------------
     function openAdmissionSlip(id) {
       const student = masterRecords.find(s => s.id === id);
-      if (!student || student.isCoursePerson !== 'YES') {
-        alert("This person is not enrolled as Course Person: YES!");
-        return;
-      }
+      if (!student) return;
+      if (!student.totalFee) student.totalFee = coursePrices[student.course] || 18000;
+      if (student.due === undefined || student.due === null) student.due = Math.max(0, Number(student.totalFee) - (Number(student.advance || 0) + Number(student.regularPaid || 0)));
 
       const roll = student.rollNo || generateRollNo(student.course, student.sheetMode, student.id);
       student.rollNo = roll;
@@ -6659,16 +6823,37 @@ const TODAY_STR = "2026-10-06";
       const callerProfile = callerEl ? callerEl.value : 'ALL';
 
       let filtered = masterRecords.filter(item => {
-        if (callerProfile !== 'ALL' && item.kam !== callerProfile) return false;
+        if (callerProfile !== 'ALL') {
+          const itemKam = (item.kam || '').trim();
+          const profKam = callerProfile.trim();
+          const isImranMatch = (profKam === 'ইমরান' || profKam.toLowerCase() === 'imran') && (itemKam === 'ইমরান' || itemKam.toLowerCase() === 'imran');
+          const isPavelMatch = (profKam === 'পাবেল' || profKam.toLowerCase() === 'pavel') && (itemKam === 'পাবেল' || itemKam.toLowerCase() === 'pavel');
+          if (itemKam !== profKam && !isImranMatch && !isPavelMatch) return false;
+        }
 
-        const matchesQ = item.name.toLowerCase().includes(searchQ) || 
-                         item.phone.includes(searchQ) || 
+        const matchesQ = (item.name && item.name.toLowerCase().includes(searchQ)) || 
+                         (item.phone && item.phone.includes(searchQ)) || 
                          (item.company && item.company.toLowerCase().includes(searchQ)) ||
                          (item.email && item.email.toLowerCase().includes(searchQ)) ||
                          (item.id && item.id.toLowerCase().includes(searchQ));
         
         const matchesCourse = courseQ === 'ALL' || item.course === courseQ;
-        const matchesSource = sourceQ === 'ALL' || (item.source && item.source.toLowerCase() === sourceQ.toLowerCase()) || (!item.source && sourceQ === 'Facebook Ads');
+
+        let matchesSource = true;
+        if (sourceQ !== 'ALL') {
+          const itemSrc = (item.source || 'Facebook Lead').toLowerCase();
+          const qSrc = sourceQ.toLowerCase();
+          if (itemSrc === qSrc) matchesSource = true;
+          else if ((qSrc.includes('facebook') || qSrc.includes('fb')) && (itemSrc.includes('facebook') || itemSrc.includes('fb'))) matchesSource = true;
+          else if (qSrc.includes('web') && itemSrc.includes('web')) matchesSource = true;
+          else if ((qSrc.includes('whatsapp') || qSrc.includes('wa')) && (itemSrc.includes('whatsapp') || itemSrc.includes('wa'))) matchesSource = true;
+          else if (qSrc.includes('ref') && itemSrc.includes('ref')) matchesSource = true;
+          else if (qSrc.includes('linkedin') && itemSrc.includes('linkedin')) matchesSource = true;
+          else if (qSrc.includes('google') && itemSrc.includes('google')) matchesSource = true;
+          else if (qSrc.includes('direct') && (itemSrc.includes('direct') || itemSrc.includes('personal') || itemSrc.includes('walk'))) matchesSource = true;
+          else matchesSource = false;
+        }
+
         const matchesPerson = personQ === 'ALL' || item.isCoursePerson === personQ;
 
         let matchesDateWork = true;
@@ -6765,10 +6950,8 @@ const TODAY_STR = "2026-10-06";
           <td class="p-2 whitespace-nowrap">
             ${renderBatchModeSelectDropdown(item.id, item.sheetMode)}
           </td>
-          <td class="p-3 whitespace-nowrap">
-            <button onclick="toggleCoursePersonStatus('${item.id}')" title="Click to Toggle Status" class="px-2 py-0.5 rounded-full text-[10px] font-bold ${isYes ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400 border border-slate-700'}">
-              ${isYes ? '✅ YES' : '❌ NO'}
-            </button>
+          <td class="p-2 whitespace-nowrap">
+            ${renderCoursePersonSelectDropdown(item.id, item.isCoursePerson)}
           </td>
           <td class="p-2 whitespace-nowrap">${renderCourseSelectDropdown(item.id, item.course)}</td>
           <td class="p-3 whitespace-nowrap">${isYes ? `<strong class="text-white">৳${Number(item.totalFee).toLocaleString()}</strong>` : '-'}</td>
@@ -6786,16 +6969,8 @@ const TODAY_STR = "2026-10-06";
               ${lScore >= 75 ? '⭐ VIP ' : ''}${lScore}/100
             </div>
           </td>
-          <td class="p-3 text-center whitespace-nowrap">
-            <div class="inline-flex items-center gap-1.5">
-              <button onclick="openQuickMessageModal('${item.id}')" title="Direct WhatsApp Message" class="p-1.5 rounded-xl bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white transition">
-                <i class="fa-brands fa-whatsapp text-xs"></i>
-              </button>
-              <button onclick="toggleActionDropdown('${item.id}', event)" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-brand-500 font-semibold text-xs inline-flex items-center gap-1.5 transition shadow-sm" title="More Actions">
-                <span>Actions</span>
-                <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
-              </button>
-            </div>
+          <td class="p-2 text-center whitespace-nowrap">
+            ${renderActionSelectDropdown(item)}
           </td>
         `;
         tbody.appendChild(tr);
@@ -6824,6 +6999,16 @@ const TODAY_STR = "2026-10-06";
       setQuickFilter(mapped);
     }
 
+    function handleCoursePersonFilterChange(val) {
+      if (currentFilter === 'YES' || currentFilter === 'NO') {
+        currentFilter = 'ALL';
+        const stDrop = document.getElementById('statusQuickFilterDropdown');
+        if (stDrop) stDrop.value = 'ALL';
+      }
+      currentPage = 1;
+      renderTable();
+    }
+
     function setQuickFilter(type) {
       if (type === 'SOP_RULES') {
         openSopRulesModal();
@@ -6834,6 +7019,12 @@ const TODAY_STR = "2026-10-06";
       const dropEl = document.getElementById('statusQuickFilterDropdown');
       if (dropEl) {
         dropEl.value = currentFilter;
+      }
+      const personEl = document.getElementById('coursePersonFilter');
+      if (personEl) {
+        if (currentFilter === 'YES' || currentFilter === 'NO') {
+          personEl.value = 'ALL';
+        }
       }
       document.querySelectorAll('.chip-btn').forEach(c => {
         c.classList.remove('bg-brand-600', 'text-white', 'border-brand-500');
@@ -6847,9 +7038,30 @@ const TODAY_STR = "2026-10-06";
       renderTable();
     }
 
+    function renderCoursePersonSelectDropdown(leadId, isCoursePerson) {
+      const isYes = isCoursePerson === 'YES';
+      const safeId = String(leadId).replace(/'/g, "\\'");
+      const colorClass = isYes
+        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:border-emerald-400'
+        : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-slate-500';
+      return `<select onclick="event.stopPropagation()" onchange="updateLeadCoursePersonDirectly('${safeId}', this.value)" class="border font-extrabold text-[10px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer ${colorClass}" title="Course Person (YES/NO) পরিবর্তন করুন">
+        <option value="YES" class="bg-slate-900 text-emerald-400 font-bold" ${isYes ? 'selected' : ''}>✅ YES</option>
+        <option value="NO" class="bg-slate-900 text-slate-300 font-bold" ${!isYes ? 'selected' : ''}>❌ NO</option>
+      </select>`;
+    }
+
+    function updateLeadCoursePersonDirectly(id, newVal) {
+      const rec = masterRecords.find(r => r.id === id);
+      if (!rec) return;
+      if (rec.isCoursePerson !== newVal) {
+        toggleCoursePersonStatus(id);
+      }
+    }
+
     function renderStatusSelectDropdown(leadId, currentStatus) {
       const raw = (currentStatus || 'Cold').trim();
       const norm = (raw === 'Semi-hot') ? 'Semi-Hot' : (['Hot', 'Semi-Hot', 'Cold', 'Closed', 'Confirmed'].includes(raw) ? raw : 'Cold');
+      const safeId = String(leadId).replace(/'/g, "\\'");
       const colorMap = {
         'Hot': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:border-emerald-400',
         'Semi-Hot': 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40 hover:border-fuchsia-400',
@@ -6859,7 +7071,7 @@ const TODAY_STR = "2026-10-06";
       };
       const colorClass = colorMap[norm] || colorMap['Cold'];
 
-      return `<select onclick="event.stopPropagation()" onchange="updateLeadStatusDirectly('${leadId}', this.value)" class="border font-extrabold text-[10px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer ${colorClass}" title="লিড স্ট্যাটাস পরিবর্তন করুন">
+      return `<select onclick="event.stopPropagation()" onchange="updateLeadStatusDirectly('${safeId}', this.value)" class="border font-extrabold text-[10px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer ${colorClass}" title="লিড স্ট্যাটাস পরিবর্তন করুন">
         <option value="Hot" class="bg-slate-900 text-emerald-400 font-bold" ${norm === 'Hot' ? 'selected' : ''}>🟢 Hot</option>
         <option value="Semi-Hot" class="bg-slate-900 text-fuchsia-400 font-bold" ${norm === 'Semi-Hot' ? 'selected' : ''}>🟣 Semi-Hot</option>
         <option value="Cold" class="bg-slate-900 text-yellow-300 font-bold" ${norm === 'Cold' ? 'selected' : ''}>🟡 Cold</option>
@@ -6883,9 +7095,11 @@ const TODAY_STR = "2026-10-06";
         if (typeof showToast === 'function') {
           showToast(`🔄 [${rec.name}]-এর Status আপডেট হয়েছে: ${newStatus}`);
         }
-        if (typeof renderTable === 'function') renderTable();
-        if (typeof renderMotherDataTable === 'function') renderMotherDataTable();
-        if (typeof renderKanbanBoard === 'function' && typeof activeTab !== 'undefined' && activeTab === 'kanban') renderKanbanBoard();
+        setTimeout(() => {
+          if (typeof renderTable === 'function') renderTable();
+          if (typeof renderMotherDataTable === 'function') renderMotherDataTable();
+          if (typeof renderKanbanBoard === 'function' && typeof activeTab !== 'undefined' && activeTab === 'kanban') renderKanbanBoard();
+        }, 15);
       } catch (err) {
         console.error('Error in updateLeadStatusDirectly:', err);
       }
@@ -6916,10 +7130,6 @@ const TODAY_STR = "2026-10-06";
     }
     function filterData() { currentPage = 1; renderTable(); }
     function switchUserProfile() { currentPage = 1; renderTable(); }
-
-    function saveStorage() {
-      localStorage.setItem('sl_crm_tailwind_v9', JSON.stringify(masterRecords));
-    }
 
     function renderPagination(totalItems) {
       const totalPages = Math.ceil(totalItems / pageSize) || 1;
@@ -6961,7 +7171,23 @@ const TODAY_STR = "2026-10-06";
     }
 
     // ----------------- MODAL CONTROLS -----------------
+    function ensureSelectHasValue(selectId, val) {
+      const el = document.getElementById(selectId);
+      if (!el || !val) return;
+      const exists = Array.from(el.options).some(o => o.value === val);
+      if (!exists) {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = val;
+        el.appendChild(opt);
+      }
+      el.value = val;
+    }
+
     function openLeadModal() { 
+      if (typeof updateCourseDropdowns === 'function') updateCourseDropdowns();
+      if (typeof updateSourceDropdowns === 'function') updateSourceDropdowns();
+      if (typeof updateKamDropdowns === 'function') updateKamDropdowns();
       document.getElementById('leadForm').reset();
       document.getElementById('m_editId').value = "";
       document.getElementById('duplicatePhoneAlert').classList.add('hidden');
@@ -6978,15 +7204,19 @@ const TODAY_STR = "2026-10-06";
       const rec = masterRecords.find(r => r.id === id);
       if (!rec) return;
 
+      if (typeof updateCourseDropdowns === 'function') updateCourseDropdowns();
+      if (typeof updateSourceDropdowns === 'function') updateSourceDropdowns();
+      if (typeof updateKamDropdowns === 'function') updateKamDropdowns();
+
       document.getElementById('m_editId').value = rec.id;
-      document.getElementById('m_name').value = rec.name;
-      document.getElementById('m_source').value = rec.source || 'Facebook Ads';
+      document.getElementById('m_name').value = rec.name || '';
+      ensureSelectHasValue('m_source', rec.source || 'Facebook Lead');
       if (rec.photo) {
         setLeadPhotoDisplay(rec.photo);
       } else {
         removeLeadPhoto();
       }
-      document.getElementById('m_phone').value = rec.phone;
+      document.getElementById('m_phone').value = rec.phone || '';
       document.getElementById('m_company').value = rec.company || '';
       document.getElementById('m_designation').value = rec.designation || '';
       document.getElementById('m_sheetMode').value = (rec.sheetMode === 'Online' || rec.sheetMode === 'Physical') ? rec.sheetMode : (rec.sheetMode === 'None' || rec.sheetMode === 'non' ? 'None' : (rec.sheetMode || 'Physical'));
@@ -6994,9 +7224,9 @@ const TODAY_STR = "2026-10-06";
         rec.rollNo = generateRollNo(rec.course, rec.sheetMode, rec.id);
       }
       document.getElementById('m_rollNo').value = rec.rollNo || '';
-      document.getElementById('m_kam').value = rec.kam || 'পাবেল';
-      document.getElementById('m_isCoursePerson').value = rec.isCoursePerson;
-      document.getElementById('m_course').value = rec.course;
+      ensureSelectHasValue('m_kam', rec.kam || 'Tusar');
+      document.getElementById('m_isCoursePerson').value = rec.isCoursePerson || 'NO';
+      ensureSelectHasValue('m_course', rec.course || 'Lean Six Sigma Green Belt');
       document.getElementById('m_disposition').value = rec.disposition || 'Follow-up';
       document.getElementById('m_priority').value = rec.status || 'Cold';
       const fileEl = document.getElementById('m_fileSheet');
@@ -7237,6 +7467,8 @@ const TODAY_STR = "2026-10-06";
     function resetAllFilters() {
       const sEl = document.getElementById('searchInput');
       if (sEl) sEl.value = '';
+      const clrBtn = document.getElementById('searchClearBtn');
+      if (clrBtn) clrBtn.classList.add('hidden');
       const pEl = document.getElementById('coursePersonFilter');
       if (pEl) pEl.value = 'ALL';
       const bEl = document.getElementById('batchModeFilter');
@@ -7253,8 +7485,11 @@ const TODAY_STR = "2026-10-06";
       const stDrop = document.getElementById('statusQuickFilterDropdown');
       if (stDrop) stDrop.value = 'ALL';
       selectedCalDate = null;
+      const calChip = document.getElementById('chip-cal-active');
+      if (calChip) calChip.classList.add('hidden');
       currentPage = 1;
       renderTable();
+      if (typeof showToast === 'function') showToast("🔄 সকল ফিল্টার রিসেট করা হয়েছে!");
     }
 
     function toggleCoursePersonStatus(id) {
@@ -7286,7 +7521,9 @@ const TODAY_STR = "2026-10-06";
 
     function openInvoice(id) {
       const student = masterRecords.find(s => s.id === id);
-      if (!student || student.isCoursePerson !== 'YES') return;
+      if (!student) return;
+      if (!student.totalFee) student.totalFee = coursePrices[student.course] || 18000;
+      if (student.due === undefined || student.due === null) student.due = Math.max(0, Number(student.totalFee) - (Number(student.advance || 0) + Number(student.regularPaid || 0)));
 
       document.getElementById('invNoText').innerText = `INV-${student.id}`;
       document.getElementById('invDateText').innerText = `Date: ${new Date().toISOString().slice(0, 10)}`;
@@ -7329,7 +7566,16 @@ const TODAY_STR = "2026-10-06";
 
     function openCollectInstallmentModal(id) {
       const rec = masterRecords.find(r => r.id === id);
-      if (!rec || rec.isCoursePerson !== 'YES') return;
+      if (!rec) return;
+      if (rec.isCoursePerson !== 'YES') {
+        rec.isCoursePerson = 'YES';
+        rec.totalFee = coursePrices[rec.course] || 18000;
+        rec.advance = rec.advance || 0;
+        rec.regularPaid = rec.regularPaid || 0;
+        rec.due = Math.max(0, rec.totalFee - (rec.advance + rec.regularPaid));
+        saveStorage();
+        renderTable();
+      }
 
       document.getElementById('inst_id').value = rec.id;
       document.getElementById('inst_studentName').innerText = rec.name;
@@ -7547,6 +7793,8 @@ const TODAY_STR = "2026-10-06";
     // Initialize Tailwind Dashboard
 
     // Initialize Tailwind Dashboard & Authentication Session
+    updateCourseDropdowns();
+    updateSourceDropdowns();
     updateKamDropdowns();
     checkAuthOnLoad();
     renderCalendar();
