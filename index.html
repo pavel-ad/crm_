@@ -1040,9 +1040,13 @@
                 <option value="ALL">All Courses (সব কোর্স)</option>
               </select>
 
-              <button onclick="bulkCutSelectedLeads()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-900 border border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+              <button onclick="bulkCutSelectedLeads()" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-slate-900 border border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
                 <i class="fa-solid fa-scissors"></i>
                 <span>Bulk Cut to File</span>
+              </button>
+              <button onclick="deleteSelectedMotherDataLeads()" class="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer" title="নির্বাচিত মাদার ডাটা লিডগুলো ডিলিট করুন">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Delete Selected</span>
               </button>
             </div>
           </div>
@@ -1261,6 +1265,10 @@
                 <i class="fa-solid fa-clock-rotate-left"></i>
                 <span>Overdue (<span id="headerOverdueCount">0</span>)</span>
               </button>
+              <button onclick="applyMasterBulkAction('delete')" id="headerBulkDeleteBtn" class="hidden px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white border border-rose-500 transition flex items-center gap-1.5 shadow-md shadow-rose-900/40 cursor-pointer animate-pulse" title="নির্বাচিত লিডগুলো ডিলিট করুন">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Delete Selected (<span id="headerBulkDeleteCount">0</span>)</span>
+              </button>
               <button onclick="cleanDuplicateLeads()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-600 hover:text-white transition flex items-center gap-1.5" title="ডুপ্লিকেট ফোন নম্বর খুঁজে ১-ক্লিকে ক্লিন করুন">
                 <i class="fa-solid fa-broom"></i>
                 <span>Duplicate Cleaner</span>
@@ -1309,8 +1317,9 @@
                 <option value="Tusar">👤 Tusar</option>
               </select>
 
-              <button type="button" onclick="applyMasterBulkAction('delete')" class="px-2.5 py-1.5 rounded-xl bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 font-bold text-[11px] transition">
-                <i class="fa-solid fa-trash-can mr-1"></i> Delete
+              <button type="button" onclick="applyMasterBulkAction('delete')" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs transition shadow-md shadow-rose-600/40 flex items-center gap-1.5 cursor-pointer active:scale-95" title="নির্বাচিত লিডগুলো একবারে ডিলিট করুন">
+                <i class="fa-solid fa-trash-can"></i>
+                <span>Delete Selected (<span id="masterBulkDeleteCountBadge">0</span>)</span>
               </button>
               <button type="button" onclick="clearMasterBulkSelection()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] transition">
                 ✖ Clear
@@ -2227,9 +2236,17 @@
           </div>
         </div>
 
-        <div class="flex justify-end gap-2.5 pt-3 border-t border-slate-800">
-          <button type="button" onclick="closeModal('leadModal')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
-          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-500/30">Save Record</button>
+        <div class="flex justify-between items-center pt-3 border-t border-slate-800">
+          <div>
+            <button type="button" id="m_deleteLeadBtn" onclick="deleteCurrentModalLead()" class="hidden px-4 py-2 rounded-xl text-xs font-bold bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-500/40 transition flex items-center gap-1.5 cursor-pointer" title="এই লিডটি চিরতরে ডিলিট করুন">
+              <i class="fa-solid fa-trash-can"></i>
+              <span>Delete Lead</span>
+            </button>
+          </div>
+          <div class="flex justify-end gap-2.5">
+            <button type="button" onclick="closeModal('leadModal')" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300">Cancel</button>
+            <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-500 text-white shadow-lg shadow-brand-500/30">Save Record</button>
+          </div>
         </div>
       </form>
     </div>
@@ -3949,6 +3966,9 @@
           <button type="button" onclick="editLeadRecord('${safeId}')" title="সম্পূর্ণ তথ্য এডিট (Edit)" class="p-1.5 rounded-xl bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600 hover:text-white transition shrink-0 cursor-pointer">
             <i class="fa-solid fa-pen-to-square text-xs"></i>
           </button>
+          <button type="button" onclick="deleteLeadRecord('${safeId}')" title="লিড ডিলিট করুন (Delete Lead)" class="p-1.5 rounded-xl bg-rose-600/20 text-rose-400 hover:bg-rose-600 hover:text-white transition shrink-0 cursor-pointer">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+          </button>
           <select onclick="event.stopPropagation()" onchange="const v=this.value; this.selectedIndex=0; executeLeadQuickAction('${safeId}', v);" class="bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 hover:border-brand-500 font-bold text-[11px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer shadow-sm" title="লিড অ্যাকশন নির্বাচন করুন">
             <option value="" selected>⚡ Actions ▾</option>
             <option value="wa_direct" class="bg-slate-900 text-emerald-400 font-bold">📲 সরাসরি WhatsApp ওপেন করুন</option>
@@ -4083,15 +4103,52 @@
       if (e.key === 'Escape') closeActionDropdown();
     });
 
+    
+    function deleteCurrentModalLead() {
+      const id = document.getElementById('m_editId').value;
+      if (!id) return;
+      closeModal('leadModal');
+      deleteLeadRecord(id);
+    }
+
+    function deleteSelectedMotherDataLeads() {
+      const checkedBoxes = Array.from(document.querySelectorAll('.md-row-chk:checked'));
+      if (checkedBoxes.length === 0) {
+        if (typeof showToast === 'function') showToast("⚠️ ডিলিট করার জন্য মাদার ডাটার অন্তত ১টি লিড সিলেক্ট করুন!");
+        else alert("দয়া করে ডিলিট করার জন্য অন্তত ১টি লিড নির্বাচন করুন!");
+        return;
+      }
+      const ids = checkedBoxes.map(chk => chk.value);
+      if (!confirm(`আপনি কি নিশ্চিতভাবে মাদার ডাটা থেকে নির্বাচিত ${ids.length}টি লিড চিরতরে ডিলিট করতে চান?`)) return;
+      const idSet = new Set(ids);
+      masterRecords = masterRecords.filter(r => !idSet.has(r.id));
+      const mdSelectAll = document.getElementById('mdSelectAll');
+      if (mdSelectAll) mdSelectAll.checked = false;
+      saveStorage();
+      renderMotherDataTable();
+      renderTable();
+      renderCalendar();
+      if (typeof renderDashboardTab === 'function') renderDashboardTab();
+      if (typeof renderPersistentBottomDueAlert === 'function') renderPersistentBottomDueAlert();
+      showToast(`🗑️ মাদার ডাটা থেকে ${ids.length}টি লিড সফলভাবে ডিলিট করা হয়েছে!`);
+    }
+
     function deleteLeadRecord(id) {
       const rec = masterRecords.find(r => r.id === id);
       if (!rec) return;
-      if (confirm(`আপনি কি নিশ্চিত যে [${rec.name}] এর রেকর্ডটি ডিলিট করতে চান?`)) {
+      if (confirm(`আপনি কি নিশ্চিত যে [${rec.name || 'Unknown'}] এর রেকর্ডটি চিরতরে ডিলিট করতে চান?`)) {
         masterRecords = masterRecords.filter(r => r.id !== id);
+        if (typeof selectedMasterLeadIds !== 'undefined' && selectedMasterLeadIds.has(id)) {
+          selectedMasterLeadIds.delete(id);
+          if (typeof syncBulkActionBarUI === 'function') syncBulkActionBarUI();
+        }
         saveStorage();
         renderTable();
         renderCalendar();
-        showToast(`🗑️ [${rec.name}] রেকর্ডটি সফলভাবে ডিলিট করা হয়েছে!`);
+        if (typeof renderDashboardTab === 'function') renderDashboardTab();
+        if (typeof renderPersistentBottomDueAlert === 'function') renderPersistentBottomDueAlert();
+        if (typeof renderMotherDataTable === 'function') renderMotherDataTable();
+        showToast(`🗑️ [${rec.name || 'Lead'}] রেকর্ডটি সফলভাবে ডিলিট করা হয়েছে!`);
       }
     }
 
@@ -7819,6 +7876,8 @@ const TODAY_STR = "2026-10-06";
       renderCallTimeline({ callLogs: [] });
       const voicePlayer = document.getElementById('voiceAudioPlayerContainer');
       if (voicePlayer) voicePlayer.classList.add('hidden');
+      const modalDelBtn = document.getElementById('m_deleteLeadBtn');
+      if (modalDelBtn) modalDelBtn.classList.add('hidden');
       document.getElementById('leadModal').classList.remove('hidden'); 
       toggleCoursePersonPaymentFields();
     }
@@ -7832,6 +7891,8 @@ const TODAY_STR = "2026-10-06";
       if (typeof updateKamDropdowns === 'function') updateKamDropdowns();
 
       document.getElementById('m_editId').value = rec.id;
+      const modalDelBtn = document.getElementById('m_deleteLeadBtn');
+      if (modalDelBtn) modalDelBtn.classList.remove('hidden');
       document.getElementById('m_name').value = rec.name || '';
       ensureSelectHasValue('m_source', rec.source || 'Facebook Lead');
       if (rec.photo) {
@@ -8508,12 +8569,19 @@ const TODAY_STR = "2026-10-06";
     function syncBulkActionBarUI() {
       const bar = document.getElementById('masterBulkActionBar');
       const cntEl = document.getElementById('masterBulkSelectedCount');
+      const headerDeleteBtn = document.getElementById('headerBulkDeleteBtn');
+      const headerDeleteCnt = document.getElementById('headerBulkDeleteCount');
+      const bulkDeleteBadge = document.getElementById('masterBulkDeleteCountBadge');
       if (!bar || !cntEl) return;
 
       const count = selectedMasterLeadIds.size;
       cntEl.innerText = count;
+      if (headerDeleteCnt) headerDeleteCnt.innerText = count;
+      if (bulkDeleteBadge) bulkDeleteBadge.innerText = count;
+
       if (count > 0) {
         bar.classList.remove('hidden');
+        if (headerDeleteBtn) headerDeleteBtn.classList.remove('hidden');
         const bulkCourseEl = document.getElementById('bulkCourseSelect');
         if (bulkCourseEl && bulkCourseEl.options.length <= 1) {
           const courses = typeof getAllCourses === 'function' ? getAllCourses() : (typeof INITIAL_DEFAULT_COURSES !== 'undefined' ? INITIAL_DEFAULT_COURSES : []);
@@ -8526,6 +8594,7 @@ const TODAY_STR = "2026-10-06";
         }
       } else {
         bar.classList.add('hidden');
+        if (headerDeleteBtn) headerDeleteBtn.classList.add('hidden');
       }
     }
 
@@ -8537,11 +8606,15 @@ const TODAY_STR = "2026-10-06";
 
       const ids = Array.from(selectedMasterLeadIds);
       if (field === 'delete') {
-        if (!confirm(`আপনি কি নিশ্চিতভাবে নির্বাচিত ${ids.length}টি লিড ডিলিট করতে চান?`)) return;
+        if (!confirm(`আপনি কি নিশ্চিতভাবে নির্বাচিত ${ids.length}টি লিড চিরতরে ডিলিট করতে চান?`)) return;
         masterRecords = masterRecords.filter(r => !selectedMasterLeadIds.has(r.id));
         clearMasterBulkSelection();
         saveStorage();
         renderTable();
+        renderCalendar();
+        if (typeof renderDashboardTab === 'function') renderDashboardTab();
+        if (typeof renderPersistentBottomDueAlert === 'function') renderPersistentBottomDueAlert();
+        if (typeof renderMotherDataTable === 'function') renderMotherDataTable();
         showToast(`🗑️ ${ids.length}টি লিড সফলভাবে ডিলিট করা হয়েছে!`);
         return;
       }
