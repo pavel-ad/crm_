@@ -746,7 +746,16 @@
                 <input type="text" id="mdSearchInput" oninput="renderMotherDataTable()" placeholder="Search Mother Data..." class="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs bg-slate-800 border border-slate-700 text-slate-200 outline-none">
               </div>
 
-              <select id="mdCourseFilter" onchange="renderMotherDataTable()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 outline-none">
+              <select id="mdStatusFilter" onchange="renderMotherDataTable()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-200 outline-none cursor-pointer">
+                <option value="ALL">All Status (সকল স্ট্যাটাস)</option>
+                <option value="Hot">🟢 Hot</option>
+                <option value="Semi-Hot">🟣 Semi-Hot</option>
+                <option value="Cold">🟡 Cold</option>
+                <option value="Closed">🔴 Closed</option>
+                <option value="Confirmed">✅ Confirmed</option>
+              </select>
+
+              <select id="mdCourseFilter" onchange="renderMotherDataTable()" class="bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-slate-200 outline-none cursor-pointer">
                 <option value="ALL">All Courses (সব কোর্স)</option>
               </select>
 
@@ -834,28 +843,55 @@
 
         <!-- Dedicated Filter & Search Control Panel (Clean Grid - Never Overlaps!) -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
-          <!-- Row 1: Quick Filter Status Chips + Reset Button -->
+          <!-- Row 1: Unified Status & Category Filter Dropdown + SOP Rules + Reset Button -->
           <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="text-xs font-bold text-slate-400 mr-1"><i class="fa-solid fa-filter text-brand-400"></i> Status:</span>
-              <button onclick="setQuickFilter('ALL')" id="chip-all" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-brand-600 text-white border border-brand-500 transition">All Leads</button>
-              <button onclick="setQuickFilter('TODAY')" id="chip-today" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">🚨 Today's Calls (<span id="chipTodayCount">0</span>)</button>
-              <button onclick="setQuickFilter('YES')" id="chip-yes" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">✅ Course Person: YES (<span id="chipYesCount">0</span>)</button>
-              <button onclick="setQuickFilter('NO')" id="chip-no" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition">❌ Course Person: NO (<span id="chipNoCount">0</span>)</button>
-              <button onclick="setQuickFilter('DUE')" id="chip-due" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 text-rose-400 transition">🔴 Due Payments (<span id="chipDueCount">0</span>)</button>
-              <button onclick="setQuickFilter('HOT')" id="chip-hot" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> <span>Hot</span> (<span id="chipHotCount">0</span>)</button>
-              <button onclick="setQuickFilter('SEMI')" id="chip-semi" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-fuchsia-400"></span> <span>Semi-Hot</span> (<span id="chipSemiCount">0</span>)</button>
-              <button onclick="setQuickFilter('COLD')" id="chip-cold" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> <span>Cold</span> (<span id="chipColdCount">0</span>)</button>
-              <button onclick="setQuickFilter('CLOSED')" id="chip-closed" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> <span>Closed</span> (<span id="chipClosedCount">0</span>)</button>
-              <button onclick="setQuickFilter('CONFIRMED')" id="chip-confirmed" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span> <span>Confirmed</span> (<span id="chipConfirmedCount">0</span>)</button>
-              <button onclick="setQuickFilter('MOTHERDATA')" id="chip-motherdata" class="chip-btn px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600 transition flex items-center gap-1"><i class="fa-solid fa-folder-tree text-amber-400 text-xs"></i> <span>Mother Data</span> (<span id="chipMotherDataCount">0</span>)</button>
-              <button onclick="openSopRulesModal()" class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-900 transition flex items-center gap-1"><i class="fa-solid fa-book-bookmark text-xs"></i> <span>SOP Rules</span></button>
-              <button onclick="clearDateFilter()" id="chip-cal-active" class="hidden px-3 py-1 rounded-full text-xs font-bold bg-purple-600 text-white items-center gap-1.5">
+            <div class="flex flex-wrap items-center gap-2.5 flex-1">
+              <label for="statusQuickFilterDropdown" class="text-xs font-bold text-slate-300 flex items-center gap-1.5 whitespace-nowrap">
+                <i class="fa-solid fa-filter text-brand-400"></i>
+                <span>Status:</span>
+              </label>
+              <div class="relative min-w-[250px] sm:min-w-[300px]">
+                <select id="statusQuickFilterDropdown" onchange="handleStatusDropdownChange(this.value)" class="w-full bg-slate-800 hover:bg-slate-800/90 border border-brand-500/50 focus:border-brand-400 rounded-xl px-3.5 py-2 text-xs font-bold text-white outline-none focus:ring-2 focus:ring-brand-500/30 transition cursor-pointer shadow-md">
+                  <option value="ALL" id="opt-status-all" class="bg-slate-900 text-white font-bold">📋 All Leads (সকল লিড)</option>
+                  <option value="TODAY" id="opt-status-today" class="bg-slate-900 text-purple-300 font-bold">🚨 Today's Calls (0)</option>
+                  <option value="YES" id="opt-status-yes" class="bg-slate-900 text-emerald-300 font-bold">✅ Course Person: YES (0)</option>
+                  <option value="NO" id="opt-status-no" class="bg-slate-900 text-slate-300 font-bold">❌ Course Person: NO (0)</option>
+                  <option value="DUE" id="opt-status-due" class="bg-slate-900 text-rose-400 font-bold">🔴 Due Payments (0)</option>
+                  <option value="HOT" id="opt-status-hot" class="bg-slate-900 text-emerald-400 font-bold">🟢 Hot (0)</option>
+                  <option value="SEMI" id="opt-status-semi" class="bg-slate-900 text-fuchsia-400 font-bold">🟣 Semi-Hot (0)</option>
+                  <option value="COLD" id="opt-status-cold" class="bg-slate-900 text-yellow-300 font-bold">🟡 Cold (0)</option>
+                  <option value="CLOSED" id="opt-status-closed" class="bg-slate-900 text-rose-400 font-bold">🔴 Closed (0)</option>
+                  <option value="CONFIRMED" id="opt-status-confirmed" class="bg-slate-900 text-teal-300 font-bold">✅ Confirmed (0)</option>
+                  <option value="MOTHERDATA" id="opt-status-motherdata" class="bg-slate-900 text-amber-300 font-bold">📂 Mother Data (0)</option>
+                  <option value="SOP_RULES" id="opt-status-sop" class="bg-slate-900 text-amber-400 font-bold">📖 SOP Rules (স্ট্যাটাস গাইড দেখুন)</option>
+                </select>
+              </div>
+
+              <button onclick="openSopRulesModal()" class="px-3 py-2 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-900 transition flex items-center gap-1.5 whitespace-nowrap shadow-sm" title="SOP Rules & Lead Status Guide">
+                <i class="fa-solid fa-book-bookmark text-xs"></i>
+                <span>SOP Rules</span>
+              </button>
+
+              <button onclick="clearDateFilter()" id="chip-cal-active" class="hidden px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-600 text-white items-center gap-1.5">
                 <span id="chipDateText"></span> <i class="fa-solid fa-xmark"></i>
               </button>
+
+              <!-- Hidden compatibility count spans so no legacy selector fails -->
+              <div class="hidden" aria-hidden="true">
+                <span id="chipTodayCount">0</span>
+                <span id="chipYesCount">0</span>
+                <span id="chipNoCount">0</span>
+                <span id="chipDueCount">0</span>
+                <span id="chipHotCount">0</span>
+                <span id="chipSemiCount">0</span>
+                <span id="chipColdCount">0</span>
+                <span id="chipClosedCount">0</span>
+                <span id="chipConfirmedCount">0</span>
+                <span id="chipMotherDataCount">0</span>
+              </div>
             </div>
             
-            <button onclick="resetAllFilters()" class="text-xs font-semibold text-slate-400 hover:text-brand-400 flex items-center gap-1.5 transition">
+            <button onclick="resetAllFilters()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-slate-300 hover:text-brand-400 flex items-center gap-1.5 transition whitespace-nowrap">
               <i class="fa-solid fa-rotate-left text-[11px]"></i>
               <span>ফিল্টার রিসেট (Reset)</span>
             </button>
@@ -5085,6 +5121,7 @@ const TODAY_STR = "2026-10-06";
     function renderMotherDataTable() {
       const q = (document.getElementById('mdSearchInput')?.value || '').trim().toLowerCase();
       const courseFilter = document.getElementById('mdCourseFilter')?.value || 'ALL';
+      const statusFilter = document.getElementById('mdStatusFilter')?.value || 'ALL';
 
       // Update Mother Data course dropdown if empty
       const cFilterEl = document.getElementById('mdCourseFilter');
@@ -5121,7 +5158,8 @@ const TODAY_STR = "2026-10-06";
       let filtered = motherLeads.filter(r => {
         const matchesQ = !q || r.name.toLowerCase().includes(q) || r.phone.includes(q) || (r.company && r.company.toLowerCase().includes(q));
         const matchesC = courseFilter === 'ALL' || r.course === courseFilter;
-        return matchesQ && matchesC;
+        const matchesS = statusFilter === 'ALL' || (r.status || 'Cold') === statusFilter;
+        return matchesQ && matchesC && matchesS;
       });
 
       const tbody = document.getElementById('motherDataTableBody');
@@ -5182,8 +5220,8 @@ const TODAY_STR = "2026-10-06";
             <div class="text-white font-semibold text-xs">${item.company || '<span class="text-slate-500 italic">No Company</span>'}</div>
             <div class="text-[10px] text-slate-400">${item.designation || '<span class="text-slate-500 italic">No Designation</span>'}</div>
           </td>
-          <td class="p-3 text-center whitespace-nowrap">
-            ${renderStatusBadge(item.status)}
+          <td class="p-2 text-center whitespace-nowrap">
+            ${typeof renderStatusSelectDropdown === 'function' ? renderStatusSelectDropdown(item.id, item.status) : renderStatusBadge(item.status)}
           </td>
           <td class="p-3 text-center whitespace-nowrap">
             <div class="inline-flex items-center gap-1.5">
@@ -6561,10 +6599,35 @@ const TODAY_STR = "2026-10-06";
       document.getElementById('statEnrolledCount').innerText = countEnrolled;
       document.getElementById('statEnrolledPct').innerText = `${((countEnrolled / totalCount) * 100).toFixed(1)}% converted`;
 
-      document.getElementById('chipTodayCount').innerText = countTodayCalls;
-      document.getElementById('chipYesCount').innerText = countEnrolled;
-      document.getElementById('chipNoCount').innerText = totalCount - countEnrolled;
-      document.getElementById('chipDueCount').innerText = countDue;
+      if (document.getElementById('chipTodayCount')) document.getElementById('chipTodayCount').innerText = countTodayCalls;
+      if (document.getElementById('chipYesCount')) document.getElementById('chipYesCount').innerText = countEnrolled;
+      if (document.getElementById('chipNoCount')) document.getElementById('chipNoCount').innerText = masterRecords.length - countEnrolled;
+      if (document.getElementById('chipDueCount')) document.getElementById('chipDueCount').innerText = countDue;
+
+      // Update unified Status Filter Dropdown option labels with live counts
+      const countNotEnrolled = Math.max(0, masterRecords.length - countEnrolled);
+      const optMap = {
+        'opt-status-all': `📋 All Leads (${masterRecords.length})`,
+        'opt-status-today': `🚨 Today's Calls (${countTodayCalls})`,
+        'opt-status-yes': `✅ Course Person: YES (${countEnrolled})`,
+        'opt-status-no': `❌ Course Person: NO (${countNotEnrolled})`,
+        'opt-status-due': `🔴 Due Payments (${countDue})`,
+        'opt-status-hot': `🟢 Hot (${countHot})`,
+        'opt-status-semi': `🟣 Semi-Hot (${countSemi})`,
+        'opt-status-cold': `🟡 Cold (${countCold})`,
+        'opt-status-closed': `🔴 Closed (${countClosed})`,
+        'opt-status-confirmed': `✅ Confirmed (${countConfirmed})`,
+        'opt-status-motherdata': `📂 Mother Data (${countMotherData})`,
+        'opt-status-sop': `📖 SOP Rules (লিড স্ট্যাটাস গাইড)`
+      };
+      for (const [optId, labelText] of Object.entries(optMap)) {
+        const optEl = document.getElementById(optId);
+        if (optEl) optEl.textContent = labelText;
+      }
+      const statusDropEl = document.getElementById('statusQuickFilterDropdown');
+      if (statusDropEl && currentFilter && statusDropEl.value !== currentFilter) {
+        statusDropEl.value = currentFilter;
+      }
       document.getElementById('todayCallBannerSub').innerText = `আজকে মোট ${countTodayCalls} জন ক্লায়েন্টকে কল দিতে হবে। এগুলো তালিকার সবার উপরে পিন করা আছে।`;
 
       const searchEl = document.getElementById('searchInput');
@@ -6704,9 +6767,9 @@ const TODAY_STR = "2026-10-06";
             </div>
             ${item.due > 0 && item.nextDueDate ? `<div class="text-[10px] text-rose-400 font-medium">Due: ${item.nextDueDate}</div>` : ''}
           </td>
-          <td class="p-3 whitespace-nowrap">
-            ${typeof renderStatusBadge === 'function' ? renderStatusBadge(item.status) : `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">${item.status || 'Cold'}</span>`}
-            <div class="text-[10px] mt-0.5 ${lScore >= 75 ? 'text-amber-400 font-extrabold' : 'text-slate-400'}">
+          <td class="p-2 whitespace-nowrap">
+            ${typeof renderStatusSelectDropdown === 'function' ? renderStatusSelectDropdown(item.id, item.status) : renderStatusBadge(item.status)}
+            <div class="text-[10px] mt-0.5 px-1 ${lScore >= 75 ? 'text-amber-400 font-extrabold' : 'text-slate-400'}">
               ${lScore >= 75 ? '⭐ VIP ' : ''}${lScore}/100
             </div>
           </td>
@@ -6726,25 +6789,93 @@ const TODAY_STR = "2026-10-06";
       });
     }
 
+    function handleStatusDropdownChange(val) {
+      if (val === 'SOP_RULES') {
+        openSopRulesModal();
+        const dropEl = document.getElementById('statusQuickFilterDropdown');
+        if (dropEl) dropEl.value = currentFilter || 'ALL';
+        return;
+      }
+      setQuickFilter(val);
+    }
+
     function filterByStatusQuick(status) {
-      currentFilter = status;
-      currentPage = 1;
-      renderTable();
+      const statusMap = {
+        'Hot': 'HOT',
+        'Semi-Hot': 'SEMI',
+        'Cold': 'COLD',
+        'Closed': 'CLOSED',
+        'Confirmed': 'CONFIRMED'
+      };
+      const mapped = statusMap[status] || status;
+      setQuickFilter(mapped);
     }
 
     function setQuickFilter(type) {
-      currentFilter = type;
+      if (type === 'SOP_RULES') {
+        openSopRulesModal();
+        return;
+      }
+      currentFilter = type || 'ALL';
       currentPage = 1;
+      const dropEl = document.getElementById('statusQuickFilterDropdown');
+      if (dropEl) {
+        dropEl.value = currentFilter;
+      }
       document.querySelectorAll('.chip-btn').forEach(c => {
         c.classList.remove('bg-brand-600', 'text-white', 'border-brand-500');
         c.classList.add('bg-slate-800', 'text-slate-300', 'border-slate-700');
       });
-      const activeChip = document.getElementById('chip-' + type.toLowerCase());
+      const activeChip = document.getElementById('chip-' + currentFilter.toLowerCase());
       if (activeChip) {
         activeChip.classList.remove('bg-slate-800', 'text-slate-300', 'border-slate-700');
         activeChip.classList.add('bg-brand-600', 'text-white', 'border-brand-500');
       }
       renderTable();
+    }
+
+    function renderStatusSelectDropdown(leadId, currentStatus) {
+      const raw = (currentStatus || 'Cold').trim();
+      const norm = (raw === 'Semi-hot') ? 'Semi-Hot' : (['Hot', 'Semi-Hot', 'Cold', 'Closed', 'Confirmed'].includes(raw) ? raw : 'Cold');
+      const colorMap = {
+        'Hot': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:border-emerald-400',
+        'Semi-Hot': 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/40 hover:border-fuchsia-400',
+        'Cold': 'bg-yellow-400/20 text-yellow-300 border-yellow-400/40 hover:border-yellow-300',
+        'Closed': 'bg-rose-500/20 text-rose-300 border-rose-500/40 hover:border-rose-400',
+        'Confirmed': 'bg-teal-500/20 text-teal-300 border-teal-500/40 hover:border-teal-400'
+      };
+      const colorClass = colorMap[norm] || colorMap['Cold'];
+
+      return `<select onclick="event.stopPropagation()" onchange="updateLeadStatusDirectly('${leadId}', this.value)" class="border font-extrabold text-[10px] rounded-xl px-2 py-1 outline-none focus:ring-1 focus:ring-brand-500 transition cursor-pointer ${colorClass}" title="লিড স্ট্যাটাস পরিবর্তন করুন">
+        <option value="Hot" class="bg-slate-900 text-emerald-400 font-bold" ${norm === 'Hot' ? 'selected' : ''}>🟢 Hot</option>
+        <option value="Semi-Hot" class="bg-slate-900 text-fuchsia-400 font-bold" ${norm === 'Semi-Hot' ? 'selected' : ''}>🟣 Semi-Hot</option>
+        <option value="Cold" class="bg-slate-900 text-yellow-300 font-bold" ${norm === 'Cold' ? 'selected' : ''}>🟡 Cold</option>
+        <option value="Closed" class="bg-slate-900 text-rose-400 font-bold" ${norm === 'Closed' ? 'selected' : ''}>🔴 Closed</option>
+        <option value="Confirmed" class="bg-slate-900 text-teal-300 font-bold" ${norm === 'Confirmed' ? 'selected' : ''}>✅ Confirmed</option>
+      </select>`;
+    }
+
+    function updateLeadStatusDirectly(id, newStatus) {
+      try {
+        const rec = masterRecords.find(r => r.id === id);
+        if (!rec) return;
+        rec.status = newStatus;
+        if (newStatus === 'Confirmed' && rec.isCoursePerson !== 'YES') {
+          rec.isCoursePerson = 'YES';
+          if (!rec.totalFee) rec.totalFee = (typeof coursePrices !== 'undefined' && coursePrices[rec.course]) ? coursePrices[rec.course] : 18000;
+          if (!rec.advance) rec.advance = 5000;
+          rec.due = Math.max(0, Number(rec.totalFee || 0) - (Number(rec.advance || 0) + Number(rec.regularPaid || 0)));
+        }
+        try { saveStorage(); } catch (e) {}
+        if (typeof showToast === 'function') {
+          showToast(`🔄 [${rec.name}]-এর Status আপডেট হয়েছে: ${newStatus}`);
+        }
+        if (typeof renderTable === 'function') renderTable();
+        if (typeof renderMotherDataTable === 'function') renderMotherDataTable();
+        if (typeof renderKanbanBoard === 'function' && typeof activeTab !== 'undefined' && activeTab === 'kanban') renderKanbanBoard();
+      } catch (err) {
+        console.error('Error in updateLeadStatusDirectly:', err);
+      }
     }
 
     let filterTimer = null;
@@ -7106,6 +7237,8 @@ const TODAY_STR = "2026-10-06";
       const uEl = document.getElementById('userProfileSelector');
       if (uEl) uEl.value = 'ALL';
       currentFilter = 'ALL';
+      const stDrop = document.getElementById('statusQuickFilterDropdown');
+      if (stDrop) stDrop.value = 'ALL';
       selectedCalDate = null;
       currentPage = 1;
       renderTable();
