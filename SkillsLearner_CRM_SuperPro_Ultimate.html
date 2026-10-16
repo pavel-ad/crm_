@@ -267,6 +267,15 @@
           </div>
         </div>
 
+        <!-- 1. Executive Dashboard (Pro Level Top Tab) -->
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-brand-600/15 text-brand-400 border border-brand-500/30">
+          <span class="flex items-center space-x-2.5">
+            <i class="fa-solid fa-gauge-high w-4 text-center text-cyan-400"></i>
+            <span>Executive Dashboard</span>
+          </span>
+          <span class="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-gradient-to-r from-brand-600 to-cyan-500 text-white shadow-sm">PRO</span>
+        </button>
+
         <button onclick="switchTab('sources')" id="nav-sources" class="nav-btn w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800">
           <span class="flex items-center space-x-2.5">
             <i class="fa-solid fa-bullseye w-4 text-center text-blue-400"></i>
@@ -282,7 +291,7 @@
           <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300" id="badge-motherdata">0</span>
         </button>
   
-        <button onclick="switchTab('master')" id="nav-master" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all bg-brand-600/15 text-brand-400 border border-brand-500/30">
+        <button onclick="switchTab('master')" id="nav-master" class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all text-slate-400 hover:text-slate-200 hover:bg-slate-800">
           <span class="flex items-center space-x-2.5">
             <i class="fa-solid fa-table-list w-4 text-center"></i>
             <span>Master Pipeline</span>
@@ -551,8 +560,257 @@
     <!-- Content Workspace -->
     <main class="p-3 sm:p-5 flex-1 space-y-5 pb-36 lg:pb-24">
 
-      <!-- ==================== TAB 1: MASTER PIPELINE ==================== -->
-      
+
+      <!-- ==================== TAB: PRO EXECUTIVE DASHBOARD (BEAUTIFUL PRO LEVEL) ==================== -->
+      <section id="tab-dashboard" class="tab-section space-y-6">
+        
+        <!-- Hero Header with Glassmorphism & Gradient Glow -->
+        <div class="p-6 sm:p-7 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950/80 to-slate-900 border border-brand-500/30 shadow-[0_12px_40px_rgba(99,102,241,0.18)] relative overflow-hidden">
+          <div class="absolute -right-16 -top-16 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-brand-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-wrap justify-between items-center gap-5">
+            <div class="space-y-1.5 max-w-2xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-[11px] font-extrabold tracking-wide uppercase">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                <span>Real-Time Business Intelligence & Telesales CRM</span>
+              </div>
+              <h2 class="text-xl sm:text-3xl font-black text-white tracking-tight flex items-center gap-2.5">
+                <span id="dashGreetingText">Welcome back, Executive!</span>
+                <span class="text-xl">🚀</span>
+              </h2>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                স্কিলস লার্নার টেলিসেলস পারফরম্যান্স, এনরোলমেন্ট রেট, বকেয়া আদায় ও নিট লাভের সম্পূর্ণ লাইভ ড্যাশবোর্ড ওভারভিউ।
+              </p>
+            </div>
+
+            <!-- Command Center Quick Actions -->
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button onclick="switchTab('master')" class="px-4 py-2.5 rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition flex items-center gap-2 shadow-lg">
+                <i class="fa-solid fa-table-list text-cyan-400"></i>
+                <span>Master Leads (<span id="dashMasterCount">0</span>)</span>
+              </button>
+              <button onclick="openLeadModal()" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-lg shadow-brand-500/30">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>New Lead</span>
+              </button>
+              <button onclick="openEodModal()" class="px-3.5 py-2.5 rounded-2xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white border border-purple-500/40 text-xs font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-file-signature"></i>
+                <span>Daily EOD</span>
+              </button>
+              <button onclick="triggerCloudSync()" class="px-3.5 py-2.5 rounded-2xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-500/40 text-xs font-bold transition flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Sync Sheet</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Pro-Level Glowing Glassmorphic KPI Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
+          <!-- KPI 1: Total Leads -->
+          <div onclick="switchTab('master')" class="p-4 bg-slate-900/90 border border-slate-800 hover:border-brand-500/60 rounded-2xl transition duration-300 shadow-xl cursor-pointer group relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <span>Total Leads</span>
+              <i class="fa-solid fa-database text-brand-400 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="text-2xl font-black text-white mt-2" id="dashTotalLeads">0</div>
+            <div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span id="dashHotRatio">0 Hot Leads</span>
+            </div>
+          </div>
+
+          <!-- KPI 2: Enrolled Won -->
+          <div onclick="switchTab('admitted')" class="p-4 bg-slate-900/90 border border-emerald-500/30 hover:border-emerald-400 rounded-2xl transition duration-300 shadow-xl cursor-pointer group relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <span>Enrolled Won</span>
+              <i class="fa-solid fa-graduation-cap text-emerald-400 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="text-2xl font-black text-emerald-400 mt-2" id="dashEnrolledCount">0</div>
+            <div class="text-[10px] text-emerald-300 mt-1 font-semibold flex items-center justify-between">
+              <span id="dashConvRate">0% Win Rate</span>
+              <span class="text-slate-500" id="dashBatchSplit">0 Phy • 0 Onl</span>
+            </div>
+          </div>
+
+          <!-- KPI 3: Cash Collected -->
+          <div onclick="switchTab('admitted')" class="p-4 bg-slate-900/90 border border-cyan-500/30 hover:border-cyan-400 rounded-2xl transition duration-300 shadow-xl cursor-pointer group relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <span>Cash Collected</span>
+              <i class="fa-solid fa-money-bill-wave text-cyan-400 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="text-2xl font-black text-cyan-400 mt-2 truncate" id="dashRevenue">৳০</div>
+            <div class="text-[10px] text-cyan-300 mt-1 font-semibold" id="dashRevenueSubtitle">Admitted Revenue</div>
+          </div>
+
+          <!-- KPI 4: Outstanding Due -->
+          <div onclick="switchTab('due_reminders')" class="p-4 bg-slate-900/90 border border-rose-500/40 hover:border-rose-400 rounded-2xl transition duration-300 shadow-xl cursor-pointer group relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <span>Outstanding Due</span>
+              <i class="fa-solid fa-triangle-exclamation text-rose-500 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="text-2xl font-black text-rose-400 mt-2 truncate" id="dashDue">৳০</div>
+            <div class="text-[10px] text-rose-300 mt-1 font-bold flex items-center gap-1">
+              <span id="dashDueCountBadge">0 জন বকেয়া</span>
+            </div>
+          </div>
+
+          <!-- KPI 5: Net Profit -->
+          <div onclick="switchTab('admitted')" class="p-4 bg-slate-900/90 border border-amber-500/30 hover:border-amber-400 rounded-2xl transition duration-300 shadow-xl cursor-pointer group relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <span>Net Profit (নিট লাভ)</span>
+              <i class="fa-solid fa-scale-balanced text-amber-400 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="text-2xl font-black text-amber-400 mt-2 truncate" id="dashNetProfit">৳০</div>
+            <div class="text-[10px] text-slate-400 mt-1" id="dashExpensesSubtitle">Revenue − Expenses</div>
+          </div>
+
+          <!-- KPI 6: Today's Calls -->
+          <div onclick="switchTab('today')" class="p-4 bg-slate-900/90 border border-purple-500/40 hover:border-purple-400 rounded-2xl transition duration-300 shadow-xl cursor-pointer group relative overflow-hidden">
+            <div class="flex justify-between items-center text-slate-400 text-xs font-bold uppercase tracking-wider">
+              <span>Priority Calls</span>
+              <i class="fa-solid fa-phone-volume text-purple-400 group-hover:scale-110 transition"></i>
+            </div>
+            <div class="text-2xl font-black text-purple-300 mt-2" id="dashTodayCalls">0</div>
+            <div class="text-[10px] text-orange-400 mt-1 font-bold flex items-center gap-1" id="dashOverdueSubtitle">
+              <span>⏰ 0 Overdue</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 1: Pipeline Funnel + Course Revenue Analytics (2 Columns) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- 1. Lead Conversion Funnel Matrix -->
+          <div class="p-5 bg-slate-900/95 border border-slate-800 rounded-3xl shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-filter"></i>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-sm text-white">Lead Conversion Pipeline Funnel</h4>
+                  <p class="text-[11px] text-slate-400">র-ডাটা থেকে এনরোলমেন্ট পর্যন্ত পর্যায়ক্রমিক রূপান্তর হার</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 text-brand-300 border border-brand-500/30">Live Funnel</span>
+            </div>
+
+            <div class="space-y-3.5 text-xs pt-1" id="dashFunnelContainer">
+              <!-- Dynamically populated funnel stages -->
+            </div>
+          </div>
+
+          <!-- 2. Course-wise Enrollment & Revenue Share -->
+          <div class="p-5 bg-slate-900/95 border border-slate-800 rounded-3xl shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-award"></i>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-sm text-white">Course Enrollment & Batch Capacity</h4>
+                  <p class="text-[11px] text-slate-400">কোর্সভিত্তিক ভর্তি সংখ্যা, অর্জিত রেভিনিউ ও সিট পূরণ হার</p>
+                </div>
+              </div>
+              <button onclick="switchTab('admitted')" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">
+                <span>View Details</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+
+            <div class="space-y-3 text-xs pt-1" id="dashCourseShareContainer">
+              <!-- Dynamically populated course share bars -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 2: Marketing Channels Attribution + Telesales Leaderboard Podium -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <!-- Marketing Channel Attribution -->
+          <div class="p-5 bg-slate-900/95 border border-slate-800 rounded-3xl shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-sm text-white">Lead Acquisition Channels (Source ROI)</h4>
+                  <p class="text-[11px] text-slate-400">ফেসবুক, ওয়েবসাইট, হোয়াটসঅ্যাপ ও রেফারেল চ্যানেলের কার্যকারিতা</p>
+                </div>
+              </div>
+              <button onclick="switchTab('sources')" class="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">
+                <span>Full Channel Tab</span> <i class="fa-solid fa-arrow-right text-[10px]"></i>
+              </button>
+            </div>
+
+            <div class="space-y-3 text-xs pt-1" id="dashChannelContainer">
+              <!-- Dynamically populated channel bars -->
+            </div>
+          </div>
+
+          <!-- Telesales Performance Podium -->
+          <div class="p-5 bg-slate-900/95 border border-slate-800 rounded-3xl shadow-xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                  <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                  <h4 class="font-extrabold text-sm text-white">Top Telesales Executive Rankings</h4>
+                  <p class="text-[11px] text-slate-400">কলিং অ্যাক্টিভিটি, হট লিড নার্চারিং ও ক্যাশ কালেকশন র‍্যাঙ্ক</p>
+                </div>
+              </div>
+              <button onclick="openRoundRobinModal()" class="px-3 py-1 rounded-xl bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600 hover:text-white text-[11px] font-bold transition flex items-center gap-1.5">
+                <i class="fa-solid fa-shuffle"></i> <span>Auto Distribute</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3" id="dashPodiumContainer">
+              <!-- Dynamically populated caller podium cards -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 3: High-Priority Hot Leads Ready for Conversion -->
+        <div class="bg-slate-900/95 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl space-y-0">
+          <div class="p-5 border-b border-slate-800 flex flex-wrap justify-between items-center gap-3 bg-slate-900/80">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-fire text-rose-500 animate-pulse"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-sm text-white">Priority Hot & Semi-Hot Leads (Ready to Close)</h4>
+                <p class="text-[11px] text-slate-400">যেসব ক্লায়েন্ট কোর্সে ভর্তি হওয়ার জন্য সবচেয়ে বেশি আগ্রহী তাদের তালিকা</p>
+              </div>
+            </div>
+            <button onclick="switchTab('master')" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs transition flex items-center gap-2 shadow-lg shadow-brand-500/30">
+              <span>View All 3,200+ Master Leads</span>
+              <i class="fa-solid fa-arrow-right text-xs"></i>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-950/80 border-b border-slate-800 text-slate-400 uppercase font-bold text-[10px]">
+                  <th class="p-3">ID</th>
+                  <th class="p-3">Client Name & Contact</th>
+                  <th class="p-3">Company & Role</th>
+                  <th class="p-3">Course Program</th>
+                  <th class="p-3 text-center">Assigned KAM</th>
+                  <th class="p-3 text-center">Status & AI Score</th>
+                  <th class="p-3 text-center">Quick Action</th>
+                </tr>
+              </thead>
+              <tbody id="dashHotLeadsTableBody" class="divide-y divide-slate-800 text-slate-200">
+                <!-- Dynamically populated top 6 hot leads -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
       <!-- ==================== TAB: EMPLOYEE & TEAM MANAGEMENT ==================== -->
       <section id="tab-team" class="tab-section hidden space-y-5">
         <div class="p-5 bg-slate-900 border border-slate-800 rounded-2xl flex flex-wrap justify-between items-center gap-4 shadow-xl">
@@ -2860,12 +3118,12 @@
   <!-- ==================== MOBILE BOTTOM NAVIGATION BAR (Photo UI Match) ==================== -->
   <nav id="mobileBottomNav" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-slate-800 rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.6)] px-2 py-1.5 pb-[calc(0.4rem+env(safe-area-inset-bottom,0px))] transition-transform duration-300">
     <div class="flex items-center justify-around max-w-lg mx-auto">
-      <!-- 1. Home / Master Leads -->
-      <button onclick="switchTab('master')" id="mobileNav-master" class="mobile-nav-item flex flex-col items-center justify-center flex-1 py-1 focus:outline-none transition group active">
+      <!-- 1. Executive Dashboard -->
+      <button onclick="switchTab('dashboard')" id="mobileNav-dashboard" class="mobile-nav-item flex flex-col items-center justify-center flex-1 py-1 focus:outline-none transition group active">
         <div class="mobile-nav-pill px-4 py-1 rounded-full bg-brand-500/20 text-brand-400 font-bold border border-brand-500/30 shadow-[0_0_12px_rgba(99,102,241,0.25)] transition-all duration-300">
-          <i class="fa-solid fa-house text-base"></i>
+          <i class="fa-solid fa-gauge-high text-base"></i>
         </div>
-        <span class="mobile-nav-label text-[10px] sm:text-[11px] font-bold text-brand-400 mt-0.5 tracking-tight">হোম</span>
+        <span class="mobile-nav-label text-[10px] sm:text-[11px] font-bold text-brand-400 mt-0.5 tracking-tight">ড্যাশবোর্ড</span>
       </button>
 
       <!-- 2. Course / Admitted Students (Matches highlighted Course icon from screenshot) -->
@@ -3553,6 +3811,7 @@
           if (typeof updateKamDropdowns === 'function') updateKamDropdowns();
           renderCalendar();
           renderTable();
+          if (typeof renderDashboardTab === 'function') renderDashboardTab();
           if (forceNetwork) showToast(`☁️ ${source} থেকে ডাটাবেস সিঙ্ক হয়েছে (${masterRecords.length} টি রেকর্ড)`);
         }
         dbConfig.lastSyncTime = new Date().toLocaleTimeString();
@@ -3837,7 +4096,7 @@
     }
 
 const TODAY_STR = "2026-10-06";
-    let activeTab = 'master';
+    let activeTab = 'dashboard';
     let currentFilter = 'ALL';
     let currentSheetFilter = 'Physical';
     let selectedCalDate = null;
@@ -5803,7 +6062,8 @@ const TODAY_STR = "2026-10-06";
         activeNav.classList.add('bg-brand-600/15', 'text-brand-400', 'border', 'border-brand-500/30');
       }
 
-      if (tabId === 'team') renderTeamTab();
+      if (tabId === 'dashboard') renderDashboardTab();
+      else if (tabId === 'team') renderTeamTab();
       else if (tabId === 'motherdata') renderMotherDataTable();
       else if (tabId === 'sources') renderSourcesTab();
       else if (tabId === 'master') renderTable();
@@ -8664,6 +8924,289 @@ const TODAY_STR = "2026-10-06";
       }
     }
 
+
+    // ----------------- PRO EXECUTIVE DASHBOARD CONTROLLER -----------------
+    function renderDashboardTab() {
+      // 1. User greeting
+      const user = (typeof currentUser !== 'undefined' && currentUser && currentUser.name) ? currentUser.name : 'Executive';
+      const greetEl = document.getElementById('dashGreetingText');
+      if (greetEl) {
+        const hour = new Date().getHours();
+        const timeOfDay = hour < 12 ? 'শুভ সকাল' : hour < 17 ? 'শুভ দুপুর' : 'শুভ সন্ধ্যা';
+        greetEl.innerText = `${timeOfDay}, ${user}! 🚀`;
+      }
+
+      const totalCount = masterRecords.length;
+      const enrolled = masterRecords.filter(r => r.isCoursePerson === 'YES');
+      const hot = masterRecords.filter(r => r.status === 'Hot');
+      const semi = masterRecords.filter(r => r.status === 'Semi-Hot' || r.status === 'Semi-hot');
+      const cold = masterRecords.filter(r => r.status === 'Cold' || !r.status);
+      const todayCalls = masterRecords.filter(r => r.nextCall && r.nextCall.startsWith(TODAY_STR));
+      const overdueCalls = masterRecords.filter(r => (r.nextCall && r.nextCall.slice(0, 10) < TODAY_STR && r.status !== 'Closed') || (r.isCoursePerson === 'YES' && Number(r.due || 0) > 0 && r.nextDueDate && r.nextDueDate < TODAY_STR));
+
+      let totalRevenue = 0, totalDue = 0, phyCount = 0, onlCount = 0;
+      enrolled.forEach(r => {
+        totalRevenue += (Number(r.advance || 0) + Number(r.regularPaid || 0));
+        totalDue += Number(r.due || 0);
+        if (r.sheetMode === 'Online') onlCount++;
+        else phyCount++;
+      });
+
+      const expenses = typeof getCrmExpenses === 'function' ? getCrmExpenses() : [];
+      const totalExp = expenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
+      const netProfit = totalRevenue - totalExp;
+
+      // Update KPI cards
+      const elMasterCnt = document.getElementById('dashMasterCount');
+      if (elMasterCnt) elMasterCnt.innerText = totalCount;
+      const elTot = document.getElementById('dashTotalLeads');
+      if (elTot) elTot.innerText = totalCount.toLocaleString();
+      const elHotRatio = document.getElementById('dashHotRatio');
+      if (elHotRatio) elHotRatio.innerText = `${hot.length} Hot • ${semi.length} Semi-Hot`;
+
+      const elEnr = document.getElementById('dashEnrolledCount');
+      if (elEnr) elEnr.innerText = `${enrolled.length} জন`;
+      const elWinRate = document.getElementById('dashConvRate');
+      if (elWinRate) {
+        const winPct = totalCount > 0 ? ((enrolled.length / totalCount) * 100).toFixed(1) : '0';
+        elWinRate.innerText = `⭐ ${winPct}% Win Rate`;
+      }
+      const elBatchSplit = document.getElementById('dashBatchSplit');
+      if (elBatchSplit) elBatchSplit.innerText = `${phyCount} Phy • ${onlCount} Onl`;
+
+      const elRev = document.getElementById('dashRevenue');
+      if (elRev) elRev.innerText = `৳${totalRevenue.toLocaleString()}`;
+
+      const elDue = document.getElementById('dashDue');
+      if (elDue) elDue.innerText = `৳${totalDue.toLocaleString()}`;
+      const elDueBadge = document.getElementById('dashDueCountBadge');
+      if (elDueBadge) elDueBadge.innerText = `🔴 ${enrolled.filter(r => Number(r.due||0)>0).length} জন বকেয়া রয়েছে`;
+
+      const elNetProf = document.getElementById('dashNetProfit');
+      if (elNetProf) {
+        elNetProf.innerText = `${netProfit >= 0 ? '৳' : '-৳'}${Math.abs(netProfit).toLocaleString()}`;
+        elNetProf.className = `text-2xl font-black mt-2 truncate ${netProfit >= 0 ? 'text-amber-400' : 'text-rose-400'}`;
+      }
+      const elExpSub = document.getElementById('dashExpensesSubtitle');
+      if (elExpSub) elExpSub.innerText = `ব্যয়: ৳${totalExp.toLocaleString()} বাদ দিয়ে`;
+
+      const elToday = document.getElementById('dashTodayCalls');
+      if (elToday) elToday.innerText = todayCalls.length;
+      const elOverdueSub = document.getElementById('dashOverdueSubtitle');
+      if (elOverdueSub) elOverdueSub.innerText = `⏰ ${overdueCalls.length} টি Overdue কল/কিস্তি`;
+
+      // 2. Render Lead Conversion Funnel
+      const funnelCont = document.getElementById('dashFunnelContainer');
+      if (funnelCont) {
+        const stages = [
+          { name: '1. Raw Lead Repository (Mother Data)', count: totalCount, pct: 100, color: 'from-blue-600 to-indigo-600', icon: 'fa-folder-tree' },
+          { name: '2. Contacted & Cold Prospects', count: cold.length, pct: totalCount ? Math.round((cold.length/totalCount)*100) : 0, color: 'from-amber-500 to-yellow-500', icon: 'fa-phone' },
+          { name: '3. Qualified & Semi-Hot Discussions', count: semi.length, pct: totalCount ? Math.round((semi.length/totalCount)*100) : 0, color: 'from-fuchsia-600 to-purple-600', icon: 'fa-bolt' },
+          { name: '4. High-Intent Hot Opportunities', count: hot.length, pct: totalCount ? Math.round((hot.length/totalCount)*100) : 0, color: 'from-rose-500 to-red-600', icon: 'fa-fire' },
+          { name: '5. Enrolled Won & Active Students', count: enrolled.length, pct: totalCount ? Math.round((enrolled.length/totalCount)*100) : 0, color: 'from-emerald-500 to-teal-400', icon: 'fa-graduation-cap' }
+        ];
+
+        funnelCont.innerHTML = stages.map(stg => `
+          <div class="space-y-1.5 bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid ${stg.icon} text-slate-400 text-[11px]"></i>
+                <span>${stg.name}</span>
+              </span>
+              <div class="flex items-center gap-2">
+                <span class="font-black text-white text-xs">${stg.count.toLocaleString()}</span>
+                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">${stg.pct}%</span>
+              </div>
+            </div>
+            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r ${stg.color} rounded-full transition-all duration-500" style="width: ${Math.max(4, stg.pct)}%"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 3. Render Course Revenue & Batch Seat Distribution
+      const courseCont = document.getElementById('dashCourseShareContainer');
+      if (courseCont) {
+        const cMap = {};
+        enrolled.forEach(r => {
+          const c = r.course || 'Lean Six Sigma Green Belt';
+          if (!cMap[c]) cMap[c] = { enr: 0, rev: 0 };
+          cMap[c].enr++;
+          cMap[c].rev += (Number(r.advance || 0) + Number(r.regularPaid || 0));
+        });
+
+        const cList = Object.entries(cMap).sort((a,b) => b[1].rev - a[1].rev);
+        if (cList.length === 0) {
+          courseCont.innerHTML = '<div class="text-slate-500 text-center py-4">এখনও কোনো কোর্সে ভর্তি ডাটা নেই।</div>';
+        } else {
+          const maxRev = cList[0][1].rev || 1;
+          courseCont.innerHTML = cList.map(([cName, data]) => {
+            const pct = Math.min(100, Math.round((data.rev / maxRev) * 100));
+            const safeCName = cName.replace(/'/g, "\\'");
+            return `
+              <div class="p-3 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                  <div class="font-extrabold text-white truncate max-w-[220px]">${cName}</div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-emerald-400 font-black">৳${data.rev.toLocaleString()}</span>
+                    <button type="button" onclick="sendBatchClassLinkWA('${safeCName}')" class="px-2 py-0.5 rounded-lg bg-emerald-600/20 text-emerald-300 hover:bg-emerald-600 hover:text-white text-[10px] font-bold transition">
+                      <i class="fa-brands fa-whatsapp"></i> Link
+                    </button>
+                  </div>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-brand-500 to-emerald-400 rounded-full" style="width: ${pct}%"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-slate-400">
+                  <span>🎓 মোট ভর্তি: <strong class="text-slate-200">${data.enr} জন</strong></span>
+                  <span>রেভিনিউ শেয়ার: <strong class="text-brand-300">${totalRevenue ? Math.round((data.rev/totalRevenue)*100) : 0}%</strong></span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
+
+      // 4. Render Marketing Channels Attribution
+      const channelCont = document.getElementById('dashChannelContainer');
+      if (channelCont) {
+        const srcMap = {};
+        masterRecords.forEach(r => {
+          let s = r.source || 'Facebook Lead';
+          if (s.toLowerCase().includes('facebook') || s.toLowerCase().includes('fb')) s = 'Facebook Ads';
+          else if (s.toLowerCase().includes('web') || s.toLowerCase().includes('google')) s = 'Google & Website';
+          else if (s.toLowerCase().includes('whatsapp') || s.toLowerCase().includes('wa')) s = 'WhatsApp Direct';
+          else if (s.toLowerCase().includes('ref')) s = 'Referral Network';
+          else if (s.toLowerCase().includes('linkedin')) s = 'LinkedIn Network';
+          else s = 'Direct / Walk-in';
+
+          if (!srcMap[s]) srcMap[s] = { total: 0, won: 0, rev: 0 };
+          srcMap[s].total++;
+          if (r.isCoursePerson === 'YES') {
+            srcMap[s].won++;
+            srcMap[s].rev += (Number(r.advance || 0) + Number(r.regularPaid || 0));
+          }
+        });
+
+        const srcList = Object.entries(srcMap).sort((a,b) => b[1].total - a[1].total);
+        channelCont.innerHTML = srcList.slice(0, 5).map(([sName, data]) => {
+          const sharePct = totalCount ? Math.round((data.total / totalCount) * 100) : 0;
+          const winPct = data.total ? ((data.won / data.total) * 100).toFixed(1) : 0;
+          return `
+            <div class="p-2.5 bg-slate-950/60 border border-slate-800 rounded-2xl space-y-1.5">
+              <div class="flex justify-between items-center text-xs">
+                <span class="font-bold text-white">${sName}</span>
+                <span class="text-cyan-300 font-extrabold">${data.total.toLocaleString()} Leads (${sharePct}%)</span>
+              </div>
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full" style="width: ${sharePct}%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-slate-400">
+                <span>কনভার্সন: <strong class="text-emerald-400">${data.won} জন (${winPct}%)</strong></span>
+                <span>রেভিনিউ: <strong class="text-emerald-400">৳${data.rev.toLocaleString()}</strong></span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 5. Render Telesales Performance Podium
+      const podiumCont = document.getElementById('dashPodiumContainer');
+      if (podiumCont) {
+        let pavel = { name: 'পাবেল', role: 'Account Manager', calls: 0, hot: 0, won: 0, rev: 0, badge: '🥇 1st' };
+        let imran = { name: 'ইমরান', role: 'Telesales Specialist', calls: 0, hot: 0, won: 0, rev: 0, badge: '🥈 2nd' };
+
+        masterRecords.forEach(r => {
+          const kam = (r.kam || 'পাবেল').trim();
+          const t = (kam === 'পাবেল') ? pavel : imran;
+          t.calls++;
+          if (r.status === 'Hot') t.hot++;
+          if (r.isCoursePerson === 'YES') {
+            t.won++;
+            t.rev += (Number(r.advance || 0) + Number(r.regularPaid || 0));
+          }
+        });
+
+        const callers = [pavel, imran].sort((a,b) => b.rev - a.rev);
+        callers[0].badge = '🥇 1st Place';
+        callers[1].badge = '🥈 2nd Place';
+
+        podiumCont.innerHTML = callers.map((c, idx) => `
+          <div class="p-4 bg-slate-950/80 border ${idx === 0 ? 'border-amber-500/50 bg-amber-950/10' : 'border-slate-800'} rounded-2xl space-y-2.5 shadow-lg">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-black ${idx === 0 ? 'text-amber-400' : 'text-slate-400'}">${c.badge}</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-brand-300 font-bold">${c.role}</span>
+            </div>
+            <div>
+              <h5 class="text-sm font-extrabold text-white">${c.name}</h5>
+              <div class="text-[11px] text-slate-400 mt-0.5">Assigned Leads: <strong class="text-slate-200">${c.calls}</strong></div>
+            </div>
+            <div class="pt-2 border-t border-slate-800/80 space-y-1 text-[11px]">
+              <div class="flex justify-between">
+                <span class="text-slate-400">Hot Leads:</span>
+                <span class="text-rose-400 font-bold">${c.hot}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400">Enrolled Won:</span>
+                <span class="text-emerald-400 font-bold">${c.won} জন</span>
+              </div>
+              <div class="flex justify-between pt-1 border-t border-slate-800/60 font-bold text-xs">
+                <span class="text-white">Cash Collected:</span>
+                <span class="text-emerald-400 font-black">৳${c.rev.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 6. Render Priority Hot Leads in table
+      const hotTableBody = document.getElementById('dashHotLeadsTableBody');
+      if (hotTableBody) {
+        const topHot = masterRecords.filter(r => r.status === 'Hot' || r.status === 'Semi-Hot').slice(0, 6);
+        if (topHot.length === 0) {
+          hotTableBody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">কোনো হট লিড পাওয়া যায়নি।</td></tr>';
+        } else {
+          hotTableBody.innerHTML = topHot.map(item => {
+            const safeId = String(item.id).replace(/'/g, "\\'");
+            const lScore = typeof calculateLeadScore === 'function' ? calculateLeadScore(item) : 75;
+            return `
+              <tr class="hover:bg-slate-800/50 transition">
+                <td class="p-3 font-mono font-bold text-brand-400 whitespace-nowrap">${item.id}</td>
+                <td class="p-3 whitespace-nowrap">
+                  <div class="font-bold text-white flex items-center gap-1.5">
+                    <span>${item.name}</span>
+                    ${item.status === 'Hot' ? '<span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>' : ''}
+                  </div>
+                  <div class="text-[10px] text-slate-400 font-mono">${item.phone}</div>
+                </td>
+                <td class="p-3 text-slate-300 max-w-[140px] truncate">${item.company || 'Individual'}</td>
+                <td class="p-3 font-semibold text-brand-300 whitespace-nowrap">${item.course}</td>
+                <td class="p-3 text-center whitespace-nowrap font-bold text-cyan-300">👤 ${item.kam || 'পাবেল'}</td>
+                <td class="p-3 text-center whitespace-nowrap">
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${item.status === 'Hot' ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' : 'bg-fuchsia-500/20 text-fuchsia-300 border border-fuchsia-500/40'}">
+                    ${item.status === 'Hot' ? '🔥 Hot' : '⚡ Semi-Hot'}
+                  </span>
+                  <div class="text-[9px] text-amber-400 font-bold mt-0.5">⭐ VIP ${lScore}/100</div>
+                </td>
+                <td class="p-3 text-center whitespace-nowrap space-x-1">
+                  <button type="button" onclick="initiateDirectCall('${safeId}')" class="p-1.5 rounded-lg bg-sky-600/20 text-sky-400 hover:bg-sky-600 hover:text-white transition" title="সরাসরি কল করুন">
+                    <i class="fa-solid fa-phone text-xs"></i>
+                  </button>
+                  <button type="button" onclick="openDirectWhatsApp('${safeId}', event)" class="p-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white transition" title="সরাসরি WhatsApp">
+                    <i class="fa-brands fa-whatsapp text-xs"></i>
+                  </button>
+                  <button type="button" onclick="editLeadRecord('${safeId}')" class="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition" title="এডিট করুন">
+                    <i class="fa-solid fa-pen-to-square text-xs"></i>
+                  </button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+    }
+
     // ----------------- THEME & LANGUAGE TOGGLE (ADDED) -----------------
     let isDarkTheme = true;
     let isEnglish = false;
@@ -8709,6 +9252,7 @@ const TODAY_STR = "2026-10-06";
     initSmartFollowUpAlarm();
     initCloudSyncInputs();
     renderPersistentBottomDueAlert();
+    renderDashboardTab();
 
     window.addEventListener('DOMContentLoaded', () => {
       checkAuthOnLoad();
