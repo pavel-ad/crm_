@@ -118,7 +118,14 @@
           <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="নাম, নম্বর বা যেকোনো তথ্য দিয়ে সার্চ করুন..." class="w-full pl-9 pr-4 py-2 rounded-lg text-sm bg-slate-100 dark:bg-slate-800 border-none outline-none focus:ring-2 focus:ring-brand-500 transition-all">
         </div>
       </div>
-      <div class="flex items-center space-x-2.5">
+      <div class="flex items-center space-x-2 sm:space-x-2.5">
+        <!-- Live GitHub DB Sync Button in Header -->
+        <button onclick="syncWithGitHub()" id="headerSyncBtn" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 text-xs font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5 sm:gap-2 cursor-pointer shadow-sm group" title="GitHub / db.json থেকে ১-ক্লিকে ডাটা সিঙ্ক করুন">
+          <i class="fa-solid fa-rotate text-brand-500 group-hover:rotate-180 transition-transform duration-500" id="headerSyncIcon"></i>
+          <span class="hidden sm:inline">GitHub Sync</span>
+          <span class="px-1.5 py-0.5 rounded-md bg-brand-500 text-white text-[10px] font-black font-mono leading-none" id="headerSyncCount">0</span>
+        </button>
+
         <button onclick="toggleDarkMode()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 transition-all" title="Dark / Light Mode"><i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i></button>
         <button class="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center gap-1.5" onclick="openAddLeadModal()"><i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">নতুন লিড</span></button>
 
@@ -934,8 +941,32 @@
       reader.readAsText(file, "UTF-8");
     }
 
-    async function syncWithGitHub() {
+    function showToast(msg, isError = false) {
+      const t = document.getElementById('toastNotification');
+      const tMsg = document.getElementById('toastMessage');
+      const tIcon = document.getElementById('toastIcon');
+      if (!t || !tMsg) {
+        console.log((isError ? 'Error: ' : 'Info: ') + msg);
+        return;
+      }
+      tMsg.innerText = msg;
+      tIcon.innerText = isError ? '⚠️' : '✅';
+      t.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      t.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        t.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+        t.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    async function syncWithGitHub(isSilent = false) {
+      const syncIcon = document.getElementById('headerSyncIcon');
+      const countEl = document.getElementById('headerSyncCount');
       const msg = document.getElementById('githubSyncResultMsg');
+
+      if (syncIcon) syncIcon.classList.add('fa-spin');
+      if (!isSilent) showToast('⏳ GitHub থেকে ডাটা সিঙ্ক করা হচ্ছে...');
+
       if (msg) {
         msg.className = 'text-xs p-2.5 rounded-xl bg-blue-500/10 text-blue-500 border border-blue-500/20 block';
         msg.innerText = '⏳ GitHub থেকে db.json ফেচ করা হচ্ছে...';
@@ -943,41 +974,50 @@
 
       try {
         const rawUrl = 'https://raw.githubusercontent.com/' + GITHUB_REPO + '/' + GITHUB_BRANCH + '/' + GITHUB_FILE + '?t=' + Date.now();
-        const res = await fetch(rawUrl);
+        const res = await fetch(rawUrl, { cache: 'no-store' });
         if (!res.ok) throw new Error('HTTP ' + res.status + ' - GitHub ফাইল পাওয়া যায়নি');
         const data = await res.json();
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           leads = data;
           saveLeads();
           renderAll();
+          if (countEl) countEl.innerText = data.length;
           if (msg) {
             msg.className = 'text-xs p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 block';
             msg.innerText = '✅ GitHub থেকে ' + data.length + ' টি রেকর্ড সফলভাবে লোড হয়েছে!';
           }
+          if (!isSilent) showToast('✅ GitHub থেকে ' + data.length + ' টি রেকর্ড সফলভাবে আপডেট হয়েছে!');
+          return;
         }
       } catch (err) {
         console.warn('Direct GitHub fetch failed, attempting local server /api/records...', err);
         try {
-          const localRes = await fetch('/api/records');
+          const localRes = await fetch('/api/records?t=' + Date.now(), { cache: 'no-store' });
           if (localRes.ok) {
             const data = await localRes.json();
-            if (Array.isArray(data)) {
+            if (Array.isArray(data) && data.length > 0) {
               leads = data;
               saveLeads();
               renderAll();
+              if (countEl) countEl.innerText = data.length;
               if (msg) {
                 msg.className = 'text-xs p-2.5 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 block';
                 msg.innerText = '✅ লোকাল সার্ভার থেকে ' + data.length + ' টি রেকর্ড সফলভাবে সিঙ্ক হয়েছে!';
               }
+              if (!isSilent) showToast('✅ লোকাল সার্ভার থেকে ' + data.length + ' টি রেকর্ড সফলভাবে সিঙ্ক হয়েছে!');
               return;
             }
           }
         } catch (localErr) {}
 
+        if (!isSilent) showToast('❌ সিঙ্ক ব্যর্থ হয়েছে: ' + err.message, true);
         if (msg) {
           msg.className = 'text-xs p-2.5 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 block';
           msg.innerText = '❌ সিঙ্ক ব্যর্থ হয়েছে: ' + err.message;
         }
+      } finally {
+        if (syncIcon) syncIcon.classList.remove('fa-spin');
+        if (countEl) countEl.innerText = leads.length;
       }
     }
 
@@ -1134,7 +1174,14 @@
       window.open(calUrl, '_blank');
     }
 
-    window.addEventListener('DOMContentLoaded', () => { initAuth(); loadSavedPatToken(); renderAll(); loadReportHistory(); });
+    window.addEventListener('DOMContentLoaded', () => { 
+      initAuth(); 
+      loadSavedPatToken(); 
+      renderAll(); 
+      loadReportHistory(); 
+      // Auto-sync latest data from GitHub / db.json
+      syncWithGitHub(true);
+    });
 
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
@@ -1144,6 +1191,8 @@
     }
 
     function renderAll() {
+      const syncCnt = document.getElementById('headerSyncCount');
+      if (syncCnt) syncCnt.innerText = leads.length;
       renderLeads();
       renderFollowUps();
       renderAdmitted();
@@ -1664,6 +1713,13 @@
         </button>
       </form>
     </div>
+  </div>
+
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white border border-slate-700 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold max-w-sm">
+    <span id="toastIcon" class="text-base text-emerald-400">✅</span>
+    <span id="toastMessage">অ্যাকশন সম্পন্ন হয়েছে</span>
   </div>
 
 </body>
