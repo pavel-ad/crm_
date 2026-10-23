@@ -88,6 +88,24 @@
         </button>
       </nav>
     </div>
+
+    <!-- SIDEBAR USER CARD & LOGOUT -->
+    <div class="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60">
+      <div class="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 shadow-sm">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <div id="sideUserAvatar" class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 text-white font-black text-xs flex items-center justify-center shrink-0 shadow">
+            AD
+          </div>
+          <div class="truncate text-left">
+            <div id="sideUserName" class="text-xs font-bold text-slate-900 dark:text-white truncate">System Admin</div>
+            <div id="sideUserRole" class="text-[10px] text-brand-600 dark:text-brand-400 font-semibold truncate">👑 Admin</div>
+          </div>
+        </div>
+        <button onclick="logoutUser()" class="p-2 rounded-lg text-rose-500 hover:text-white hover:bg-rose-600 transition shrink-0 cursor-pointer" title="লগআউট করুন (Logout)">
+          <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+        </button>
+      </div>
+    </div>
   </aside>
 
   <!-- MAIN AREA -->
@@ -103,6 +121,12 @@
       <div class="flex items-center space-x-2.5">
         <button onclick="toggleDarkMode()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 transition-all" title="Dark / Light Mode"><i class="fa-solid fa-moon dark:hidden"></i><i class="fa-solid fa-sun hidden dark:inline text-amber-400"></i></button>
         <button class="px-3.5 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all flex items-center gap-1.5" onclick="openAddLeadModal()"><i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">নতুন লিড</span></button>
+
+        <!-- Logout Button in Header -->
+        <button onclick="logoutUser()" class="px-2.5 py-1.5 rounded-xl bg-rose-500/10 hover:bg-rose-600 text-rose-600 hover:text-white dark:text-rose-400 text-xs font-bold border border-rose-500/20 transition flex items-center gap-1.5 cursor-pointer shadow-sm" title="লগআউট করুন (Logout)">
+          <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+          <span class="hidden sm:inline">Logout</span>
+        </button>
 
         <!-- User Profile & Switcher Dropdown -->
         <div class="relative" id="userMenuContainer">
@@ -602,18 +626,19 @@
         console.error('Error loading user session', e);
       }
 
+      const loginModal = document.getElementById('loginModal');
       if (!currentUser) {
-        // Default to admin or show login
-        currentUser = CRM_ACCOUNTS[0]; // Admin by default
-        localStorage.setItem('edupro_current_user', JSON.stringify(currentUser));
+        // Show Login Screen
+        if (loginModal) loginModal.classList.remove('hidden');
+        updateUserUI();
+      } else {
+        // User is logged in
+        if (loginModal) loginModal.classList.add('hidden');
+        updateUserUI();
       }
-
-      updateUserUI();
     }
 
     function updateUserUI() {
-      if (!currentUser) return;
-
       const avatarEl = document.getElementById('userAvatar');
       const nameTop = document.getElementById('userNameTop');
       const roleTop = document.getElementById('userRoleBadgeTop');
@@ -621,8 +646,24 @@
       const dropEmail = document.getElementById('dropdownUserEmail');
       const dropRole = document.getElementById('dropdownUserRole');
 
+      const sideAvatar = document.getElementById('sideUserAvatar');
+      const sideName = document.getElementById('sideUserName');
+      const sideRole = document.getElementById('sideUserRole');
+
+      if (!currentUser) {
+        if (avatarEl) avatarEl.innerText = "?";
+        if (nameTop) nameTop.innerText = "লগইন করুন";
+        if (roleTop) roleTop.innerText = "Not Logged In";
+        if (sideAvatar) sideAvatar.innerText = "?";
+        if (sideName) sideName.innerText = "লগইন করুন";
+        if (sideRole) sideRole.innerText = "লগআউট অবস্থা";
+        return;
+      }
+
+      const avatarText = currentUser.avatar || currentUser.name.slice(0, 2).toUpperCase();
+
       if (avatarEl) {
-        avatarEl.innerText = currentUser.avatar || currentUser.name.slice(0, 2).toUpperCase();
+        avatarEl.innerText = avatarText;
         avatarEl.className = 'w-7 h-7 rounded-lg text-white font-black text-xs flex items-center justify-center shadow bg-gradient-to-tr ' + (currentUser.color || 'from-brand-600 to-indigo-500');
       }
       if (nameTop) nameTop.innerText = currentUser.name;
@@ -630,6 +671,13 @@
       if (dropName) dropName.innerText = currentUser.name;
       if (dropEmail) dropEmail.innerText = currentUser.email;
       if (dropRole) dropRole.innerText = currentUser.badge + ' (' + currentUser.title + ')';
+
+      if (sideAvatar) {
+        sideAvatar.innerText = avatarText;
+        sideAvatar.className = 'w-8 h-8 rounded-lg text-white font-black text-xs flex items-center justify-center shrink-0 shadow bg-gradient-to-tr ' + (currentUser.color || 'from-brand-600 to-indigo-500');
+      }
+      if (sideName) sideName.innerText = currentUser.name;
+      if (sideRole) sideRole.innerText = currentUser.badge;
 
       // Auto-set KAM when opening add lead modal for employees
       const kamSelect = document.getElementById('nl-kam');
@@ -668,7 +716,15 @@
       currentUser = null;
       const menu = document.getElementById('userDropdownMenu');
       if (menu) menu.classList.add('hidden');
-      document.getElementById('loginModal').classList.remove('hidden');
+      const loginModal = document.getElementById('loginModal');
+      if (loginModal) {
+        loginModal.classList.remove('hidden');
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        const errEl = document.getElementById('loginErrorMsg');
+        if (errEl) errEl.classList.add('hidden');
+      }
+      updateUserUI();
     }
 
     function quickFillAndLogin(email, pass) {
@@ -1160,7 +1216,7 @@
   </script>
 
   <!-- ==================== AUTH / LOGIN MODAL ==================== -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+  <div id="loginModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 animate-card">
       <div class="text-center space-y-2">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-xl shadow-brand-500/40">
