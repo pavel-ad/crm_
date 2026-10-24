@@ -77,6 +77,11 @@
         <button onclick="switchTab('callcenter')" id="nav-callcenter" class="nav-btn w-full flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <i class="fa-solid fa-database w-5"></i> <span>মাস্টার ডেটাবেস</span>
         </button>
+        <!-- Dedicated Lean Database for Pavel -->
+        <button onclick="switchTab('leandb')" id="nav-leandb" class="nav-btn w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <div class="flex items-center space-x-3"><i class="fa-solid fa-award w-5 text-indigo-500"></i> <span>লিন ডেটাবেস (Lean)</span></div>
+          <span class="bg-indigo-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold" id="sideBadgeLean">0</span>
+        </button>
         <button onclick="switchTab('followup')" id="nav-followup" class="nav-btn w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <div class="flex items-center space-x-3"><i class="fa-regular fa-clock w-5 text-amber-500"></i> <span>ফলো-আপ</span></div>
           <span class="bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full" id="sideBadgeFollowUp">0</span>
@@ -456,6 +461,61 @@
         </div>
       </section>
 
+      <!-- 2.5 DEDICATED LEAN DATABASE (FOR PAVEL & ADMIN) -->
+      <section id="view-leandb" class="hidden space-y-6 animate-card">
+        <!-- Lean Banner -->
+        <div class="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-indigo-900/40 shadow-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-bold mb-2">
+              <i class="fa-solid fa-award text-amber-400"></i>
+              <span>পাবেলের লিন ডেটাবেস হাব (Lean Hub)</span>
+            </div>
+            <h2 class="text-xl md:text-2xl font-black text-white flex items-center gap-2.5">
+              <span>লিন ডেটাবেস (Lean Database)</span>
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">লিন সিক্স সিগমা (Green Belt ও Black Belt) কোর্সের এক্সক্লুসিভ লিড পাইপলাইন ও ফলো-আপ।</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 text-xs">
+            <div class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 font-bold">
+              <span>মোট লিন লিড:</span> <span id="leanDbTotalCount" class="font-mono text-white font-black">0</span>
+            </div>
+            <button onclick="openAddLeanLeadModal()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs transition shadow-lg shadow-indigo-500/30 flex items-center gap-1.5 cursor-pointer">
+              <i class="fa-solid fa-plus"></i>
+              <span>নতুন লিন লিড</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter pills -->
+        <div class="flex space-x-2 overflow-x-auto no-scrollbar pb-1">
+          <button onclick="filterLeanTable('all')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 bg-indigo-600 text-white cursor-pointer">All Lean Leads</button>
+          <button onclick="filterLeanTable('Cold')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-blue-500 cursor-pointer">Cold</button>
+          <button onclick="filterLeanTable('Warm')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-amber-500 cursor-pointer">Warm</button>
+          <button onclick="filterLeanTable('Hot')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-purple-500 cursor-pointer">Hot</button>
+          <button onclick="filterLeanTable('Enrolled')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-emerald-500 cursor-pointer">Enrolled</button>
+        </div>
+
+        <!-- Lean Table -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="bg-slate-50 dark:bg-slate-800/60 text-[10px] md:text-xs uppercase text-slate-400 font-bold border-b border-slate-200 dark:border-slate-800">
+                <tr>
+                  <th class="p-3 md:p-4">গ্রাহক ও ফোন</th>
+                  <th class="p-3 md:p-4">কোর্স</th>
+                  <th class="p-3 md:p-4">সোর্স ও KAM</th>
+                  <th class="p-3 md:p-4">স্ট্যাটাস</th>
+                  <th class="p-3 md:p-4 text-center">শিট মোড</th>
+                  <th class="p-3 md:p-4 text-right">অ্যাকশন</th>
+                </tr>
+              </thead>
+              <tbody id="leanTableBody" class="divide-y divide-slate-100 dark:divide-slate-800"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <!-- 3. FOLLOW-UP & REMINDERS (NOW FULLY FUNCTIONAL WITH REAL DATES) -->
       <section id="view-followup" class="hidden space-y-4 md:space-y-6 animate-card">
         <div class="p-4 md:p-6 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -702,7 +762,13 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="col-span-2 md:col-span-1"><label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">নাম</label><input type="text" id="nl-name" required class="w-full mt-1 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 outline-none text-sm"></div>
           <div class="col-span-2 md:col-span-1"><label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">ফোন নম্বর</label><input type="text" id="nl-phone" required class="w-full mt-1 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 outline-none text-sm"></div>
-          <div class="col-span-2"><label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">কোর্স</label><select id="nl-course" class="w-full mt-1 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 outline-none text-sm"><option value="Lean Six Sigma Black Belt">Lean Six Sigma Black Belt</option><option value="PMP Exam Prep">PMP Exam Prep</option><option value="Supply Chain Analytics">Supply Chain Analytics</option></select></div>
+          <div class="col-span-2"><label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">কোর্স</label><select id="nl-course" class="w-full mt-1 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 outline-none text-sm">
+  <option value="Lean Six Sigma Black Belt">Lean Six Sigma Black Belt (পাবেল)</option>
+  <option value="Lean Six Sigma Green Belt">Lean Six Sigma Green Belt (পাবেল)</option>
+  <option value="PMP Exam Prep">PMP Exam Prep (নাসিম)</option>
+  <option value="Primavera P6 Professional">Primavera P6 Professional (নাসিম)</option>
+  <option value="Supply Chain Analytics">Supply Chain Analytics</option>
+</select></div>
           <div class="col-span-2 md:col-span-1"><label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">লিড সোর্স</label><select id="nl-source" class="w-full mt-1 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 outline-none text-sm"><option value="Facebook Ads">Facebook Ads</option><option value="Direct Call">Direct Call</option></select></div>
           <div class="col-span-2 md:col-span-1"><label class="text-[10px] md:text-xs font-bold text-slate-400 uppercase">অ্যাসাইন (KAM)</label><select id="nl-kam" class="w-full mt-1 bg-slate-50 dark:bg-slate-800 p-2.5 rounded-lg border border-slate-200 outline-none text-sm"><option value="পাবেল">পাবেল</option><option value="নাসিম">নাসিম</option><option value="ইমরান">ইমরান</option><option value="তানভীর">তানভীর</option></select></div>
         </div>
@@ -800,10 +866,11 @@
 
     const DEFAULT_INITIAL_LEADS = [
       { id: "PHY-1", name: "Mohammad Saifullah", phone: "01720000001", company: "Pretty Group", designation: "Manager", course: "Lean Six Sigma Black Belt", source: "Facebook Ads", totalFee: 18000, paid: 18000, due: 0, status: "Enrolled", kam: "পাবেল", nextCall: "", clientComment: "Course valo legeche", ourComment: "Full paid", sheetMode: "Physical", nextDueDate: "" },
-      { id: "PHY-2", name: "M Ahsan Habib Eiasin", phone: "01301493143", company: "dzigncape", designation: "QC", course: "Lean Six Sigma Black Belt", source: "Google Search", totalFee: 18000, paid: 13000, due: 5000, status: "Enrolled", kam: "পাবেল", nextCall: getOffsetDateStr(1), clientComment: "Will pay next week", ourComment: "Need to follow up for due", sheetMode: "Online", nextDueDate: "2026-10-25" },
-      { id: "PHY-3", name: "Shaid Hasan", phone: "01738025206", company: "SQUARE Group", designation: "SCM", course: "PMP Exam Prep", source: "Direct Call", totalFee: 20000, paid: 0, due: 20000, status: "Hot", kam: "ইমরান", nextCall: getOffsetDateStr(0), clientComment: "Call at 2 PM", ourComment: "Highly interested", sheetMode: "None", nextDueDate: "" },
-      { id: "PHY-4", name: "Miraj Al Alim", phone: "01680000000", company: "ABG Interlinks", designation: "Manager", course: "Lean Six Sigma Black Belt", source: "Website Form", totalFee: 18000, paid: 0, due: 18000, status: "Cold", kam: "নাসিম", nextCall: getOffsetDateStr(5), clientComment: "Busy now", ourComment: "Call next week", sheetMode: "None", nextDueDate: "" },
-      { id: "PHY-5", name: "Tahsin JiSan", phone: "01840000003", company: "Jisan Enterprise", designation: "Procurement", course: "Supply Chain Analytics", source: "Referral", totalFee: 15000, paid: 10000, due: 5000, status: "Enrolled", kam: "রাকিব", nextCall: getOffsetDateStr(2), clientComment: "Send details", ourComment: "Wants outline", sheetMode: "None", nextDueDate: "" }
+      { id: "PHY-2", name: "M Ahsan Habib Eiasin", phone: "01301493143", company: "dzigncape", designation: "QC", course: "Lean Six Sigma Green Belt", source: "Google Search", totalFee: 18000, paid: 13000, due: 5000, status: "Enrolled", kam: "পাবেল", nextCall: getOffsetDateStr(1), clientComment: "Will pay next week", ourComment: "Need to follow up for due", sheetMode: "Online", nextDueDate: "2026-10-25" },
+      { id: "PHY-3", name: "Shaid Hasan", phone: "01738025206", company: "SQUARE Group", designation: "SCM", course: "PMP Exam Prep", source: "Direct Call", totalFee: 20000, paid: 0, due: 20000, status: "Hot", kam: "নাসিম", nextCall: getOffsetDateStr(0), clientComment: "Interested in PMP batch", ourComment: "Highly interested", sheetMode: "None", nextDueDate: "" },
+      { id: "PHY-4", name: "Miraj Al Alim", phone: "01680000000", company: "ABG Interlinks", designation: "Project Manager", course: "Primavera P6 Professional", source: "Website Form", totalFee: 16000, paid: 8000, due: 8000, status: "Warm", kam: "নাসিম", nextCall: getOffsetDateStr(3), clientComment: "P6 planning module details sent", ourComment: "Follow up Wednesday", sheetMode: "Online", nextDueDate: "2026-10-28" },
+      { id: "PHY-5", name: "Tanvir Ahmed", phone: "01819999001", company: "Beximco Pharma", designation: "QA Executive", course: "Lean Six Sigma Green Belt", source: "Facebook Ads", totalFee: 18000, paid: 0, due: 18000, status: "Hot", kam: "পাবেল", nextCall: getOffsetDateStr(0), clientComment: "Wants outline and class schedule", ourComment: "Urgent call today", sheetMode: "Physical", nextDueDate: "" },
+      { id: "PHY-6", name: "Tahsin JiSan", phone: "01840000003", company: "Jisan Enterprise", designation: "Procurement", course: "Supply Chain Analytics", source: "Referral", totalFee: 15000, paid: 10000, due: 5000, status: "Enrolled", kam: "ইমরান", nextCall: getOffsetDateStr(2), clientComment: "Send details", ourComment: "Wants outline", sheetMode: "None", nextDueDate: "" }
     ];
 
     let leads = (function() {
@@ -853,8 +920,9 @@
         name: "System Admin",
         role: "Admin",
         kam: "ALL",
+        allowedCourses: ["ALL"],
         badge: "👑 Admin",
-        title: "Super Administrator",
+        title: "Super Administrator (Master DB)",
         avatar: "AD",
         color: "from-red-600 to-rose-500"
       },
@@ -864,8 +932,9 @@
         name: "Managing Boss",
         role: "Boss",
         kam: "ALL",
+        allowedCourses: ["ALL"],
         badge: "🏢 Boss / Director",
-        title: "Executive Director",
+        title: "Executive Director (Master DB)",
         avatar: "BS",
         color: "from-amber-600 to-yellow-500"
       },
@@ -875,8 +944,9 @@
         name: "পাবেল (Pavel)",
         role: "Employee",
         kam: "পাবেল",
-        badge: "👤 Employee (পাবেল)",
-        title: "Account Manager (KAM)",
+        allowedCourses: ["Lean"],
+        badge: "👤 Employee (পাবেল - Lean)",
+        title: "Lean Database Manager",
         avatar: "PB",
         color: "from-indigo-600 to-blue-500"
       },
@@ -886,8 +956,9 @@
         name: "নাসিম (Nasim)",
         role: "Employee",
         kam: "নাসিম",
-        badge: "👤 Employee (নাসিম)",
-        title: "Account Manager (KAM)",
+        allowedCourses: ["PMP", "P6", "Primavera"],
+        badge: "👤 Employee (নাসিম - PMP/P6)",
+        title: "PMP & P6 Database Manager",
         avatar: "NS",
         color: "from-emerald-600 to-teal-500"
       }
@@ -1362,6 +1433,7 @@
       const syncCnt = document.getElementById('headerSyncCount');
       if (syncCnt) syncCnt.innerText = leads.length;
       renderLeads();
+      renderLeanDB();
       renderFollowUps();
       renderAdmitted();
       renderKanban();
@@ -1373,7 +1445,7 @@
     }
 
     function switchTab(tab) {
-      ['dashboard', 'callcenter', 'followup', 'sheetmanager', 'admitted', 'kanban', 'kpi', 'reports', 'analytics', 'cloudsync'].forEach(t => {
+      ['dashboard', 'callcenter', 'leandb', 'followup', 'sheetmanager', 'admitted', 'kanban', 'kpi', 'reports', 'analytics', 'cloudsync'].forEach(t => {
         const el = document.getElementById(`view-${t}`);
         if(el) el.classList.add('hidden');
         const nav = document.getElementById(`nav-${t}`);
@@ -1490,16 +1562,188 @@
       }
     }
 
-    function renderLeads(filteredLeads = leads) {
-      document.getElementById('leadsTableBody').innerHTML = filteredLeads.map(l => `
-        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800">
-          <td class="p-3 md:p-4"><div><strong class="text-slate-900 dark:text-white">${l.name}</strong></div><div class="text-[10px] md:text-xs text-slate-400 whitespace-nowrap"><i class="fa-solid fa-phone text-[8px] md:text-[10px]"></i> ${l.phone}</div></td>
+    
+    // ==================== ROLE BASED ACCESS CONTROL (RBAC) ====================
+    function isLeadAllowedForUser(lead, user = currentUser) {
+      if (!user) return true;
+      if (user.role === 'Admin' || user.role === 'Boss') return true;
+
+      const courseName = (lead.course || '').toLowerCase();
+      const leadKam = (lead.kam || '').toLowerCase();
+      const userKam = (user.kam || '').toLowerCase();
+
+      // Pavel: Only Lean courses and/or leads assigned to Pavel
+      if (user.email === 'pavel@skill.com' || userKam === 'পাবেল') {
+        return courseName.includes('lean') || leadKam === 'পাবেল';
+      }
+
+      // Nasim: Only PMP and P6 / Primavera courses and/or leads assigned to Nasim
+      if (user.email === 'nasim@skill.com' || userKam === 'নাসিম') {
+        return courseName.includes('pmp') || courseName.includes('p6') || courseName.includes('primavera') || leadKam === 'নাসিম';
+      }
+
+      // Default fallback
+      return leadKam === userKam;
+    }
+
+    function getUserAllowedLeads(user = currentUser) {
+      if (!user || user.role === 'Admin' || user.role === 'Boss') {
+        return leads;
+      }
+      return leads.filter(l => isLeadAllowedForUser(l, user));
+    }
+
+    function getLeanLeads() {
+      return leads.filter(l => (l.course || '').toLowerCase().includes('lean'));
+    }
+
+    // Admin 1-Click Reassign KAM
+    function reassignLeadKam(leadId, newKam) {
+      const lead = leads.find(l => l.id === leadId);
+      if (!lead) return;
+      const oldKam = lead.kam || 'Unassigned';
+      lead.kam = newKam;
+      saveLeads();
+      renderAll();
+      showToast('✅ [' + lead.name + '] কে ' + newKam + '-এর কাছে সফলভাবে অ্যাসাইন করা হয়েছে!');
+    }
+
+    function openAddLeanLeadModal() {
+      openAddLeadModal();
+      const cSelect = document.getElementById('nl-course');
+      if (cSelect) cSelect.value = 'Lean Six Sigma Black Belt';
+      const kSelect = document.getElementById('nl-kam');
+      if (kSelect) kSelect.value = 'পাবেল';
+    }
+
+    function renderLeanDB(filteredLeanLeads = null) {
+      const tbody = document.getElementById('leanTableBody');
+      const sideCnt = document.getElementById('sideBadgeLean');
+      const totalCnt = document.getElementById('leanDbTotalCount');
+
+      const allLean = getLeanLeads();
+      if (sideCnt) sideCnt.innerText = allLean.length;
+      if (totalCnt) totalCnt.innerText = allLean.length;
+
+      if (!tbody) return;
+
+      const displayLeads = filteredLeanLeads || allLean;
+
+      if (displayLeads.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="p-8 text-center text-slate-400">
+              <i class="fa-solid fa-award text-3xl text-indigo-500/40 mb-2 block"></i>
+              কোনো লিন (Lean) লিড পাওয়া যায়নি!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = displayLeads.map(l => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 transition-colors">
           <td class="p-3 md:p-4">
-            <div class="text-[10px] md:text-xs font-medium text-brand-600 dark:text-brand-400">${l.course}</div>
+            <div><strong class="text-slate-900 dark:text-white font-bold">${l.name}</strong></div>
+            <div class="text-[10px] md:text-xs text-slate-400 font-mono whitespace-nowrap mt-0.5">
+              <i class="fa-solid fa-phone text-[8px] md:text-[10px]"></i> ${l.phone}
+            </div>
+          </td>
+          <td class="p-3 md:p-4">
+            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+              ${l.course}
+            </span>
+            <div class="text-[10px] text-slate-400 mt-1 truncate max-w-[140px]">${l.company || 'Individual'}</div>
           </td>
           <td class="p-3 md:p-4 whitespace-nowrap">
-            <span class="px-2 py-1 rounded text-[10px] bg-slate-100 dark:bg-slate-800">${l.source || 'N/A'}</span>
-            <div class="text-[8px] md:text-[10px] text-slate-400 mt-1.5"><i class="fa-solid fa-user-tie"></i> ${l.kam}</div>
+            <span class="px-2 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500">${l.source || 'N/A'}</span>
+            ${(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Boss')) ? `
+              <div class="mt-1">
+                <select onchange="reassignLeadKam('${l.id}', this.value)" class="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-brand-600 dark:text-brand-400 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 outline-none cursor-pointer">
+                  <option value="পাবেল" ${l.kam === 'পাবেল' ? 'selected' : ''}>👤 পাবেল (Lean)</option>
+                  <option value="নাসিম" ${l.kam === 'নাসিম' ? 'selected' : ''}>👤 নাসিম (PMP/P6)</option>
+                  <option value="ইমরান" ${l.kam === 'ইমরান' ? 'selected' : ''}>👤 ইমরান</option>
+                  <option value="তানভীর" ${l.kam === 'তানভীর' ? 'selected' : ''}>👤 তানভীর</option>
+                </select>
+              </div>
+            ` : `
+              <div class="text-[9px] text-indigo-400 font-bold mt-1"><i class="fa-solid fa-user-tie"></i> ${l.kam}</div>
+            `}
+          </td>
+          <td class="p-3 md:p-4 whitespace-nowrap">
+            <select onchange="updateLeadStatus('${l.id}', this.value)" class="px-2 py-1 rounded text-[10px] md:text-xs font-bold bg-slate-100 dark:bg-slate-800 outline-none cursor-pointer ${l.status==='Hot'?'text-purple-500':(l.status==='Enrolled'?'text-emerald-500':(l.status==='Warm'?'text-amber-500':'text-blue-500'))}">
+              <option value="Cold" ${l.status==='Cold'?'selected':''}>Cold</option>
+              <option value="Warm" ${l.status==='Warm'?'selected':''}>Warm</option>
+              <option value="Hot" ${l.status==='Hot'?'selected':''}>Hot</option>
+              <option value="Enrolled" ${l.status==='Enrolled'?'selected':''}>Enrolled</option>
+              <option value="Closed" ${l.status==='Closed'?'selected':''}>Closed</option>
+            </select>
+          </td>
+          <td class="p-3 md:p-4 text-center whitespace-nowrap">
+            <span class="px-2 py-1 rounded-md text-[10px] font-bold ${l.sheetMode==='Physical'?'bg-emerald-500/10 text-emerald-500':(l.sheetMode==='Online'?'bg-blue-500/10 text-blue-500':'bg-slate-500/10 text-slate-400')}">
+              ${l.sheetMode || 'None'}
+            </span>
+          </td>
+          <td class="p-3 md:p-4 text-right whitespace-nowrap">
+            <div class="flex items-center justify-end space-x-1.5">
+              <button onclick="sendWADirect('${l.phone}')" class="w-7 h-7 rounded-lg bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white flex items-center justify-center transition-colors" title="WhatsApp"><i class="fa-brands fa-whatsapp text-xs"></i></button>
+              <button onclick="openStudentProfile('${l.id}')" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-brand-500 text-slate-500 hover:text-white flex items-center justify-center transition-colors" title="Profile"><i class="fa-solid fa-eye text-xs"></i></button>
+              <button onclick="openFollowUpModal('${l.id}')" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-500 text-slate-500 hover:text-white flex items-center justify-center transition-colors" title="Reschedule"><i class="fa-regular fa-clock text-xs"></i></button>
+              <button onclick="openCommentModal('${l.id}')" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-amber-500 text-slate-500 hover:text-white flex items-center justify-center transition-colors" title="Note"><i class="fa-solid fa-pen-to-square text-xs"></i></button>
+              <button onclick="deleteLead('${l.id}')" class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-rose-500 text-slate-400 hover:text-white flex items-center justify-center transition-colors" title="Delete"><i class="fa-solid fa-trash-can text-xs"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterLeanTable(status) {
+      const allLean = getLeanLeads();
+      if (status === 'all') renderLeanDB(allLean);
+      else renderLeanDB(allLean.filter(l => l.status === status));
+    }
+
+    function renderLeads(filteredLeads = null) {
+      const allowed = filteredLeads || getUserAllowedLeads();
+      const tbody = document.getElementById('leadsTableBody');
+      if (!tbody) return;
+
+      if (allowed.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="p-8 text-center text-slate-400">
+              <i class="fa-solid fa-folder-open text-2xl mb-2 block text-brand-400/50"></i>
+              আপনার এই ডেটাবেসে কোনো লিড নেই!
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = allowed.map(l => `
+        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 transition-colors">
+          <td class="p-3 md:p-4">
+            <div><strong class="text-slate-900 dark:text-white font-bold">${l.name}</strong></div>
+            <div class="text-[10px] md:text-xs text-slate-400 font-mono whitespace-nowrap mt-0.5"><i class="fa-solid fa-phone text-[8px] md:text-[10px]"></i> ${l.phone}</div>
+          </td>
+          <td class="p-3 md:p-4">
+            <div class="text-[10px] md:text-xs font-bold text-brand-600 dark:text-brand-400">${l.course}</div>
+            <div class="text-[10px] text-slate-400 mt-0.5 truncate max-w-[140px]">${l.company || 'Individual'}</div>
+          </td>
+          <td class="p-3 md:p-4 whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500">${l.source || 'N/A'}</span>
+            ${(currentUser && (currentUser.role === 'Admin' || currentUser.role === 'Boss')) ? `
+              <div class="mt-1">
+                <select onchange="reassignLeadKam('${l.id}', this.value)" class="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-brand-600 dark:text-brand-400 border border-slate-200 dark:border-slate-700 rounded px-1.5 py-0.5 outline-none cursor-pointer" title="লিডটি অন্য কর্মীকে অ্যাসাইন করুন">
+                  <option value="পাবেল" ${l.kam === 'পাবেল' ? 'selected' : ''}>👤 পাবেল (Lean)</option>
+                  <option value="নাসিম" ${l.kam === 'নাসিম' ? 'selected' : ''}>👤 নাসিম (PMP/P6)</option>
+                  <option value="ইমরান" ${l.kam === 'ইমরান' ? 'selected' : ''}>👤 ইমরান</option>
+                  <option value="তানভীর" ${l.kam === 'তানভীর' ? 'selected' : ''}>👤 তানভীর</option>
+                </select>
+              </div>
+            ` : `
+              <div class="text-[9px] font-bold text-slate-400 mt-1"><i class="fa-solid fa-user-tie text-brand-400"></i> ${l.kam}</div>
+            `}
           </td>
           <td class="p-3 md:p-4 whitespace-nowrap">
             <select onchange="updateLeadStatus('${l.id}', this.value)" class="px-2 py-1 rounded text-[10px] md:text-xs font-bold bg-slate-100 dark:bg-slate-800 outline-none cursor-pointer mb-2 block">
@@ -1523,16 +1767,17 @@
     }
 
     function filterTable(status) {
+      const allowed = getUserAllowedLeads();
       if (status === 'all') {
-        renderLeads(leads);
+        renderLeads(allowed);
       } else if (status === 'mine') {
         if (currentUser && currentUser.kam && currentUser.kam !== 'ALL') {
-          renderLeads(leads.filter(l => (l.kam || '').toLowerCase() === currentUser.kam.toLowerCase()));
+          renderLeads(allowed.filter(l => (l.kam || '').toLowerCase() === currentUser.kam.toLowerCase()));
         } else {
-          renderLeads(leads);
+          renderLeads(allowed);
         }
       } else {
-        renderLeads(leads.filter(l => l.status === status));
+        renderLeads(allowed.filter(l => l.status === status));
       }
     }
 
