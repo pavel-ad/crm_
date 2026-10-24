@@ -439,7 +439,7 @@
           <button onclick="filterTable('Semi-Hot')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-amber-500">Semi-Hot</button>
           <button onclick="filterTable('Hot')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-rose-500">Hot</button>
           <button onclick="filterTable('Enrolled')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-emerald-500">Enrolled</button>
-          <button onclick="filterTable('No')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">No / Reject</button>
+          <button onclick="filterTable('Rejected')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500 hover:text-white text-rose-500 dark:text-rose-400 transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-ban text-[10px]"></i> <span>Rejected</span></button>
         </div>
 
         <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
@@ -494,6 +494,7 @@
           <button onclick="filterLeanTable('Warm')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-amber-500 cursor-pointer">Warm</button>
           <button onclick="filterLeanTable('Hot')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-purple-500 cursor-pointer">Hot</button>
           <button onclick="filterLeanTable('Enrolled')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-emerald-500 cursor-pointer">Enrolled</button>
+          <button onclick="filterLeanTable('Rejected')" class="shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold border border-rose-500/40 bg-rose-500/10 hover:bg-rose-500 hover:text-white text-rose-500 dark:text-rose-400 transition cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-ban text-[10px]"></i> <span>Rejected</span></button>
         </div>
 
         <!-- Lean Table -->
@@ -785,7 +786,13 @@
         <div class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200"><h4 class="font-bold text-slate-800 mb-2">👤 Personal & Professional Info</h4><div class="grid grid-cols-2 gap-2"><div><span class="text-slate-500">Name:</span> <strong id="sp-name"></strong></div><div><span class="text-slate-500">Phone:</span> <strong id="sp-phone"></strong></div></div></div>
         <div class="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100"><h4 class="font-bold text-blue-800 mb-2">🎓 Course & Enrollment Details</h4><div class="grid grid-cols-2 gap-2"><div class="col-span-2"><span class="text-slate-500">Course:</span> <strong id="sp-course" class="text-blue-600"></strong></div><div><span class="text-slate-500">Total Fee:</span> <strong>৳<span id="sp-fee"></span></strong></div><div><span class="text-slate-500">Paid Amount:</span> <strong class="text-emerald-600">৳<span id="sp-paid"></span></strong></div><div><span class="text-slate-500">Remaining Due:</span> <strong class="text-rose-500">৳<span id="sp-due"></span></strong></div></div></div>
       </div>
-      <div class="mt-6 flex justify-end"><button onclick="document.getElementById('studentProfileModal').classList.add('hidden')" class="px-6 py-2 bg-slate-200 text-slate-800 rounded-lg font-bold">Close Profile</button></div>
+      <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-2">
+          <button id="sp-reject-btn" type="button" class="px-3.5 py-2 bg-rose-500/10 hover:bg-rose-600 text-rose-500 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"><i class="fa-solid fa-ban text-xs"></i> <span>Reject Lead</span></button>
+          <button id="sp-delete-btn" type="button" class="px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-rose-600 text-slate-400 hover:text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer" title="Delete Lead"><i class="fa-solid fa-trash-can text-xs"></i> <span>Delete</span></button>
+        </div>
+        <button onclick="document.getElementById('studentProfileModal').classList.add('hidden')" class="px-5 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl font-bold text-xs transition">Close Profile</button>
+      </div>
     </div>
   </div>
 
@@ -1496,7 +1503,7 @@
       document.getElementById('sp-duedate').innerText = lead.nextDueDate || 'N/A';
       document.getElementById('sp-clientcom').innerText = lead.clientComment || 'None';
       document.getElementById('sp-ourcom').innerText = lead.ourComment || 'None';
-      const delBtn = document.getElementById('sp-delete-btn'); if(delBtn) delBtn.onclick = () => deleteLead(id); document.getElementById('studentProfileModal').classList.remove('hidden');
+      const delBtn = document.getElementById('sp-delete-btn'); if(delBtn) delBtn.onclick = () => deleteLead(id); const rejBtn = document.getElementById('sp-reject-btn'); if(rejBtn) rejBtn.onclick = () => { updateLeadStatus(id, 'Rejected'); document.getElementById('studentProfileModal').classList.add('hidden'); }; document.getElementById('studentProfileModal').classList.remove('hidden');
     }
 
     function handleSearch() {
@@ -1529,7 +1536,19 @@
       link.click(); document.body.removeChild(link);
     }
 
-    function updateLeadStatus(id, newStatus) { const lead = leads.find(l => l.id === id); if (lead) { lead.status = newStatus; saveLeads(); renderAll(); } }
+    function updateLeadStatus(id, newStatus) { 
+      const lead = leads.find(l => l.id === id); 
+      if (lead) { 
+        lead.status = newStatus; 
+        saveLeads(); 
+        renderAll(); 
+        if (newStatus === 'Rejected') {
+          showToast('❌ [' + lead.name + '] স্ট্যাটাস রিজেক্টেড (Rejected) করা হয়েছে!');
+        } else {
+          showToast('✅ [' + lead.name + '] স্ট্যাটাস ' + newStatus + ' করা হয়েছে!');
+        }
+      } 
+    }
 
     function openCommentModal(id) {
       const lead = leads.find(l => l.id === id);
@@ -1671,12 +1690,12 @@
             `}
           </td>
           <td class="p-3 md:p-4 whitespace-nowrap">
-            <select onchange="updateLeadStatus('${l.id}', this.value)" class="px-2 py-1 rounded text-[10px] md:text-xs font-bold bg-slate-100 dark:bg-slate-800 outline-none cursor-pointer ${l.status==='Hot'?'text-purple-500':(l.status==='Enrolled'?'text-emerald-500':(l.status==='Warm'?'text-amber-500':'text-blue-500'))}">
+            <select onchange="updateLeadStatus('${l.id}', this.value)" class="px-2 py-1 rounded text-[10px] md:text-xs font-bold bg-slate-100 dark:bg-slate-800 outline-none cursor-pointer ${l.status==='Hot'?'text-purple-500':(l.status==='Enrolled'?'text-emerald-500':(l.status==='Warm'?'text-amber-500':(l.status==='Rejected'||l.status==='Closed'?'text-rose-500':'text-blue-500')))}">
               <option value="Cold" ${l.status==='Cold'?'selected':''}>Cold</option>
               <option value="Warm" ${l.status==='Warm'?'selected':''}>Warm</option>
               <option value="Hot" ${l.status==='Hot'?'selected':''}>Hot</option>
               <option value="Enrolled" ${l.status==='Enrolled'?'selected':''}>Enrolled</option>
-              <option value="Closed" ${l.status==='Closed'?'selected':''}>Closed</option>
+              <option value="Rejected" ${l.status==='Rejected'||l.status==='Closed'?'selected':''}>❌ Rejected</option>
             </select>
           </td>
           <td class="p-3 md:p-4 text-center whitespace-nowrap">
@@ -1699,8 +1718,13 @@
 
     function filterLeanTable(status) {
       const allLean = getLeanLeads();
-      if (status === 'all') renderLeanDB(allLean);
-      else renderLeanDB(allLean.filter(l => l.status === status));
+      if (status === 'all') {
+        renderLeanDB(allLean);
+      } else if (status === 'Rejected') {
+        renderLeanDB(allLean.filter(l => l.status === 'Rejected' || l.status === 'Closed'));
+      } else {
+        renderLeanDB(allLean.filter(l => l.status === status));
+      }
     }
 
     function renderLeads(filteredLeads = null) {
@@ -1751,7 +1775,7 @@
               <option value="Semi-Hot" ${l.status === 'Semi-Hot' ? 'selected' : ''}>⚡ Semi-Hot</option>
               <option value="Hot" ${l.status === 'Hot' ? 'selected' : ''}>🔥 Hot</option>
               <option value="Enrolled" ${l.status === 'Enrolled' ? 'selected' : ''}>🎓 Enrolled</option>
-              <option value="No" ${l.status === 'No' ? 'selected' : ''}>🚫 No / Reject</option>
+              <option value="Rejected" ${l.status === 'Rejected' || l.status === 'No' || l.status === 'Closed' ? 'selected' : ''}>❌ Rejected</option>
             </select>
             <button onclick="openCommentModal('${l.id}')" class="text-[9px] text-blue-500 hover:underline"><i class="fa-solid fa-pen"></i> Comments</button>
           </td>
@@ -1776,6 +1800,8 @@
         } else {
           renderLeads(allowed);
         }
+      } else if (status === 'Rejected') {
+        renderLeads(allowed.filter(l => l.status === 'Rejected' || l.status === 'No' || l.status === 'Closed'));
       } else {
         renderLeads(allowed.filter(l => l.status === status));
       }
