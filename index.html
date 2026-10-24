@@ -5,20 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduPro CRM: Ultimate Enterprise Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          colors: { brand: { 50: '#eef2ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } }
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif']
+          },
+          colors: {
+            brand: { 50: '#eef2ff', 100: '#e0e7ff', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' }
+          }
         }
       }
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    .animate-card { animation: slideIn 0.3s ease-out forwards; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatSlow { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+    @keyframes glowPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+    .animate-card { animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .animate-float { animation: floatSlow 4s ease-in-out infinite; }
+    .animate-glow { animation: glowPulse 3s ease-in-out infinite; }
+    .hover-lift { transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease; }
+    .hover-lift:hover { transform: translateY(-3px); }
     .glassmorphism { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .kanban-col { min-height: 400px; }
     ::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -190,60 +204,214 @@
     <main class="p-4 md:p-8 flex-1 overflow-y-auto">
 
       <!-- 1. DASHBOARD -->
-      <section id="view-dashboard" class="space-y-4 md:space-y-6 animate-card">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          <div class="p-4 md:p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
-            <div class="flex justify-between items-center mb-2">
-              <p class="text-[10px] md:text-xs uppercase tracking-wider text-slate-400 font-bold">মোট লিডস</p>
-              <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center text-xs"><i class="fa-solid fa-users"></i></div>
+      <section id="view-dashboard" class="space-y-6 animate-card">
+
+        <!-- Executive Hero Welcome Banner -->
+        <div class="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 shadow-2xl p-6 md:p-8">
+          <!-- Background Glow Shapes -->
+          <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-brand-500/20 blur-3xl pointer-events-none"></div>
+          <div class="absolute -left-16 -bottom-16 w-80 h-80 rounded-full bg-purple-500/20 blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="space-y-3">
+              <div class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700 text-xs font-semibold backdrop-blur-md">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-emerald-400 font-bold" id="heroLiveStatus">System Online</span>
+                <span class="text-slate-500">•</span>
+                <span class="text-slate-300 font-mono" id="heroLiveDate">24 Oct, 2026</span>
+              </div>
+
+              <div>
+                <h2 class="text-2xl md:text-3xl font-black text-white tracking-tight flex items-center gap-2 flex-wrap">
+                  <span id="heroGreeting">👋 স্বাগতম,</span> 
+                  <span id="heroUserName" class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-indigo-300 to-purple-400 font-extrabold">Admin!</span>
+                </h2>
+                <p class="text-xs md:text-sm text-slate-400 mt-1 max-w-xl">
+                  আপনার আজকের লাইভ পাইপলাইন ও টিম পারফরম্যান্স রেডি। নতুন লিড যোগ করুন, আজকের কল রিমাইন্ডার চেক করুন অথবা সরাসরি ক্লাউড ডাটা সিঙ্ক করুন।
+                </p>
+              </div>
+
+              <!-- Quick Target Mini Progress Bar -->
+              <div class="pt-2 max-w-md">
+                <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+                  <span class="text-slate-300 flex items-center gap-1.5"><i class="fa-solid fa-bullseye text-brand-400"></i> মাসিক সেলস টার্গেট প্রগ্রেস</span>
+                  <span class="text-brand-400 font-mono" id="heroTargetPct">0%</span>
+                </div>
+                <div class="h-2.5 w-full bg-slate-800/90 rounded-full overflow-hidden p-0.5 border border-slate-700/60 shadow-inner">
+                  <div id="heroTargetBar" class="h-full rounded-full bg-gradient-to-r from-brand-500 via-indigo-500 to-emerald-400 transition-all duration-1000 shadow-sm" style="width: 0%"></div>
+                </div>
+              </div>
             </div>
-            <h3 class="text-2xl md:text-3xl font-extrabold" id="stat-leads">0</h3>
-          </div>
-          <div class="p-4 md:p-6 bg-amber-500/10 dark:bg-amber-500/5 rounded-2xl border border-amber-200 dark:border-amber-900/30 shadow-sm cursor-pointer hover:bg-amber-500/20 transition-all" onclick="switchTab('followup')">
-            <div class="flex justify-between items-center mb-2">
-              <p class="text-[10px] md:text-xs uppercase tracking-wider text-amber-600 dark:text-amber-500 font-bold">ফলো-আপ (Today)</p>
-              <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-amber-500/20 text-amber-600 flex items-center justify-center text-xs"><i class="fa-regular fa-clock"></i></div>
+
+            <!-- Quick Action Shortcuts -->
+            <div class="flex flex-wrap lg:flex-col gap-2.5 shrink-0">
+              <button onclick="openAddLeadModal()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-xl shadow-brand-500/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+                <i class="fa-solid fa-plus-circle text-sm"></i>
+                <span>নতুন লিড যোগ করুন</span>
+              </button>
+
+              <button onclick="syncWithGitHub()" class="px-5 py-2.5 rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-rotate text-brand-400"></i>
+                <span>GitHub DB সিঙ্ক</span>
+              </button>
+
+              <button onclick="switchTab('callcenter')" class="px-5 py-2.5 rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-database text-blue-400"></i>
+                <span>মাস্টার ডেটাবেস</span>
+              </button>
             </div>
-            <h3 class="text-2xl md:text-3xl font-extrabold text-amber-600 dark:text-amber-500" id="stat-followup">0</h3>
-          </div>
-          <div class="p-4 md:p-6 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-2xl border border-emerald-200 dark:border-emerald-900/30 shadow-sm cursor-pointer hover:bg-emerald-500/20 transition-all" onclick="switchTab('admitted')">
-            <div class="flex justify-between items-center mb-2">
-              <p class="text-[10px] md:text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-500 font-bold">এনরোল্ড</p>
-              <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-emerald-500/20 text-emerald-600 flex items-center justify-center text-xs"><i class="fa-solid fa-user-check"></i></div>
-            </div>
-            <h3 class="text-2xl md:text-3xl font-extrabold text-emerald-600 dark:text-emerald-500" id="stat-enrolled">0</h3>
-          </div>
-          <div class="p-4 md:p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
-            <div class="flex justify-between items-center mb-2">
-              <p class="text-[10px] md:text-xs uppercase tracking-wider text-slate-400 font-bold">বকেয়া (Due)</p>
-              <div class="w-6 h-6 md:w-8 md:h-8 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center text-xs"><i class="fa-solid fa-wallet"></i></div>
-            </div>
-            <h3 class="text-xl md:text-2xl font-extrabold text-rose-500" id="stat-dues">৳0</h3>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-          <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 md:p-6">
-             <div class="flex justify-between items-center mb-4">
-               <h3 class="text-base md:text-lg font-bold flex items-center"><i class="fa-solid fa-users-gear text-brand-500 mr-2"></i> টিম পারফরম্যান্স সামারি</h3>
-               <button onclick="switchTab('reports')" class="text-xs text-brand-600 hover:underline font-bold">Full Report</button>
+        <!-- 4 Supercharged KPI Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+          <!-- KPI 1: Total Leads -->
+          <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-500/50 transition-all duration-300 relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">সর্বমোট লিডস পাইপলাইন</p>
+                <h3 class="text-3xl font-black text-slate-900 dark:text-white mt-1 group-hover:text-brand-500 transition-colors" id="stat-leads">0</h3>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 text-white flex items-center justify-center text-lg shadow-lg shadow-brand-500/30 group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] pt-3 border-t border-slate-100 dark:border-slate-800">
+              <span class="text-emerald-500 font-bold flex items-center gap-1"><i class="fa-solid fa-arrow-trend-up"></i> Active</span>
+              <span class="text-slate-400 font-semibold" id="dashPipelineSummary">Hot: 0 &bull; Cold: 0</span>
+            </div>
+          </div>
+
+          <!-- KPI 2: Today's Follow-up -->
+          <div onclick="switchTab('followup')" class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-amber-200/80 dark:border-amber-900/40 shadow-sm hover:shadow-xl hover:border-amber-500 transition-all duration-300 relative overflow-hidden group cursor-pointer">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <p class="text-[11px] font-extrabold uppercase tracking-wider text-amber-500">আজকের নির্ধারিত কল</p>
+                <h3 class="text-3xl font-black text-amber-500 mt-1" id="stat-followup">0</h3>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg shadow-lg shadow-amber-500/30 group-hover:scale-110 transition-transform">
+                <i class="fa-regular fa-clock"></i>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] pt-3 border-t border-amber-100 dark:border-amber-950/40">
+              <span class="text-amber-500 font-bold flex items-center gap-1"><i class="fa-solid fa-phone-volume"></i> আজই কল করুন</span>
+              <span class="text-brand-500 font-bold group-hover:translate-x-1 transition-transform">কল লিস্ট ➔</span>
+            </div>
+          </div>
+
+          <!-- KPI 3: Enrolled & Revenue -->
+          <div onclick="switchTab('admitted')" class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-emerald-200/80 dark:border-emerald-900/40 shadow-sm hover:shadow-xl hover:border-emerald-500 transition-all duration-300 relative overflow-hidden group cursor-pointer">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <p class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-500">সফল ভর্তি (Enrolled)</p>
+                <div class="flex items-baseline gap-2 mt-1">
+                  <h3 class="text-3xl font-black text-emerald-500" id="stat-enrolled">0</h3>
+                  <span class="text-xs font-bold text-slate-400" id="stat-enrolled-rev">৳0</span>
+                </div>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-500 text-white flex items-center justify-center text-lg shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-award"></i>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] pt-3 border-t border-emerald-100 dark:border-emerald-950/40">
+              <span class="text-emerald-500 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Conversion Won</span>
+              <span class="text-brand-500 font-bold group-hover:translate-x-1 transition-transform">ইনভয়েস ➔</span>
+            </div>
+          </div>
+
+          <!-- KPI 4: Pending Due -->
+          <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-rose-200/80 dark:border-rose-900/40 shadow-sm hover:shadow-xl hover:border-rose-500 transition-all duration-300 relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <p class="text-[11px] font-extrabold uppercase tracking-wider text-rose-500">বকেয়া কিস্তি (Due Queue)</p>
+                <h3 class="text-2xl sm:text-3xl font-black text-rose-500 mt-1" id="stat-dues">৳0</h3>
+              </div>
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-500 text-white flex items-center justify-center text-lg shadow-lg shadow-rose-500/30 group-hover:scale-110 transition-transform">
+                <i class="fa-solid fa-wallet"></i>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] pt-3 border-t border-rose-100 dark:border-rose-950/40">
+              <span class="text-rose-500 font-bold" id="stat-due-count">0 জনের বকেয়া আছে</span>
+              <button onclick="switchTab('admitted')" class="text-xs text-rose-500 font-bold hover:underline">কালেক্ট করুন</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pipeline Funnel Visual Bar -->
+        <div class="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="p-1.5 rounded-lg bg-brand-500/10 text-brand-500"><i class="fa-solid fa-filter"></i></span>
+              <h3 class="font-bold text-sm text-slate-900 dark:text-white">লাইভ কনভার্শন পাইপলাইন ফানেল</h3>
+            </div>
+            <span class="text-xs font-bold text-slate-400 font-mono" id="funnelConversionRate">কনভার্শন রেট: 0%</span>
+          </div>
+
+          <div class="grid grid-cols-5 gap-2 text-center text-xs">
+            <div class="p-2.5 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+              <div class="text-[10px] font-bold text-blue-400 uppercase">Cold</div>
+              <div class="text-lg font-black text-blue-500 mt-0.5" id="funnel-cold">0</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20">
+              <div class="text-[10px] font-bold text-amber-500 uppercase">Warm</div>
+              <div class="text-lg font-black text-amber-500 mt-0.5" id="funnel-warm">0</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-purple-500/10 border border-purple-500/20">
+              <div class="text-[10px] font-bold text-purple-400 uppercase">Hot</div>
+              <div class="text-lg font-black text-purple-500 mt-0.5" id="funnel-hot">0</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+              <div class="text-[10px] font-bold text-emerald-400 uppercase">Enrolled</div>
+              <div class="text-lg font-black text-emerald-500 mt-0.5" id="funnel-enrolled">0</div>
+            </div>
+            <div class="p-2.5 rounded-2xl bg-slate-500/10 border border-slate-500/20">
+              <div class="text-[10px] font-bold text-slate-400 uppercase">Closed</div>
+              <div class="text-lg font-black text-slate-500 mt-0.5" id="funnel-closed">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Podium & Today's Reminder Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Team Podium Leaderboard -->
+          <div class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 md:p-6 space-y-4">
+             <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+               <div class="flex items-center gap-2">
+                 <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-sm"><i class="fa-solid fa-trophy"></i></div>
+                 <h3 class="text-base font-bold text-slate-900 dark:text-white">টিম পারফরম্যান্স লিডারবোর্ড</h3>
+               </div>
+               <button onclick="switchTab('reports')" class="text-xs text-brand-600 dark:text-brand-400 hover:underline font-bold flex items-center gap-1">বিস্তারিত রিপোর্ট ➔</button>
              </div>
              <div class="overflow-x-auto">
-               <table class="w-full text-left text-sm border-collapse">
-                 <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] md:text-xs uppercase text-slate-400 border-b border-slate-200 dark:border-slate-800">
-                   <tr><th class="p-3">এমপ্লয়ী (KAM)</th><th class="p-3 text-center">অ্যাসাইনড</th><th class="p-3 text-center">এনরোল্ড</th><th class="p-3 text-right">কালেকশন</th></tr>
+               <table class="w-full text-left text-xs border-collapse">
+                 <thead class="bg-slate-50 dark:bg-slate-800/50 text-[10px] uppercase font-bold text-slate-400 border-b border-slate-200 dark:border-slate-800">
+                   <tr>
+                     <th class="p-3">এমপ্লয়ী (Account Manager)</th>
+                     <th class="p-3 text-center">অ্যাসাইনড</th>
+                     <th class="p-3 text-center">ভর্তি (Won)</th>
+                     <th class="p-3 text-center">কনভার্শন রেট</th>
+                     <th class="p-3 text-right">আদায়কৃত কালেকশন</th>
+                   </tr>
                  </thead>
-                 <tbody id="dashTeamSummaryBody" class="divide-y divide-slate-100 dark:divide-slate-800 text-[11px] md:text-xs"></tbody>
+                 <tbody id="dashTeamSummaryBody" class="divide-y divide-slate-100 dark:divide-slate-800 font-semibold"></tbody>
                </table>
              </div>
           </div>
-          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-4 md:p-6 flex flex-col">
-             <div class="flex justify-between items-center mb-4">
-               <h3 class="text-base md:text-lg font-bold flex items-center"><i class="fa-solid fa-bell text-amber-500 mr-2"></i> আজকের রিমাইন্ডার</h3>
-               <span class="bg-amber-100 text-amber-600 px-2 py-0.5 rounded-full text-[10px] font-bold" id="dashRemBadge">0</span>
+
+          <!-- Today's Reminders & Urgent Calls -->
+          <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-5 md:p-6 flex flex-col justify-between space-y-4">
+             <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-3">
+               <div class="flex items-center gap-2">
+                 <div class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center text-sm"><i class="fa-solid fa-bell"></i></div>
+                 <h3 class="text-base font-bold text-slate-900 dark:text-white">আজকের কল শিডিউল</h3>
+               </div>
+               <span class="bg-amber-500 text-white px-2.5 py-0.5 rounded-full text-[10px] font-black" id="dashRemBadge">0</span>
              </div>
-             <div class="space-y-3 flex-1 overflow-y-auto max-h-64 no-scrollbar" id="dashTodayReminders"></div>
-             <button onclick="switchTab('followup')" class="w-full mt-4 py-2 text-xs font-bold text-brand-600 border border-brand-200 dark:border-brand-800 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/30 transition">সবগুলো দেখুন</button>
+             <div class="space-y-2.5 flex-1 overflow-y-auto max-h-72 no-scrollbar" id="dashTodayReminders"></div>
+             <button onclick="switchTab('followup')" class="w-full py-2.5 text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-brand-950/40 text-brand-600 dark:text-brand-400 rounded-xl transition border border-slate-200 dark:border-slate-700 flex items-center justify-center gap-1.5 cursor-pointer">
+               <span>সকল ফলো-আপ দেখুন</span>
+               <i class="fa-solid fa-arrow-right text-[10px]"></i>
+             </button>
           </div>
         </div>
       </section>
@@ -862,7 +1030,7 @@
         currentUser = acc;
         localStorage.setItem('edupro_current_user', JSON.stringify(currentUser));
         if (errEl) errEl.classList.add('hidden');
-        document.getElementById('loginModal').classList.add('hidden');
+        document.getElementById('loginModal').classList.add('hidden'); playSuccessChime();
         updateUserUI();
         renderAll();
       } else {
@@ -1497,30 +1665,170 @@
       `).join('');
     }
 
+    
+    function playSuccessChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.36);
+      } catch (e) {}
+    }
+
     function updateDashboardCounts() {
-      let due = 0; leads.forEach(l => due += l.due);
-      document.getElementById('stat-leads').innerText = leads.length;
-      document.getElementById('stat-enrolled').innerText = leads.filter(l=>l.status==='Enrolled').length;
-      document.getElementById('stat-dues').innerText = `৳${due.toLocaleString()}`;
+      let due = 0, dueCount = 0, totalPaid = 0;
+      let countCold = 0, countWarm = 0, countHot = 0, countEnrolled = 0, countClosed = 0;
+
+      leads.forEach(l => {
+        const d = Number(l.due || 0);
+        const p = Number(l.paid || 0);
+        if (d > 0) { due += d; dueCount++; }
+        totalPaid += p;
+
+        const s = l.status || 'Cold';
+        if (s === 'Cold') countCold++;
+        else if (s === 'Warm' || s === 'Semi-Hot') countWarm++;
+        else if (s === 'Hot') countHot++;
+        else if (s === 'Enrolled') countEnrolled++;
+        else if (s === 'Closed') countClosed++;
+      });
+
+      // Update KPI Cards
+      const elLeads = document.getElementById('stat-leads');
+      if (elLeads) elLeads.innerText = leads.length;
+
+      const elEnrolled = document.getElementById('stat-enrolled');
+      if (elEnrolled) elEnrolled.innerText = countEnrolled;
+
+      const elEnrolledRev = document.getElementById('stat-enrolled-rev');
+      if (elEnrolledRev) elEnrolledRev.innerText = '৳' + totalPaid.toLocaleString();
+
+      const elDues = document.getElementById('stat-dues');
+      if (elDues) elDues.innerText = '৳' + due.toLocaleString();
+
+      const elDueCount = document.getElementById('stat-due-count');
+      if (elDueCount) elDueCount.innerText = dueCount + ' জনের বকেয়া আছে';
+
+      const elPipeSummary = document.getElementById('dashPipelineSummary');
+      if (elPipeSummary) elPipeSummary.innerText = 'Hot: ' + countHot + ' • Warm: ' + countWarm + ' • Cold: ' + countCold;
+
+      // Update Funnel Bar
+      const fCold = document.getElementById('funnel-cold'); if (fCold) fCold.innerText = countCold;
+      const fWarm = document.getElementById('funnel-warm'); if (fWarm) fWarm.innerText = countWarm;
+      const fHot = document.getElementById('funnel-hot'); if (fHot) fHot.innerText = countHot;
+      const fEnr = document.getElementById('funnel-enrolled'); if (fEnr) fEnr.innerText = countEnrolled;
+      const fClosed = document.getElementById('funnel-closed'); if (fClosed) fClosed.innerText = countClosed;
+
+      const fRate = document.getElementById('funnelConversionRate');
+      if (fRate) {
+        const convPct = leads.length > 0 ? ((countEnrolled / leads.length) * 100).toFixed(1) : 0;
+        fRate.innerText = 'কনভার্শন রেট: ' + convPct + '%';
+      }
+
+      // Update Hero Greeting & Date
+      const hr = new Date().getHours();
+      const greetingStr = hr < 12 ? '👋 শুভ সকাল,' : (hr < 17 ? '👋 শুভ দুপুর,' : '👋 শুভ সন্ধ্যা,');
+      const heroGreet = document.getElementById('heroGreeting');
+      if (heroGreet) heroGreet.innerText = greetingStr;
+
+      const heroName = document.getElementById('heroUserName');
+      if (heroName) heroName.innerText = (currentUser ? currentUser.name : 'Admin') + '!';
+
+      const heroDate = document.getElementById('heroLiveDate');
+      if (heroDate) {
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        heroDate.innerText = new Date().toLocaleDateString('en-GB', options);
+      }
+
+      // Target Progress (Default Target: 5,00,000 BDT)
+      const MONTH_TARGET = 500000;
+      const targetPct = Math.min((totalPaid / MONTH_TARGET) * 100, 100).toFixed(1);
+      const heroTargetPct = document.getElementById('heroTargetPct');
+      if (heroTargetPct) heroTargetPct.innerText = targetPct + '% (৳' + totalPaid.toLocaleString() + ' / ৳5L)';
+      const heroTargetBar = document.getElementById('heroTargetBar');
+      if (heroTargetBar) heroTargetBar.style.width = targetPct + '%';
     }
 
     function updateDashboardExtras() {
       const teamStats = {};
-      ["পাবেল", "ইমরান", "তানভীর"].forEach(emp => { teamStats[emp] = { assigned: 0, won: 0, rev: 0 }; });
-      leads.forEach(l => {
-          if(!teamStats[l.kam]) teamStats[l.kam] = { assigned: 0, won: 0, rev: 0 };
-          teamStats[l.kam].assigned++;
-          if(l.status === 'Enrolled') { teamStats[l.kam].won++; teamStats[l.kam].rev += Number(l.paid || 0); }
-      });
-      let displayTeam = ["পাবেল", "ইমরান", "তানভীর"];
-      document.getElementById('dashTeamSummaryBody').innerHTML = displayTeam.map(emp => `<tr class="hover:bg-slate-50 dark:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 transition-colors"><td class="p-3 font-bold text-slate-700 dark:text-slate-300">${emp}</td><td class="p-3 text-center">${teamStats[emp].assigned}</td><td class="p-3 text-center font-bold text-emerald-500">${teamStats[emp].won}</td><td class="p-3 text-right font-extrabold text-emerald-600 dark:text-emerald-400">৳${teamStats[emp].rev.toLocaleString()}</td></tr>`).join('');
+      const displayTeam = ["পাবেল", "নাসিম", "ইমরান", "তানভীর"];
+      displayTeam.forEach(emp => { teamStats[emp] = { assigned: 0, won: 0, rev: 0 }; });
 
-      const todaysFollowUps = leads.filter(l => getDiffDays(l.nextCall) === 0).slice(0, 5);
-      document.getElementById('dashRemBadge').innerText = todaysFollowUps.length;
-      if(todaysFollowUps.length === 0) {
-          document.getElementById('dashTodayReminders').innerHTML = `<div class="text-sm text-slate-400 text-center py-6">আজকের কোনো কল শিডিউল নেই।</div>`;
-      } else {
-          document.getElementById('dashTodayReminders').innerHTML = todaysFollowUps.map(l => `<div class="flex justify-between items-center p-3 bg-amber-50/50 dark:bg-amber-900/10 rounded-lg border border-amber-100 dark:border-amber-800/30"><div><div class="text-[11px] md:text-xs font-bold">${l.name}</div><div class="text-[9px] md:text-[10px] text-slate-400"><i class="fa-solid fa-phone"></i> ${l.phone}</div></div><div class="text-right"><div class="text-[10px] font-bold text-rose-500"><i class="fa-regular fa-clock"></i> ${l.nextCall.split('T')[1] || ''}</div><button onclick="sendWADirect('${l.phone}')" class="text-emerald-500 text-sm hover:scale-110 mt-1 transition-transform"><i class="fa-brands fa-whatsapp"></i></button></div></div>`).join('');
+      leads.forEach(l => {
+        const kam = l.kam || 'Unassigned';
+        if (!teamStats[kam]) teamStats[kam] = { assigned: 0, won: 0, rev: 0 };
+        teamStats[kam].assigned++;
+        if (l.status === 'Enrolled') {
+          teamStats[kam].won++;
+          teamStats[kam].rev += Number(l.paid || 0);
+        }
+      });
+
+      const bodyEl = document.getElementById('dashTeamSummaryBody');
+      if (bodyEl) {
+        bodyEl.innerHTML = displayTeam.map((emp, idx) => {
+          const s = teamStats[emp] || { assigned: 0, won: 0, rev: 0 };
+          const conv = s.assigned > 0 ? ((s.won / s.assigned) * 100).toFixed(1) : '0.0';
+          const badge = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : '🎖️'));
+          return `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 border-b border-slate-100 dark:border-slate-800 transition-colors">
+              <td class="p-3 font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                <span>${badge}</span>
+                <span>${emp}</span>
+              </td>
+              <td class="p-3 text-center font-mono">${s.assigned}</td>
+              <td class="p-3 text-center text-emerald-500 font-bold font-mono">${s.won}</td>
+              <td class="p-3 text-center">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-500/10 text-brand-500 font-mono">${conv}%</span>
+              </td>
+              <td class="p-3 text-right font-bold text-emerald-500 font-mono">৳${s.rev.toLocaleString()}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Today's Reminders
+      const todayLeads = leads.filter(l => l.nextCall && l.nextCall.startsWith(TODAY_STR));
+      const remBadge = document.getElementById('dashRemBadge');
+      if (remBadge) remBadge.innerText = todayLeads.length;
+
+      const remContainer = document.getElementById('dashTodayReminders');
+      if (remContainer) {
+        if (todayLeads.length === 0) {
+          remContainer.innerHTML = `
+            <div class="text-center py-8 text-slate-400">
+              <i class="fa-solid fa-circle-check text-2xl text-emerald-500/40 mb-2 block"></i>
+              আজকের নির্ধারিত কোনো কল নেই!
+            </div>
+          `;
+        } else {
+          remContainer.innerHTML = todayLeads.slice(0, 5).map(l => `
+            <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
+              <div class="truncate">
+                <div class="font-bold text-xs text-slate-800 dark:text-white truncate">${l.name}</div>
+                <div class="text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
+                  <i class="fa-solid fa-phone text-[8px]"></i> ${l.phone} &bull; ${l.course}
+                </div>
+              </div>
+              <div class="flex items-center gap-1 shrink-0">
+                <button type="button" onclick="sendWADirect('${l.phone}')" class="p-1.5 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition" title="WhatsApp">
+                  <i class="fa-brands fa-whatsapp text-xs"></i>
+                </button>
+                <a href="tel:${l.phone}" class="p-1.5 rounded-xl bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white transition" title="Call">
+                  <i class="fa-solid fa-phone text-xs"></i>
+                </a>
+              </div>
+            </div>
+          `).join('');
+        }
       }
     }
 
@@ -1632,89 +1940,161 @@
   </script>
 
   <!-- ==================== AUTH / LOGIN MODAL ==================== -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl space-y-5 animate-card">
+  <div id="loginModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-2xl z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <!-- Ambient Background Neon Glow Orbs -->
+    <div class="fixed top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-600/25 rounded-full blur-[130px] pointer-events-none animate-pulse"></div>
+    <div class="fixed bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-[130px] pointer-events-none animate-pulse"></div>
+
+    <div class="relative bg-slate-900/85 backdrop-blur-2xl border border-white/10 rounded-[32px] max-w-lg w-full p-6 sm:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] space-y-6 animate-card my-auto">
+      
+      <!-- Logo & Header -->
       <div class="text-center space-y-2">
-        <div class="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center text-white shadow-xl shadow-brand-500/40">
-          <i class="fa-solid fa-graduation-cap text-2xl"></i>
+        <div class="relative inline-block">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-brand-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-xl shadow-brand-500/30 transform hover:rotate-6 transition-transform">
+            <i class="fa-solid fa-graduation-cap text-3xl"></i>
+          </div>
+          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-slate-900"></span>
         </div>
-        <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">SkillsCRM এ লগইন</h2>
-        <p class="text-xs text-slate-400">নিচের যেকোনো একাউন্টে ক্লিক করুন অথবা ইমেইল ও পাসওয়ার্ড লিখুন</p>
-      </div>
-
-      <!-- Quick 1-Click Login Cards -->
-      <div class="space-y-1.5">
-        <label class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">⚡ ১-ক্লিকে দ্রুত লগইন করুন:</label>
-        <div class="grid grid-cols-2 gap-2 text-left">
-          <button type="button" onclick="quickFillAndLogin('admin@skill.com', 'skill123')" class="p-2.5 rounded-xl border border-red-500/30 bg-red-500/5 hover:bg-red-500/15 transition flex items-center gap-2 cursor-pointer">
-            <span class="text-lg">👑</span>
-            <div class="truncate">
-              <div class="font-bold text-xs text-red-500 truncate">Admin</div>
-              <div class="text-[10px] text-slate-400 font-mono truncate">admin@skill.com</div>
-            </div>
-          </button>
-          <button type="button" onclick="quickFillAndLogin('boss@skill.com', 'skill123')" class="p-2.5 rounded-xl border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/15 transition flex items-center gap-2 cursor-pointer">
-            <span class="text-lg">🏢</span>
-            <div class="truncate">
-              <div class="font-bold text-xs text-amber-500 truncate">Boss</div>
-              <div class="text-[10px] text-slate-400 font-mono truncate">boss@skill.com</div>
-            </div>
-          </button>
-          <button type="button" onclick="quickFillAndLogin('pavel@skill.com', 'skill123')" class="p-2.5 rounded-xl border border-indigo-500/30 bg-indigo-500/5 hover:bg-indigo-500/15 transition flex items-center gap-2 cursor-pointer">
-            <span class="text-lg">👤</span>
-            <div class="truncate">
-              <div class="font-bold text-xs text-indigo-400 truncate">Employee (পাবেল)</div>
-              <div class="text-[10px] text-slate-400 font-mono truncate">pavel@skill.com</div>
-            </div>
-          </button>
-          <button type="button" onclick="quickFillAndLogin('nasim@skill.com', 'skill123')" class="p-2.5 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/15 transition flex items-center gap-2 cursor-pointer">
-            <span class="text-lg">👤</span>
-            <div class="truncate">
-              <div class="font-bold text-xs text-emerald-400 truncate">Employee (নাসিম)</div>
-              <div class="text-[10px] text-slate-400 font-mono truncate">nasim@skill.com</div>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <div class="relative flex items-center justify-center my-2">
-        <div class="border-t border-slate-200 dark:border-slate-800 w-full"></div>
-        <span class="bg-white dark:bg-slate-900 px-3 text-[10px] font-bold uppercase text-slate-400 absolute">অথবা ম্যানুয়াল লগইন</span>
-      </div>
-
-      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3">
+        
         <div>
-          <label class="block text-xs font-bold text-slate-400 mb-1">ইমেইল এড্রেস</label>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/25 text-brand-300 text-[10px] font-extrabold uppercase tracking-widest mb-1.5">
+            <i class="fa-solid fa-bolt-lightning text-amber-400"></i> Enterprise CRM Edition
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            Skills<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-indigo-300 to-purple-400">CRM</span> Portal
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">ওয়ার্কস্পেসে প্রবেশ করতে আপনার একাউন্ট নির্বাচন করুন</p>
+        </div>
+      </div>
+
+      <!-- Quick 1-Click Executive Access Cards -->
+      <div class="space-y-2.5">
+        <div class="flex items-center justify-between text-[11px] font-bold text-slate-400">
+          <span class="uppercase tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-brand-400"></i> ১-ক্লিকে তাৎক্ষণিক লগইন:</span>
+          <span class="text-slate-500 text-[10px]">পাসওয়ার্ড অটো-ফিল</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <!-- Card 1: Admin -->
+          <button type="button" onclick="quickFillAndLogin('admin@skill.com', 'skill123')" class="p-3 rounded-2xl border border-rose-500/30 bg-gradient-to-br from-rose-950/30 via-slate-900 to-slate-900 hover:border-rose-500 hover:shadow-lg hover:shadow-rose-500/20 transition-all duration-200 text-left group cursor-pointer active:scale-95">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-red-500 text-white font-black text-xs flex items-center justify-center shadow-md shadow-rose-600/30">
+                  AD
+                </div>
+                <div>
+                  <div class="font-bold text-xs text-white group-hover:text-rose-400 transition-colors">👑 Admin</div>
+                  <div class="text-[10px] text-slate-400 font-mono">admin@skill.com</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-600 group-hover:text-rose-400 group-hover:translate-x-1 transition-all"></i>
+            </div>
+            <div class="mt-2 text-[9px] font-semibold text-rose-300/80 bg-rose-500/10 px-2 py-0.5 rounded-md inline-block">
+              Super Admin &bull; Full Access
+            </div>
+          </button>
+
+          <!-- Card 2: Boss -->
+          <button type="button" onclick="quickFillAndLogin('boss@skill.com', 'skill123')" class="p-3 rounded-2xl border border-amber-500/30 bg-gradient-to-br from-amber-950/30 via-slate-900 to-slate-900 hover:border-amber-500 hover:shadow-lg hover:shadow-amber-500/20 transition-all duration-200 text-left group cursor-pointer active:scale-95">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-500 text-white font-black text-xs flex items-center justify-center shadow-md shadow-amber-600/30">
+                  BS
+                </div>
+                <div>
+                  <div class="font-bold text-xs text-white group-hover:text-amber-400 transition-colors">🏢 Boss</div>
+                  <div class="text-[10px] text-slate-400 font-mono">boss@skill.com</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-600 group-hover:text-amber-400 group-hover:translate-x-1 transition-all"></i>
+            </div>
+            <div class="mt-2 text-[9px] font-semibold text-amber-300/80 bg-amber-500/10 px-2 py-0.5 rounded-md inline-block">
+              Executive &bull; KPI & Analytics
+            </div>
+          </button>
+
+          <!-- Card 3: Pavel -->
+          <button type="button" onclick="quickFillAndLogin('pavel@skill.com', 'skill123')" class="p-3 rounded-2xl border border-indigo-500/30 bg-gradient-to-br from-indigo-950/30 via-slate-900 to-slate-900 hover:border-indigo-500 hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-200 text-left group cursor-pointer active:scale-95">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-500 text-white font-black text-xs flex items-center justify-center shadow-md shadow-brand-600/30">
+                  PB
+                </div>
+                <div>
+                  <div class="font-bold text-xs text-white group-hover:text-indigo-400 transition-colors">👤 পাবেল</div>
+                  <div class="text-[10px] text-slate-400 font-mono">pavel@skill.com</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-600 group-hover:text-indigo-400 group-hover:translate-x-1 transition-all"></i>
+            </div>
+            <div class="mt-2 text-[9px] font-semibold text-indigo-300/80 bg-indigo-500/10 px-2 py-0.5 rounded-md inline-block">
+              Account Manager &bull; My Leads
+            </div>
+          </button>
+
+          <!-- Card 4: Nasim -->
+          <button type="button" onclick="quickFillAndLogin('nasim@skill.com', 'skill123')" class="p-3 rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-emerald-950/30 via-slate-900 to-slate-900 hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-200 text-left group cursor-pointer active:scale-95">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-xs flex items-center justify-center shadow-md shadow-emerald-600/30">
+                  NS
+                </div>
+                <div>
+                  <div class="font-bold text-xs text-white group-hover:text-emerald-400 transition-colors">👤 নাসিম</div>
+                  <div class="text-[10px] text-slate-400 font-mono">nasim@skill.com</div>
+                </div>
+              </div>
+              <i class="fa-solid fa-arrow-right text-xs text-slate-600 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all"></i>
+            </div>
+            <div class="mt-2 text-[9px] font-semibold text-emerald-300/80 bg-emerald-500/10 px-2 py-0.5 rounded-md inline-block">
+              Account Manager &bull; My Leads
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="relative flex items-center justify-center my-3">
+        <div class="border-t border-slate-800 w-full"></div>
+        <span class="bg-slate-900 px-3 text-[10px] font-black uppercase text-slate-500 tracking-wider absolute">অথবা ম্যানুয়ালি লিখুন</span>
+      </div>
+
+      <!-- Manual Login Form -->
+      <form id="loginForm" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1">ইমেইল এড্রেস</label>
           <div class="relative">
-            <i class="fa-solid fa-envelope absolute left-3 top-3 text-slate-400 text-xs"></i>
-            <input type="email" id="loginEmail" required placeholder="admin@skill.com" class="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-white font-mono">
+            <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+            <input type="email" id="loginEmail" required placeholder="admin@skill.com" class="w-full pl-10 pr-3 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-500 text-white font-mono transition">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-400 mb-1">পাসওয়ার্ড</label>
+          <label class="block text-xs font-bold text-slate-300 mb-1">পাসওয়ার্ড</label>
           <div class="relative">
-            <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-400 text-xs"></i>
-            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full pl-9 pr-10 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-500 text-slate-900 dark:text-white font-mono">
-            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-200 text-xs cursor-pointer">
+            <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full pl-10 pr-10 py-2.5 bg-slate-800/90 border border-slate-700 rounded-xl text-xs outline-none focus:ring-2 focus:ring-brand-500 text-white font-mono transition">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-200 text-xs cursor-pointer">
               <i class="fa-solid fa-eye" id="loginPassEye"></i>
             </button>
           </div>
-          <div class="text-[10px] text-slate-400 mt-1">সকল একাউন্টের পাসওয়ার্ড: <span class="font-mono text-brand-500 font-bold">skill123</span></div>
+          <div class="text-[10px] text-slate-400 mt-1 flex justify-between">
+            <span>সকল একাউন্টের পাসওয়ার্ড: <span class="font-mono text-brand-400 font-bold">skill123</span></span>
+            <span class="text-emerald-400 font-semibold">🔒 256-bit Secure</span>
+          </div>
         </div>
 
-        <div id="loginErrorMsg" class="hidden text-xs text-rose-500 font-bold bg-rose-500/10 p-2.5 rounded-xl border border-rose-500/20 text-center">
+        <div id="loginErrorMsg" class="hidden text-xs text-rose-400 font-bold bg-rose-500/10 p-2.5 rounded-xl border border-rose-500/20 text-center">
           ⚠️ ইমেইল অথবা পাসওয়ার্ড সঠিক নয়!
         </div>
 
-        <button type="submit" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-brand-500/30 transition active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          <span>লগইন করুন (Sign In)</span>
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-500 hover:to-purple-500 text-white font-black text-xs rounded-xl shadow-xl shadow-brand-500/30 transition transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>লগইন করুন ও ওয়ার্কস্পেসে প্রবেশ করুন</span>
         </button>
       </form>
     </div>
   </div>
-
 
   <!-- Toast Notification -->
   <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white border border-slate-700 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-xs font-bold max-w-sm">
